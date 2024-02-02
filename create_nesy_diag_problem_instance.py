@@ -38,7 +38,7 @@ def randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
         suspect_components["C" + str(i)] = (False, [])
 
     # gen anomalies
-    num_elements = round(num_of_comp * (percentage_of_anomalies / 100))
+    num_elements = round(num_of_comp * percentage_of_anomalies)
     selected_elements = random.sample(suspect_components.keys(), num_elements)
 
     # gen affected_by - each comp should have a number [0, n-1] random affected_by relations
