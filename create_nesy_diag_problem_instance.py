@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 # @author Tim Bohne
 
+import argparse
 import json
 import random
 from typing import Dict, Tuple, List
 
 from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
-
-NUMBER_OF_COMPONENTS = 6  # 129
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
@@ -92,17 +91,27 @@ def write_instance_to_file(suspect_components, error_codes, input_error_codes, s
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
+    parser.add_argument('--seed', type=int, default=42)
+    parser.add_argument('--components', type=int, default=129)  # 129 is the number of UCR datasets
+    parser.add_argument('--error-codes', type=int, default=50)
+    parser.add_argument('--input-error-codes', type=int, default=1)
+    parser.add_argument('--anomaly-percentage', type=float, default=0.2)
+    args = parser.parse_args()
 
-    seed = 42
-    random.seed(seed)
+    random.seed(args.seed)
 
     print("COMPONENTS:")
-    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(NUMBER_OF_COMPONENTS, 30)
+    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
+        args.components, args.anomaly_percentage
+    )
     for k in sus_comp.keys():
         print(k, ":", sus_comp[k])
 
     print("ERRORS:")
-    errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(4, list(sus_comp.keys()))
+    errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
+        args.error_codes, list(sus_comp.keys())
+    )
     for k in errors.keys():
         print(k, ":", errors[k])
 
@@ -110,6 +119,6 @@ if __name__ == '__main__':
     input_err = list(errors.keys())[random.randint(0, len(errors.keys()) - 1)]
     print("input error:", input_err)
 
-    write_instance_to_file(sus_comp, errors, input_err, seed)
+    write_instance_to_file(sus_comp, errors, input_err, args.seed)
 
     add_generated_instance_to_kg(sus_comp, errors)
