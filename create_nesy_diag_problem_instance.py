@@ -2,10 +2,13 @@
 # -*- coding: utf-8 -*-
 # @author Tim Bohne
 
+import json
 import random
 from typing import Dict, Tuple, List
 
 from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
+
+NUMBER_OF_COMPONENTS = 6  # 129
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
@@ -73,12 +76,28 @@ def add_generated_instance_to_kg(
         expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
 
 
+def write_instance_to_file(suspect_components, error_codes, input_error_codes, seed):
+    data = {
+        "suspect_components": suspect_components,
+        "error_codes": error_codes,
+        "input_error_codes": input_error_codes
+    }
+    # naming scheme: <num_of_comp>_<num_of_error_codes>_<num_of_input_errors>_<seed>.json
+    with open("instances/"
+              + str(len(suspect_components.keys())) + "_"
+              + str(len(error_codes.keys())) + "_"
+              + str(len(input_error_codes)) + "_"
+              + str(seed) + ".json", "w") as f:
+        json.dump(data, f, indent=4, default=str)
+
+
 if __name__ == '__main__':
 
-    random.seed(42)
+    seed = 42
+    random.seed(seed)
 
     print("COMPONENTS:")
-    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(6, 30)
+    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(NUMBER_OF_COMPONENTS, 30)
     for k in sus_comp.keys():
         print(k, ":", sus_comp[k])
 
@@ -88,7 +107,9 @@ if __name__ == '__main__':
         print(k, ":", errors[k])
 
     # generate random input error code(s) - max 2 - for the moment only 1
-    input_err = list(errors.keys())[random.randint(0, len(errors.keys()))]
+    input_err = list(errors.keys())[random.randint(0, len(errors.keys()) - 1)]
     print("input error:", input_err)
+
+    write_instance_to_file(sus_comp, errors, input_err, seed)
 
     add_generated_instance_to_kg(sus_comp, errors)
