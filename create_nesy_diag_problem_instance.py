@@ -87,4 +87,8 @@ if __name__ == '__main__':
     for k in errors.keys():
         print(k, ":", errors[k])
 
+    # generate random input error code(s) - max 2 - for the moment only 1
+    input_err = list(errors.keys())[random.randint(0, len(errors.keys()))]
+    print("input error:", input_err)
+
     add_generated_instance_to_kg(sus_comp, errors)
