@@ -52,8 +52,29 @@ def randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
     return suspect_components
 
 
-if __name__ == '__main__':
+def add_generated_instance_to_kg(
+        suspect_components: Dict[str, Tuple[bool, List[str]]], error_codes: Dict[str, Tuple[str, List[str]]]
+) -> None:
     expert_knowledge_enhancer = ExpertKnowledgeEnhancer()
+
+    for k in suspect_components.keys():
+        # init each component without any affected_by relations
+        expert_knowledge_enhancer.add_component_to_knowledge_graph(k, [])
+
+    for k in suspect_components.keys():
+        # affected_by relations
+        if len(suspect_components[k][1]) > 0:
+            expert_knowledge_enhancer.add_component_to_knowledge_graph(k, suspect_components[k][1])
+
+    for k in error_codes.keys():
+        code = k
+        fault_cond = errors[k][0]
+        associated_comps = errors[k][1]
+        expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
+
+
+if __name__ == '__main__':
+
     random.seed(42)
 
     print("COMPONENTS:")
@@ -65,3 +86,5 @@ if __name__ == '__main__':
     errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(4, list(sus_comp.keys()))
     for k in errors.keys():
         print(k, ":", errors[k])
+
+    add_generated_instance_to_kg(sus_comp, errors)
