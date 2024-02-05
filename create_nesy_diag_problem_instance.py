@@ -149,6 +149,155 @@ def generate_ground_truth_fault_paths(component_net):
     return unique_longest_paths
 
 
+def test_branching_fault_path_instance_one():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (True, []),
+        "C0006": (True, []),
+        "C0008": (True, ['C0009']),
+        "C0009": (True, ['C0010']),
+        "C0010": (False, []),
+        "C0011": (True, ['C0012']),
+        "C0012": (True, ['C0007']),
+        "C0013": (False, ['C0014']),
+        "C0014": (True, ['C0015']),
+        "C0015": (True, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    assert len(ground_truth_fault_paths) == 5
+    assert ground_truth_fault_paths[3] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[2] == ['C0007', 'C0012', 'C0011']
+    assert ground_truth_fault_paths[4] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[1] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0007', 'C0004', 'C0002', 'C0001']
+
+
+def test_branching_fault_path_instance_two():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (True, ['C0012']),
+        "C0006": (True, []),
+        "C0008": (True, ['C0009']),
+        "C0009": (True, ['C0010']),
+        "C0010": (False, []),
+        "C0011": (True, []),
+        "C0012": (True, ['C0011']),
+        "C0013": (False, ['C0014']),
+        "C0014": (True, ['C0015']),
+        "C0015": (True, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    for fp in ground_truth_fault_paths:
+        print(fp)
+    assert len(ground_truth_fault_paths) == 4
+
+    assert ground_truth_fault_paths[3] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[2] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[1] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
+
+
+def test_simple_fault_path():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (False, []),
+        "C0006": (True, ['C0008']),
+        "C0008": (True, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    assert len(ground_truth_fault_paths) == 1
+    assert ground_truth_fault_paths[0] == ['C0008', 'C0006', 'C0004', 'C0002', 'C0001']
+
+
+def test_simple_two_fault_paths():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (False, []),
+        "C0006": (True, []),
+        "C0008": (True, ['C0009']),
+        "C0009": (True, ['C0010']),
+        "C00010": (False, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    assert len(ground_truth_fault_paths) == 2
+    assert ground_truth_fault_paths[1] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[0] == ['C0006', 'C0004', 'C0002', 'C0001']
+
+
+def test_several_fault_paths():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (False, []),
+        "C0006": (True, []),
+        "C0008": (True, ['C0009']),
+        "C0009": (True, ['C0010']),
+        "C0010": (False, []),
+        "C0011": (True, ['C0012']),
+        "C0012": (True, ['C0007']),
+        "C0013": (False, ['C0014']),
+        "C0014": (True, ['C0015']),
+        "C0015": (False, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    assert len(ground_truth_fault_paths) == 4
+    assert ground_truth_fault_paths[1] == ['C0012', 'C0011']
+    assert ground_truth_fault_paths[2] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[0] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[3] == ['C0014']
+
+
+def test_complex_case():
+    component_net = {
+        "C0001": (True, ['C0002']),
+        "C0002": (True, ['C0004']),
+        "C0004": (True, ['C0007', 'C0006']),
+        "C0003": (False, ['C0005']),
+        "C0005": (False, ['C0008']),
+        "C0007": (True, ['C0012', 'C0019']),
+        "C0006": (True, ['C0019']),
+        "C0008": (True, ['C0009']),
+        "C0009": (True, ['C0010']),
+        "C0010": (False, []),
+        "C0011": (True, []),
+        "C0012": (True, ['C0011']),
+        "C0013": (False, ['C0014']),
+        "C0014": (True, ['C0015', 'C0016']),
+        "C0015": (True, []),
+        "C0016": (True, ['C0018', 'C0017']),
+        "C0017": (True, []),
+        "C0018": (False, []),
+        "C0019": (True, [])
+    }
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    assert len(ground_truth_fault_paths) == 6
+    assert ground_truth_fault_paths[5] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[3] == ['C0017', 'C0016', 'C0014']
+    assert ground_truth_fault_paths[4] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[1] == ['C0019', 'C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[2] == ['C0019', 'C0007', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
@@ -160,6 +309,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     random.seed(args.seed)
+
+    # test basic functionality of instance / fault path generation
+    test_branching_fault_path_instance_one()
+    test_branching_fault_path_instance_two()
+    test_simple_fault_path()
+    test_simple_two_fault_paths()
+    test_several_fault_paths()
+    test_complex_case()
 
     print("COMPONENTS:")
     sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
