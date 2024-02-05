@@ -120,17 +120,18 @@ def find_unique_longest_paths(paths):
 
 
 def generate_ground_truth_fault_paths(component_net):
-    list_of_anomalous_comp = []
-    for k in component_net.keys():
-        if component_net[k][0]:
-            list_of_anomalous_comp.append(k)
+    anomalous_components = [k for k in component_net.keys() if component_net[k][0]]
 
+    # finding all anomalous affecting components for all anomalous components,
+    # those are the edges in the final fault paths
     edges = []
-    for ano in list_of_anomalous_comp:
-        for aff_by in component_net[ano][1]:
-            if aff_by in list_of_anomalous_comp:
-                edges.append(aff_by + " -> " + ano)
-    edges = edges[::-1]
+    for anomaly in anomalous_components:
+        for aff_by in component_net[anomaly][1]:
+            if aff_by in anomalous_components:
+                edges.append(aff_by + " -> " + anomaly)
+
+    edges = edges[::-1]  # has to be reversed, affected-by direction
+    # create adjacency lists
     graph = defaultdict(list)
     for edge in edges:
         start, end = edge.split(' -> ')
@@ -138,13 +139,13 @@ def generate_ground_truth_fault_paths(component_net):
 
     all_paths = find_all_paths(graph)
 
-    # filter out redundant paths
+    # filter out redundant paths, i.e., find fault paths
     unique_longest_paths = find_unique_longest_paths(all_paths)
 
     # handle one-component-paths
-    for ano in list_of_anomalous_comp:
-        if ano not in " ".join(edges):
-            unique_longest_paths.append([ano])
+    for anomaly in anomalous_components:
+        if anomaly not in " ".join(edges):
+            unique_longest_paths.append([anomaly])
 
     return unique_longest_paths
 
