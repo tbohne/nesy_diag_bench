@@ -5,6 +5,7 @@
 import argparse
 import json
 import random
+from collections import defaultdict
 from typing import Dict, Tuple, List
 
 from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
@@ -70,8 +71,8 @@ def add_generated_instance_to_kg(
 
     for k in error_codes.keys():
         code = k
-        fault_cond = errors[k][0]
-        associated_comps = errors[k][1]
+        fault_cond = error_codes[k][0]
+        associated_comps = error_codes[k][1]
         expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
 
 
@@ -88,6 +89,64 @@ def write_instance_to_file(suspect_components, error_codes, input_error_codes, s
               + str(len(input_error_codes)) + "_"
               + str(seed) + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
+
+
+def find_paths(graph, start, path=[]):
+    path = path + [start]
+    if start not in graph:
+        return [path]
+    paths = []
+    for node in graph[start]:
+        new_paths = find_paths(graph, node, path)
+        for new_path in new_paths:
+            paths.append(new_path)
+    return paths
+
+
+def find_all_paths(graph):
+    all_paths = []
+    for start_node in graph:
+        all_paths.extend(find_paths(graph, start_node))
+    return all_paths
+
+
+def find_unique_longest_paths(paths):
+    unique_paths = []
+    paths_sorted = sorted(paths, key=len, reverse=True)
+    for path in paths_sorted:
+        if not any(set(path).issubset(set(unique_path)) for unique_path in unique_paths):
+            unique_paths.append(path)
+    return unique_paths
+
+
+def generate_ground_truth_fault_paths(component_net):
+    list_of_anomalous_comp = []
+    for k in component_net.keys():
+        if component_net[k][0]:
+            list_of_anomalous_comp.append(k)
+
+    edges = []
+    for ano in list_of_anomalous_comp:
+        for aff_by in component_net[ano][1]:
+            if aff_by in list_of_anomalous_comp:
+                edges.append(aff_by + " -> " + ano)
+    edges = edges[::-1]
+    graph = defaultdict(list)
+    for edge in edges:
+        start, end = edge.split(' -> ')
+        graph[start].append(end)
+
+    all_paths = find_all_paths(graph)
+
+    # filter out redundant paths
+    unique_longest_paths = find_unique_longest_paths(all_paths)
+
+    # handle one-component-paths
+    for ano in list_of_anomalous_comp:
+        if ano not in " ".join(edges):
+            unique_longest_paths.append([ano])
+
+    return unique_longest_paths
 
 
 if __name__ == '__main__':
