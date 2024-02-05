@@ -7,3 +7,9 @@ Toy world (evaluation system) for neuro-symbolic (**Symbolic[Neuro]**) diagnosis
 ```
 $ python create_nesy_diag_problem_instance.py --seed 42 --components 6 --error-codes 5 --input-error-codes 1 --anomaly-percentage 0.2 [--extend-kg]
 ```
+
+## Naming scheme for generated instances
+
+```
+<components>_<error_codes>_<input_errors>_<seed>.json
+```
