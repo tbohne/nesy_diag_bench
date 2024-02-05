@@ -97,6 +97,7 @@ if __name__ == '__main__':
     parser.add_argument('--error-codes', type=int, default=50)
     parser.add_argument('--input-error-codes', type=int, default=1)
     parser.add_argument('--anomaly-percentage', type=float, default=0.2)
+    parser.add_argument('--extend-kg', action='store_true', default=False)
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -121,4 +122,5 @@ if __name__ == '__main__':
 
     write_instance_to_file(sus_comp, errors, input_err, args.seed)
 
-    add_generated_instance_to_kg(sus_comp, errors)
+    if args.extend_kg:
+        add_generated_instance_to_kg(sus_comp, errors)
