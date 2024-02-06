@@ -91,23 +91,23 @@ def write_instance_to_file(suspect_components, error_codes, input_error_codes, s
         json.dump(data, f, indent=4, default=str)
 
 
-def find_paths_dfs(graph, node, path=[]):
+def find_paths_dfs(anomaly_graph, node, path=[]):
     path = path + [node]  # not using append() because it wouldn't create a new list
-    if node not in graph:
+    if node not in anomaly_graph:
         return [path]
     paths = []
-    for node in graph[node]:
-        paths.extend(find_paths_dfs(graph, node, path))
+    for node in anomaly_graph[node]:
+        paths.extend(find_paths_dfs(anomaly_graph, node, path))
     return paths
 
 
-def find_all_longest_paths(graph):
+def find_all_longest_paths(anomaly_graph):
     all_paths = []
-    nodes_with_incoming_edges = [inc for targets in graph.values() for inc in targets]
-    for path_src in graph:
+    nodes_with_incoming_edges = [inc for targets in anomaly_graph.values() for inc in targets]
+    for path_src in anomaly_graph:
         if path_src in nodes_with_incoming_edges:
             continue
-        all_paths.extend(find_paths_dfs(graph, path_src))
+        all_paths.extend(find_paths_dfs(anomaly_graph, path_src))
     return all_paths
 
 
@@ -124,12 +124,12 @@ def generate_ground_truth_fault_paths(component_net):
 
     edges = edges[::-1]  # has to be reversed, affected-by direction
     # create adjacency lists
-    graph = defaultdict(list)
+    anomaly_graph = defaultdict(list)
     for edge in edges:
         start, end = edge.split(' -> ')
-        graph[start].append(end)
+        anomaly_graph[start].append(end)
 
-    fault_paths = find_all_longest_paths(graph)
+    fault_paths = find_all_longest_paths(anomaly_graph)
 
     # handle one-component-paths
     for anomaly in anomalous_components:
@@ -185,8 +185,6 @@ def test_branching_fault_path_instance_two():
         "C0015": (True, [])
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
-    for fp in ground_truth_fault_paths:
-        print(fp)
     assert len(ground_truth_fault_paths) == 4
     assert ground_truth_fault_paths[2] == ['C0009', 'C0008']
     assert ground_truth_fault_paths[0] == ['C0015', 'C0014']
