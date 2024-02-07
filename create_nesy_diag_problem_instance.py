@@ -92,6 +92,8 @@ def write_instance_to_file(suspect_components, error_codes, input_error_codes, s
 
 
 def find_paths_dfs(anomaly_graph, node, path=[]):
+    if node in path:  # deal with cyclic relations
+        return path
     path = path + [node]  # not using append() because it wouldn't create a new list
     if node not in anomaly_graph:
         return [path]
