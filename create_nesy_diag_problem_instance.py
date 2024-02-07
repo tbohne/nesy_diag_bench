@@ -30,7 +30,7 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
 
 
 def randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
-        num_of_comp: int, percentage_of_anomalies: float
+        num_of_comp: int, percentage_of_anomalies: float, affected_by_ub_percentage: float
 ) -> Dict[str, Tuple[bool, List[str]]]:
     suspect_components = {}
     for i in range(num_of_comp):
@@ -42,9 +42,9 @@ def randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
     num_elements = round(num_of_comp * percentage_of_anomalies)
     selected_elements = random.sample(suspect_components.keys(), num_elements)
 
-    # gen affected_by - each comp should have a number [0, n-1] random affected_by relations
+    # gen affected_by - each comp should have a number [0, min(n-1, config_param)] random affected_by relations
     for i in range(num_of_comp):
-        rand_num = random.randint(0, num_of_comp - 1)
+        rand_num = random.randint(0, min(num_of_comp - 1, int(affected_by_ub_percentage * num_of_comp)))
         affected_by_relations = []
         for j in range(rand_num):
             r = random.randint(0, num_of_comp - 1)
@@ -293,6 +293,7 @@ if __name__ == '__main__':
     parser.add_argument('--input-error-codes', type=int, default=1)
     parser.add_argument('--anomaly-percentage', type=float, default=0.2)
     parser.add_argument('--extend-kg', action='store_true', default=False)
+    parser.add_argument('--affected-by-ub-percentage', type=float, default=0.4)
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -307,10 +308,14 @@ if __name__ == '__main__':
 
     print("COMPONENTS:")
     sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
-        args.components, args.anomaly_percentage
+        args.components, args.anomaly_percentage, args.affected_by_ub_percentage
     )
     for k in sus_comp.keys():
         print(k, ":", sus_comp[k])
+
+    print("GROUND TRUTH FAULT PATHS:")
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(sus_comp)
+    print(ground_truth_fault_paths)
 
     print("ERRORS:")
     errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
