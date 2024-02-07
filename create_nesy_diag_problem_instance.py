@@ -93,7 +93,7 @@ def write_instance_to_file(suspect_components, error_codes, input_error_codes, s
 
 def find_paths_dfs(anomaly_graph, node, path=[]):
     if node in path:  # deal with cyclic relations
-        return path
+        return [path]
     path = path + [node]  # not using append() because it wouldn't create a new list
     if node not in anomaly_graph:
         return [path]
@@ -105,12 +105,18 @@ def find_paths_dfs(anomaly_graph, node, path=[]):
 
 def find_all_longest_paths(anomaly_graph):
     all_paths = []
-    nodes_with_incoming_edges = [inc for targets in anomaly_graph.values() for inc in targets]
     for path_src in anomaly_graph:
-        if path_src in nodes_with_incoming_edges:
-            continue
         all_paths.extend(find_paths_dfs(anomaly_graph, path_src))
-    return all_paths
+    return find_unique_longest_paths(all_paths)
+
+
+def find_unique_longest_paths(paths):
+    unique_paths = []
+    paths_sorted = sorted(paths, key=len, reverse=True)
+    for path in paths_sorted:
+        if not any(" ".join(path) in " ".join(unique_path) for unique_path in unique_paths):
+            unique_paths.append(path)
+    return unique_paths
 
 
 def generate_ground_truth_fault_paths(component_net):
@@ -161,11 +167,11 @@ def test_branching_fault_path_instance_one():
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
     assert len(ground_truth_fault_paths) == 5
-    assert ground_truth_fault_paths[0] == ['C0015', 'C0014']
-    assert ground_truth_fault_paths[1] == ['C0007', 'C0012', 'C0011']
-    assert ground_truth_fault_paths[3] == ['C0009', 'C0008']
-    assert ground_truth_fault_paths[4] == ['C0006', 'C0004', 'C0002', 'C0001']
-    assert ground_truth_fault_paths[2] == ['C0007', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[3] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[2] == ['C0007', 'C0012', 'C0011']
+    assert ground_truth_fault_paths[4] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[1] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0007', 'C0004', 'C0002', 'C0001']
 
 
 def test_branching_fault_path_instance_two():
@@ -188,10 +194,10 @@ def test_branching_fault_path_instance_two():
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
     assert len(ground_truth_fault_paths) == 4
-    assert ground_truth_fault_paths[2] == ['C0009', 'C0008']
-    assert ground_truth_fault_paths[0] == ['C0015', 'C0014']
-    assert ground_truth_fault_paths[3] == ['C0006', 'C0004', 'C0002', 'C0001']
-    assert ground_truth_fault_paths[1] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[3] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[2] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[1] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
 
 
 def test_simple_fault_path():
@@ -225,8 +231,8 @@ def test_simple_two_fault_paths():
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
     assert len(ground_truth_fault_paths) == 2
-    assert ground_truth_fault_paths[0] == ['C0009', 'C0008']
-    assert ground_truth_fault_paths[1] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[1] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[0] == ['C0006', 'C0004', 'C0002', 'C0001']
 
 
 def test_several_fault_paths():
@@ -249,9 +255,9 @@ def test_several_fault_paths():
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
     assert len(ground_truth_fault_paths) == 4
-    assert ground_truth_fault_paths[0] == ['C0012', 'C0011']
-    assert ground_truth_fault_paths[1] == ['C0009', 'C0008']
-    assert ground_truth_fault_paths[2] == ['C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[1] == ['C0012', 'C0011']
+    assert ground_truth_fault_paths[2] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[0] == ['C0006', 'C0004', 'C0002', 'C0001']
     assert ground_truth_fault_paths[3] == ['C0014']
 
 
@@ -279,12 +285,12 @@ def test_complex_case():
     }
     ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
     assert len(ground_truth_fault_paths) == 6
-    assert ground_truth_fault_paths[3] == ['C0009', 'C0008']
-    assert ground_truth_fault_paths[0] == ['C0017', 'C0016', 'C0014']
-    assert ground_truth_fault_paths[1] == ['C0015', 'C0014']
-    assert ground_truth_fault_paths[4] == ['C0019', 'C0006', 'C0004', 'C0002', 'C0001']
-    assert ground_truth_fault_paths[5] == ['C0019', 'C0007', 'C0004', 'C0002', 'C0001']
-    assert ground_truth_fault_paths[2] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[5] == ['C0009', 'C0008']
+    assert ground_truth_fault_paths[3] == ['C0017', 'C0016', 'C0014']
+    assert ground_truth_fault_paths[4] == ['C0015', 'C0014']
+    assert ground_truth_fault_paths[1] == ['C0019', 'C0006', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[2] == ['C0019', 'C0007', 'C0004', 'C0002', 'C0001']
+    assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
 
 
 if __name__ == '__main__':
