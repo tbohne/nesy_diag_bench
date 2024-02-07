@@ -12,10 +12,11 @@ from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        num_of_codes: int, components: List[str]
+        num_of_ground_truth_fault_paths: int, components: List[str]
 ) -> Dict[str, Tuple[str, List[str]]]:
     error_codes = {}
-    for i in range(num_of_codes):
+    # we need as many random error codes as we have ground truth fault paths (assuming no duplicates)
+    for i in range(num_of_ground_truth_fault_paths):
         # gen diag associations - each code should have a number [0, n] random associated components
         rand_num = random.randint(0, len(components))
         sus_components = []
@@ -297,7 +298,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--components', type=int, default=129)  # 129 is the number of UCR datasets
-    parser.add_argument('--error-codes', type=int, default=50)
     parser.add_argument('--input-error-codes', type=int, default=1)
     parser.add_argument('--anomaly-percentage', type=float, default=0.2)
     parser.add_argument('--extend-kg', action='store_true', default=False)
@@ -327,7 +327,7 @@ if __name__ == '__main__':
 
     print("ERRORS:")
     errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        args.error_codes, list(sus_comp.keys())
+        len(ground_truth_fault_paths), list(sus_comp.keys())
     )
     for k in errors.keys():
         print(k, ":", errors[k])
