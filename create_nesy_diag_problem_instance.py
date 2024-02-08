@@ -91,9 +91,10 @@ def add_generated_instance_to_kg(
         expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
 
 
-def write_instance_to_file(suspect_components, error_codes, input_error_codes, seed):
+def write_instance_to_file(suspect_components, ground_truth_fault_paths, error_codes, input_error_codes, seed):
     data = {
         "suspect_components": suspect_components,
+        "ground_truth_fault_paths": ground_truth_fault_paths,
         "error_codes": error_codes,
         "input_error_codes": input_error_codes
     }
@@ -353,7 +354,7 @@ if __name__ == '__main__':
     input_err = list(errors.keys())[random.randint(0, len(errors.keys()) - 1)]
     print("input error:", input_err)
 
-    write_instance_to_file(sus_comp, errors, input_err, args.seed)
+    write_instance_to_file(sus_comp, ground_truth_fault_paths, errors, input_err, args.seed)
 
     if args.extend_kg:
         add_generated_instance_to_kg(sus_comp, errors)
