@@ -91,18 +91,24 @@ def add_generated_instance_to_kg(
         expert_knowledge_enhancer.add_error_code_to_knowledge_graph(code, fault_cond, associated_comps)
 
 
-def write_instance_to_file(suspect_components, ground_truth_fault_paths, error_codes, input_error_codes, seed):
+def write_instance_to_file(
+        suspect_components, ground_truth_fault_paths, error_codes, seed, anomaly_percentage, affected_by_ub,
+        fault_path_comp_ub, distractor_ub
+):
     data = {
         "suspect_components": suspect_components,
         "ground_truth_fault_paths": ground_truth_fault_paths,
-        "error_codes": error_codes,
-        "input_error_codes": input_error_codes
+        "error_codes": error_codes
     }
-    # naming scheme: <num_of_comp>_<num_of_error_codes>_<num_of_input_errors>_<seed>.json
+    # naming scheme:
+    # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
     with open("instances/"
               + str(len(suspect_components.keys())) + "_"
               + str(len(error_codes.keys())) + "_"
-              + str(len(input_error_codes)) + "_"
+              + str(anomaly_percentage) + "_"
+              + str(affected_by_ub) + "_"
+              + str(fault_path_comp_ub) + "_"
+              + str(distractor_ub) + "_"
               + str(seed) + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
 
@@ -313,7 +319,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--components', type=int, default=129)  # 129 is the number of UCR datasets
-    parser.add_argument('--input-error-codes', type=int, default=1)
     parser.add_argument('--anomaly-percentage', type=float, default=0.2)
     parser.add_argument('--extend-kg', action='store_true', default=False)
     parser.add_argument('--affected-by-ub-percentage', type=float, default=0.4)
@@ -350,11 +355,10 @@ if __name__ == '__main__':
     for k in errors.keys():
         print(k, ":", errors[k])
 
-    # generate random input error code(s) - max 2 - for the moment only 1
-    input_err = list(errors.keys())[random.randint(0, len(errors.keys()) - 1)]
-    print("input error:", input_err)
-
-    write_instance_to_file(sus_comp, ground_truth_fault_paths, errors, input_err, args.seed)
+    write_instance_to_file(
+        sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
+        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage
+    )
 
     if args.extend_kg:
         add_generated_instance_to_kg(sus_comp, errors)
