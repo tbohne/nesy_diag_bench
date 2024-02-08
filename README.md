@@ -5,11 +5,11 @@ Toy world (evaluation system) for neuro-symbolic (**Symbolic[Neuro]**) diagnosis
 ## Usage
 
 ```
-$ python instance_gen.py --seed 42 --components 6 --input-error-codes 1 --anomaly-percentage 0.2 --affected-by-ub-percentage 0.3 --fault-path-comp-ub-percentage 1 --distractor-ub-percentage 0.5 [--extend-kg]
+$ python instance_gen.py --seed 42 --components 15 --anomaly-percentage 0.2 --affected-by-ub-percentage 1 --fault-path-comp-ub-percentage 1 --distractor-ub-percentage 0.5 [--extend-kg]
 ```
 
 ## Naming scheme for generated instances
 
 ```
-<components>_<error_codes>_<input_errors>_<seed>.json
+<num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
 ```
