@@ -19,17 +19,17 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
     for i in range(len(ground_truth_fault_paths)):
         # gen diag associations - each code should have a number [1, n] random associated components from the
         # corresponding ground truth fault path
-        rand_num = random.randint(1, len(ground_truth_fault_paths[i]))
+        num_of_fault_path_comp = random.randint(1, len(ground_truth_fault_paths[i]))
         sus_components = []
-        for j in range(rand_num):
+        for j in range(num_of_fault_path_comp):
             r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
             while ground_truth_fault_paths[i][r] in sus_components:
                 r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
             sus_components.append(ground_truth_fault_paths[i][r])
 
         # also add some "distractors", i.e., include some suspect components that are not part of the fault path
-        rand_num = random.randint(1, len(components) - len(sus_components))
-        for j in range(rand_num):
+        num_of_distractors = random.randint(1, len(components) - len(sus_components))
+        for j in range(num_of_distractors):
             r = random.randint(0, len(components) - 1)
             while components[r] in sus_components:
                 r = random.randint(0, len(components) - 1)
