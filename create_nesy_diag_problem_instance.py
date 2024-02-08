@@ -12,19 +12,20 @@ from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        num_of_ground_truth_fault_paths: int, components: List[str]
+        ground_truth_fault_paths: List[List[str]], components: List[str]
 ) -> Dict[str, Tuple[str, List[str]]]:
     error_codes = {}
     # we need as many random error codes as we have ground truth fault paths (assuming no duplicates)
-    for i in range(num_of_ground_truth_fault_paths):
-        # gen diag associations - each code should have a number [0, n] random associated components
-        rand_num = random.randint(0, len(components))
+    for i in range(len(ground_truth_fault_paths)):
+        # gen diag associations - each code should have a number [1, n] random associated components from the
+        # corresponding ground truth fault path
+        rand_num = random.randint(1, len(ground_truth_fault_paths[i]))
         sus_components = []
         for j in range(rand_num):
-            r = random.randint(0, len(components) - 1)
-            while components[r] in sus_components:
-                r = random.randint(0, len(components) - 1)
-            sus_components.append(components[r])
+            r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
+            while ground_truth_fault_paths[i][r] in sus_components:
+                r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
+            sus_components.append(ground_truth_fault_paths[i][r])
 
         error_codes["E" + str(i)] = ("FC" + str(i), sus_components)
     return error_codes
@@ -327,7 +328,7 @@ if __name__ == '__main__':
 
     print("ERRORS:")
     errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        len(ground_truth_fault_paths), list(sus_comp.keys())
+        ground_truth_fault_paths, list(sus_comp.keys())
     )
     for k in errors.keys():
         print(k, ":", errors[k])
