@@ -105,10 +105,10 @@ def write_instance_to_file(
     with open("instances/"
               + str(len(suspect_components.keys())) + "_"
               + str(len(error_codes.keys())) + "_"
-              + str(anomaly_percentage) + "_"
-              + str(affected_by_ub) + "_"
-              + str(fault_path_comp_ub) + "_"
-              + str(distractor_ub) + "_"
+              + str(int(anomaly_percentage * 100)) + "_"
+              + str(int(affected_by_ub * 100)) + "_"
+              + str(int(fault_path_comp_ub * 100)) + "_"
+              + str(int(distractor_ub * 100)) + "_"
               + str(seed) + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
 
