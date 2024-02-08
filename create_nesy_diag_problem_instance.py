@@ -27,6 +27,14 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
                 r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
             sus_components.append(ground_truth_fault_paths[i][r])
 
+        # also add some "distractors", i.e., include some suspect components that are not part of the fault path
+        rand_num = random.randint(1, len(components) - len(sus_components))
+        for j in range(rand_num):
+            r = random.randint(0, len(components) - 1)
+            while components[r] in sus_components:
+                r = random.randint(0, len(components) - 1)
+            sus_components.append(components[r])
+
         error_codes["E" + str(i)] = ("FC" + str(i), sus_components)
     return error_codes
 
