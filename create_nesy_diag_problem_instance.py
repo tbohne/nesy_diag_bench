@@ -12,14 +12,17 @@ from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        ground_truth_fault_paths: List[List[str]], components: List[str]
+        ground_truth_fault_paths: List[List[str]], components: List[str], fault_path_comp_ub_percentage: float,
+        distractor_ub_percentage: float
 ) -> Dict[str, Tuple[str, List[str]]]:
     error_codes = {}
     # we need as many random error codes as we have ground truth fault paths (assuming no duplicates)
     for i in range(len(ground_truth_fault_paths)):
         # gen diag associations - each code should have a number [1, n] random associated components from the
         # corresponding ground truth fault path
-        num_of_fault_path_comp = random.randint(1, len(ground_truth_fault_paths[i]))
+        num_of_fault_path_comp = random.randint(
+            1, int(fault_path_comp_ub_percentage * len(ground_truth_fault_paths[i]))
+        )
         sus_components = []
         for j in range(num_of_fault_path_comp):
             r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
@@ -28,7 +31,9 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
             sus_components.append(ground_truth_fault_paths[i][r])
 
         # also add some "distractors", i.e., include some suspect components that are not part of the fault path
-        num_of_distractors = random.randint(1, len(components) - len(sus_components))
+        num_of_distractors = random.randint(
+            1, int(distractor_ub_percentage * (len(components) - len(sus_components) - 1))
+        )
         for j in range(num_of_distractors):
             r = random.randint(0, len(components) - 1)
             while components[r] in sus_components:
@@ -311,6 +316,8 @@ if __name__ == '__main__':
     parser.add_argument('--anomaly-percentage', type=float, default=0.2)
     parser.add_argument('--extend-kg', action='store_true', default=False)
     parser.add_argument('--affected-by-ub-percentage', type=float, default=0.4)
+    parser.add_argument('--fault-path-comp-ub-percentage', type=float, default=1)
+    parser.add_argument('--distractor-ub-percentage', type=float, default=0.5)
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -336,7 +343,8 @@ if __name__ == '__main__':
 
     print("ERRORS:")
     errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        ground_truth_fault_paths, list(sus_comp.keys())
+        ground_truth_fault_paths, list(sus_comp.keys()), args.fault_path_comp_ub_percentage,
+        args.distractor_ub_percentage
     )
     for k in errors.keys():
         print(k, ":", errors[k])
