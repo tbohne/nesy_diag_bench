@@ -9,7 +9,6 @@ import logging
 
 import smach
 import tensorflow as tf
-from nesy_diag_smach.config import FAULT_CONTEXT_INPUT_FILE
 from nesy_diag_smach.nesy_diag_smach import NeuroSymbolicDiagnosisStateMachine
 from termcolor import colored
 
@@ -44,7 +43,7 @@ if __name__ == '__main__':
         fault_paths = run_smach(instance)
 
         # compare to ground truth
-        with open(FAULT_CONTEXT_INPUT_FILE, "r") as f:
+        with open(instance, "r") as f:
             problem_instance = json.load(f)
 
         ground_truth_fault_paths = problem_instance["ground_truth_fault_paths"]
