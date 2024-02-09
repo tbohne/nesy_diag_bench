@@ -5,7 +5,6 @@
 import json
 from typing import List
 
-from nesy_diag_smach.config import FAULT_CONTEXT_INPUT_FILE
 from nesy_diag_smach.config import SIGNAL_SESSION_FILES
 from nesy_diag_smach.data_types.fault_context import FaultContext
 from nesy_diag_smach.data_types.sensor_data import SensorData
@@ -18,8 +17,8 @@ class LocalDataAccessor(DataAccessor):
     Implementation of the data accessor interface used for evaluation purposes.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, instance):
+        self.instance = instance
 
     def get_fault_context(self) -> FaultContext:
         """
@@ -27,7 +26,7 @@ class LocalDataAccessor(DataAccessor):
 
         :return: fault context data
         """
-        with open(FAULT_CONTEXT_INPUT_FILE, "r") as f:
+        with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         # only take list of error codes as input, not more
         input_error_codes = list(problem_instance["error_codes"].keys())
@@ -43,7 +42,7 @@ class LocalDataAccessor(DataAccessor):
         """
         signals = []
         # for each component we need to check the ground truth of the instance - if it should have an anomaly
-        with open(FAULT_CONTEXT_INPUT_FILE, "r") as f:
+        with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         for comp in components:
             anomaly_suffix = "NEG" if problem_instance["suspect_components"][comp][0] else "POS"
