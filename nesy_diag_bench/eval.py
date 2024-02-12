@@ -7,6 +7,7 @@ import glob
 import json
 import logging
 
+import requests
 import smach
 import tensorflow as tf
 from nesy_diag_smach.nesy_diag_smach import NeuroSymbolicDiagnosisStateMachine
@@ -15,6 +16,7 @@ from termcolor import colored
 from local_data_accessor import LocalDataAccessor
 from local_data_provider import LocalDataProvider
 from local_model_accessor import LocalModelAccessor
+from nesy_diag_bench.config import UPDATE_ENDPOINT
 from util import log_info, log_debug, log_warn, log_err
 
 
@@ -34,12 +36,29 @@ def run_smach(instance):
     return final_out
 
 
+def clear_hosted_kg():
+    clear_query = """
+        PREFIX rdfs: <http://www.w3.org/2000/01-rdf-syntax-ns#>
+        DELETE WHERE {
+            ?s ?p ?o .
+        }
+    """
+    resp = requests.post(UPDATE_ENDPOINT, data={"update": clear_query})
+    if resp.status_code == 200:
+        print("dataset successfully cleared..")
+    else:
+        print("failed to clear dataset..")
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
     parser.add_argument('--instances', type=str, required=True)
     args = parser.parse_args()
 
     for instance in glob.glob(args.instances + "/*.json"):
+        print("working on instance:", instance)
+        clear_hosted_kg()
+
         fault_paths = run_smach(instance)
 
         # compare to ground truth
