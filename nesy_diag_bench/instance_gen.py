@@ -5,10 +5,14 @@
 import argparse
 import json
 import random
+import subprocess
 from collections import defaultdict
 from typing import Dict, Tuple, List
 
+import requests
 from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
+
+from config import BACKUP_URL
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
@@ -102,15 +106,12 @@ def write_instance_to_file(
     }
     # naming scheme:
     # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
-    with open("instances/"
-              + str(len(suspect_components.keys())) + "_"
-              + str(len(error_codes.keys())) + "_"
-              + str(int(anomaly_percentage * 100)) + "_"
-              + str(int(affected_by_ub * 100)) + "_"
-              + str(int(fault_path_comp_ub * 100)) + "_"
-              + str(int(distractor_ub * 100)) + "_"
-              + str(seed) + ".json", "w") as f:
+    filename = ((str(len(suspect_components.keys())) + "_" + str(len(error_codes.keys())) + "_"
+                 + str(int(anomaly_percentage * 100)) + "_") + str(int(affected_by_ub * 100)) + "_"
+                + str(int(fault_path_comp_ub * 100)) + "_") + str(int(distractor_ub * 100)) + "_" + str(seed)
+    with open("instances/" + filename + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
+    return filename
 
 
 def find_paths_dfs(anomaly_graph, node, path=[]):
@@ -315,6 +316,17 @@ def test_complex_case():
     assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
 
 
+def create_kg_file_for_generated_instance():
+    # create KG file (.nt) - perform backup and compress result using gzip
+    response = requests.get(BACKUP_URL, headers={"Accept": "application/n-triples"})
+    if response.status_code == 200:
+        with open("instances/" + filename + ".nt", "wb") as f:
+            f.write(response.content)
+        subprocess.run(["gzip", "instances/" + filename + ".nt"])
+    else:
+        print(f"HTTP status: {response.status_code}")
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
@@ -355,10 +367,11 @@ if __name__ == '__main__':
     for k in errors.keys():
         print(k, ":", errors[k])
 
-    write_instance_to_file(
+    filename = write_instance_to_file(
         sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
         args.fault_path_comp_ub_percentage, args.distractor_ub_percentage
     )
 
     if args.extend_kg:
         add_generated_instance_to_kg(sus_comp, errors)
+        create_kg_file_for_generated_instance()
