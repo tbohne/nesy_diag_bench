@@ -53,7 +53,7 @@ def clear_hosted_kg():
 def upload_kg_for_instance(instance):
     # upload new KG file (.nt)
     kg_file = instance.replace(".json", ".nt")
-    with open(kg_file, "rb") as f:
+    with open(kg_file, "r") as f:
         resp = requests.post(DATA_ENDPOINT, data=f, headers={"Content-Type": "application/n-triples"})
     if resp.status_code == 200:
         print("kg successfully uploaded")
