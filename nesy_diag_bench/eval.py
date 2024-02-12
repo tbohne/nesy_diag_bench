@@ -13,10 +13,10 @@ import tensorflow as tf
 from nesy_diag_smach.nesy_diag_smach import NeuroSymbolicDiagnosisStateMachine
 from termcolor import colored
 
+from config import UPDATE_ENDPOINT, DATA_ENDPOINT
 from local_data_accessor import LocalDataAccessor
 from local_data_provider import LocalDataProvider
 from local_model_accessor import LocalModelAccessor
-from nesy_diag_bench.config import UPDATE_ENDPOINT
 from util import log_info, log_debug, log_warn, log_err
 
 
@@ -50,6 +50,17 @@ def clear_hosted_kg():
         print("failed to clear dataset..")
 
 
+def upload_kg_for_instance(instance):
+    # upload new KG file (.nt)
+    kg_file = instance.replace(".json", ".nt")
+    with open(kg_file, "rb") as f:
+        resp = requests.post(DATA_ENDPOINT, data=f, headers={"Content-Type": "application/n-triples"})
+    if resp.status_code == 200:
+        print("kg successfully uploaded")
+    else:
+        print("failed to upload kg", resp.text)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
     parser.add_argument('--instances', type=str, required=True)
@@ -58,6 +69,7 @@ if __name__ == '__main__':
     for instance in glob.glob(args.instances + "/*.json"):
         print("working on instance:", instance)
         clear_hosted_kg()
+        upload_kg_for_instance(instance)
 
         fault_paths = run_smach(instance)
 
