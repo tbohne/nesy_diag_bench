@@ -5,7 +5,6 @@
 import argparse
 import json
 import random
-import subprocess
 from collections import defaultdict
 from typing import Dict, Tuple, List
 
@@ -322,7 +321,6 @@ def create_kg_file_for_generated_instance(filename):
     if response.status_code == 200:
         with open("instances/" + filename + ".nt", "wb") as f:
             f.write(response.content)
-        subprocess.run(["gzip", "instances/" + filename + ".nt"])
     else:
         print(f"HTTP status: {response.status_code}")
 
