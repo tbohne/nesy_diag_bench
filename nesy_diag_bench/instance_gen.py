@@ -316,7 +316,7 @@ def test_complex_case():
     assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
 
 
-def create_kg_file_for_generated_instance():
+def create_kg_file_for_generated_instance(filename):
     # create KG file (.nt) - perform backup and compress result using gzip
     response = requests.get(BACKUP_URL, headers={"Accept": "application/n-triples"})
     if response.status_code == 200:
@@ -374,4 +374,4 @@ if __name__ == '__main__':
 
     if args.extend_kg:
         add_generated_instance_to_kg(sus_comp, errors)
-        create_kg_file_for_generated_instance()
+        create_kg_file_for_generated_instance(filename)
