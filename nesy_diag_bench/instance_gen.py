@@ -23,9 +23,10 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
     for i in range(len(ground_truth_fault_paths)):
         # gen diag associations - each code should have a number [1, n] random associated components from the
         # corresponding ground truth fault path
-        num_of_fault_path_comp = random.randint(
-            1, int(fault_path_comp_ub_percentage * len(ground_truth_fault_paths[i]))
-        )
+        if len(ground_truth_fault_paths[i]) == 1:
+            num_of_fault_path_comp = 1
+        else:
+            num_of_fault_path_comp = random.randint(1, int(fault_path_comp_ub_percentage * len(ground_truth_fault_paths[i])))
         sus_components = []
         for j in range(num_of_fault_path_comp):
             r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
