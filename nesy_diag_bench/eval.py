@@ -46,8 +46,10 @@ def clear_hosted_kg():
     resp = requests.post(UPDATE_ENDPOINT, data={"update": clear_query})
     if resp.status_code == 200:
         print("dataset successfully cleared..")
+        return True
     else:
         print("failed to clear dataset..")
+        return False
 
 
 def upload_kg_for_instance(instance):
@@ -57,8 +59,10 @@ def upload_kg_for_instance(instance):
         resp = requests.post(DATA_ENDPOINT, data=f, headers={"Content-Type": "application/n-triples"})
     if resp.status_code == 200:
         print("kg successfully uploaded")
+        return True
     else:
         print("failed to upload kg", resp.text)
+        return False
 
 
 if __name__ == '__main__':
@@ -68,8 +72,8 @@ if __name__ == '__main__':
 
     for instance in glob.glob(args.instances + "/*.json"):
         print("working on instance:", instance)
-        clear_hosted_kg()
-        upload_kg_for_instance(instance)
+        assert clear_hosted_kg()
+        assert upload_kg_for_instance(instance)
 
         fault_paths = run_smach(instance)
 
