@@ -11,7 +11,7 @@ from typing import Dict, Tuple, List
 import requests
 from nesy_diag_ontology.expert_knowledge_enhancer import ExpertKnowledgeEnhancer
 
-from config import BACKUP_URL
+from config import BACKUP_URL, UPDATE_ENDPOINT
 
 
 def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
@@ -325,6 +325,22 @@ def create_kg_file_for_generated_instance(filename):
         print(f"HTTP status: {response.status_code}")
 
 
+def clear_hosted_kg():
+    clear_query = """
+        PREFIX rdfs: <http://www.w3.org/2000/01-rdf-syntax-ns#>
+        DELETE WHERE {
+            ?s ?p ?o .
+        }
+    """
+    resp = requests.post(UPDATE_ENDPOINT, data={"update": clear_query})
+    if resp.status_code == 200:
+        print("dataset successfully cleared..")
+        return True
+    else:
+        print("failed to clear dataset..")
+        return False
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
@@ -371,5 +387,6 @@ if __name__ == '__main__':
     )
 
     if args.extend_kg:
+        assert clear_hosted_kg()
         add_generated_instance_to_kg(sus_comp, errors)
         create_kg_file_for_generated_instance(filename)
