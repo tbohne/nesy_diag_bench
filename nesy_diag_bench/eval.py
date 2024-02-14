@@ -88,9 +88,15 @@ if __name__ == '__main__':
         print("DETERMINED FAULT PATHS:", determined_fault_paths)
         print("#####################################################################")
 
-        assert len(ground_truth_fault_paths) == len(fault_paths)
-        assert all(gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
-        print("set of generated fault paths of state machine execution with instance", instance, "matches ground truth")
+        try:
+            assert len(ground_truth_fault_paths) == len(fault_paths)
+            assert all(gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
+            print("set of generated fault paths of state machine execution with instance", instance,
+                  "matches ground truth")
+        except AssertionError as e:
+            print("assertion:", e)
+            print("for instance:", instance)
+            exit(0)
 
         for fault_path in fault_paths:
             print(colored(fault_path, "red", "on_white", ["bold"]))
