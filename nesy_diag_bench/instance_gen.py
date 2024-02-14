@@ -30,9 +30,14 @@ def randomly_gen_error_codes_with_fault_cond_and_suspect_components(
             num_of_fault_path_comp = random.randint(1, ub)
         sus_components = []
         for j in range(num_of_fault_path_comp):
-            r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
-            while ground_truth_fault_paths[i][r] in sus_components:
+            # the first one always has to be the "anti-root-cause" so that all components are reachable via affected-by
+            if j == 0:
+                # the "anti-root-cause", the beginning of the "affected-by-chain"
+                r = len(ground_truth_fault_paths[i]) - 1
+            else:
                 r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
+                while ground_truth_fault_paths[i][r] in sus_components:
+                    r = random.randint(0, len(ground_truth_fault_paths[i]) - 1)
             sus_components.append(ground_truth_fault_paths[i][r])
 
         # also add some "distractors", i.e., include some suspect components that are not part of the fault path
