@@ -10,7 +10,7 @@ import logging
 import requests
 import smach
 import tensorflow as tf
-from nesy_diag_smach.nesy_diag_smach import NeuroSymbolicDiagnosisStateMachine
+from nesy_diag_smach.nesy_diag_state_machine import NeuroSymbolicDiagnosisStateMachine
 from termcolor import colored
 
 from config import UPDATE_ENDPOINT, DATA_ENDPOINT
@@ -28,7 +28,7 @@ def run_smach(instance):
     model_acc = LocalModelAccessor()
     data_prov = LocalDataProvider()
 
-    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov)
+    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=False)
     tf.get_logger().setLevel(logging.ERROR)
     sm.execute()
     final_out = sm.userdata.final_output
