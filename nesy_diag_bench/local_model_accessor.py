@@ -4,10 +4,9 @@
 
 from typing import Union, Tuple
 
-from tensorflow import keras
-
 from nesy_diag_smach.config import TRAINED_MODEL_POOL
 from nesy_diag_smach.interfaces.model_accessor import ModelAccessor
+from tensorflow import keras
 
 
 class LocalModelAccessor(ModelAccessor):
@@ -15,8 +14,13 @@ class LocalModelAccessor(ModelAccessor):
     Implementation of the model accessor interface for evaluation purposes.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, verbose: bool = False):
+        """
+        Initializes the local model accessor.
+
+        :param verbose: sets verbosity of model accessor
+        """
+        self.verbose = verbose
 
     def get_keras_univariate_ts_classification_model_by_component(
             self, component: str
@@ -35,7 +39,8 @@ class LocalModelAccessor(ModelAccessor):
         """
         try:
             trained_model_file = TRAINED_MODEL_POOL + component + ".h5"
-            print("loading trained model:", trained_model_file)
+            if self.verbose:
+                print("loading trained model:", trained_model_file)
             model_meta_info = {
                 "normalization_method": "z_norm",
                 "model_id": "keras_univariate_ts_classification_model_001"
