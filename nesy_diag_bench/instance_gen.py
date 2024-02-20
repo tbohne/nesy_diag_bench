@@ -103,7 +103,7 @@ def add_generated_instance_to_kg(
 
 def write_instance_to_file(
         suspect_components, ground_truth_fault_paths, error_codes, seed, anomaly_percentage, affected_by_ub,
-        fault_path_comp_ub, distractor_ub
+        fault_path_comp_ub, distractor_ub, idx
 ):
     data = {
         "suspect_components": suspect_components,
@@ -112,9 +112,10 @@ def write_instance_to_file(
     }
     # naming scheme:
     # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
-    filename = ((str(len(suspect_components.keys())) + "_" + str(len(error_codes.keys())) + "_"
-                 + str(int(anomaly_percentage * 100)) + "_") + str(int(affected_by_ub * 100)) + "_"
-                + str(int(fault_path_comp_ub * 100)) + "_") + str(int(distractor_ub * 100)) + "_" + str(seed)
+    filename = (str(len(suspect_components.keys())) + "_" + str(len(error_codes.keys())) + "_"
+                + str(int(anomaly_percentage * 100)) + "_" + str(int(affected_by_ub * 100)) + "_"
+                + str(int(fault_path_comp_ub * 100)) + "_" + str(int(distractor_ub * 100)) + "_"
+                + str(seed) + "_" + str(idx))
     with open("instances/" + filename + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
     return filename
@@ -348,6 +349,35 @@ def clear_hosted_kg():
         return False
 
 
+def test_basic_functionality():
+    # test basic functionality of instance / fault path generation
+    test_branching_fault_path_instance_one()
+    test_branching_fault_path_instance_two()
+    test_simple_fault_path()
+    test_simple_two_fault_paths()
+    test_several_fault_paths()
+    test_complex_case()
+
+
+def generate_instance(args, idx):
+    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
+        args.components, args.anomaly_percentage, args.affected_by_ub_percentage
+    )
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(sus_comp)
+    errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
+        ground_truth_fault_paths, list(sus_comp.keys()), args.fault_path_comp_ub_percentage,
+        args.distractor_ub_percentage
+    )
+    filename = write_instance_to_file(
+        sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
+        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage, idx
+    )
+    if args.extend_kg:
+        assert clear_hosted_kg()
+        add_generated_instance_to_kg(sus_comp, errors)
+        create_kg_file_for_generated_instance(filename)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Randomly generate parametrized NeSy diag problem instances.')
     parser.add_argument('--seed', type=int, default=42)
@@ -357,43 +387,12 @@ if __name__ == '__main__':
     parser.add_argument('--affected-by-ub-percentage', type=float, default=0.4)
     parser.add_argument('--fault-path-comp-ub-percentage', type=float, default=1)
     parser.add_argument('--distractor-ub-percentage', type=float, default=0.5)
+    parser.add_argument('--instances-per-conf', type=int, default=1)
     args = parser.parse_args()
 
     random.seed(args.seed)
+    test_basic_functionality()
 
-    # test basic functionality of instance / fault path generation
-    test_branching_fault_path_instance_one()
-    test_branching_fault_path_instance_two()
-    test_simple_fault_path()
-    test_simple_two_fault_paths()
-    test_several_fault_paths()
-    test_complex_case()
-
-    print("COMPONENTS:")
-    sus_comp = randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
-        args.components, args.anomaly_percentage, args.affected_by_ub_percentage
-    )
-    for k in sus_comp.keys():
-        print(k, ":", sus_comp[k])
-
-    print("GROUND TRUTH FAULT PATHS:")
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(sus_comp)
-    print(ground_truth_fault_paths)
-
-    print("ERRORS:")
-    errors = randomly_gen_error_codes_with_fault_cond_and_suspect_components(
-        ground_truth_fault_paths, list(sus_comp.keys()), args.fault_path_comp_ub_percentage,
-        args.distractor_ub_percentage
-    )
-    for k in errors.keys():
-        print(k, ":", errors[k])
-
-    filename = write_instance_to_file(
-        sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
-        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage
-    )
-
-    if args.extend_kg:
-        assert clear_hosted_kg()
-        add_generated_instance_to_kg(sus_comp, errors)
-        create_kg_file_for_generated_instance(filename)
+    for i in range(args.instances_per_conf):
+        print("gen inst")
+        generate_instance(args, i)
