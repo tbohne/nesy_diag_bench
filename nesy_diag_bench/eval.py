@@ -20,7 +20,7 @@ from local_model_accessor import LocalModelAccessor
 from util import log_info, log_debug, log_warn, log_err
 
 
-def run_smach(instance):
+def run_smach(instance, verbose):
     smach.set_loggers(log_info, log_debug, log_warn, log_err)  # set custom logging functions
 
     # init local implementations of I/O interfaces
@@ -32,7 +32,8 @@ def run_smach(instance):
     tf.get_logger().setLevel(logging.ERROR)
     sm.execute()
     final_out = sm.userdata.final_output
-    print("final output of smach execution (fault path(s)):", final_out)
+    if verbose:
+        print("final output of smach execution (fault path(s)):", final_out)
     return final_out
 
 
@@ -68,6 +69,7 @@ def upload_kg_for_instance(instance):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
     parser.add_argument('--instances', type=str, required=True)
+    parser.add_argument('--v', action='store_true')
     args = parser.parse_args()
 
     for instance in glob.glob(args.instances + "/*.json"):
@@ -75,7 +77,7 @@ if __name__ == '__main__':
         assert clear_hosted_kg()
         assert upload_kg_for_instance(instance)
 
-        fault_paths = run_smach(instance)
+        fault_paths = run_smach(instance, args.v)
 
         # compare to ground truth
         with open(instance, "r") as f:
@@ -83,20 +85,21 @@ if __name__ == '__main__':
 
         ground_truth_fault_paths = problem_instance["ground_truth_fault_paths"]
         determined_fault_paths = [path.split(" -> ") for path in fault_paths]
-        print("#####################################################################")
-        print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
-        print("DETERMINED FAULT PATHS:", determined_fault_paths)
-        print("#####################################################################")
+        if args.v:
+            print("#####################################################################")
+            print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
+            print("DETERMINED FAULT PATHS:", determined_fault_paths)
+            print("#####################################################################")
 
         try:
             assert len(ground_truth_fault_paths) == len(fault_paths)
             assert all(gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
-            print("set of generated fault paths of state machine execution with instance", instance,
-                  "matches ground truth")
+            print("..gen fault paths for", instance, "match ground truth..")
         except AssertionError as e:
             print("assertion:", e)
             print("for instance:", instance)
             exit(0)
 
-        for fault_path in fault_paths:
-            print(colored(fault_path, "red", "on_white", ["bold"]))
+        if args.v:
+            for fault_path in fault_paths:
+                print(colored(fault_path, "red", "on_white", ["bold"]))
