@@ -83,7 +83,7 @@ def randomly_gen_suspect_components_with_affected_by_relations_and_anomalies(
 def add_generated_instance_to_kg(
         suspect_components: Dict[str, Tuple[bool, List[str]]], error_codes: Dict[str, Tuple[str, List[str]]]
 ) -> None:
-    expert_knowledge_enhancer = ExpertKnowledgeEnhancer()
+    expert_knowledge_enhancer = ExpertKnowledgeEnhancer(verbose=False)
 
     for k in suspect_components.keys():
         # init each component without any affected_by relations
