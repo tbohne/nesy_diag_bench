@@ -28,7 +28,7 @@ def run_smach(instance, verbose):
     model_acc = LocalModelAccessor()
     data_prov = LocalDataProvider()
 
-    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=False)
+    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=verbose)
     tf.get_logger().setLevel(logging.ERROR)
     sm.execute()
     final_out = sm.userdata.final_output
@@ -96,7 +96,9 @@ if __name__ == '__main__':
             assert all(gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
             print("..gen fault paths for", instance, "match ground truth..")
         except AssertionError as e:
-            print("assertion:", e)
+            print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
+            print("DETERMINED FAULT PATHS:", determined_fault_paths)
+            print("assertion error:", e)
             print("for instance:", instance)
             exit(0)
 
