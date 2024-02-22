@@ -22,6 +22,6 @@ $ python nesy_diag_bench/eval.py --instances instances/
 
 ## Component -> UCR-Dataset Mapping
 
-|component | dataset        | model | test_data |
-|----------|----------------|-------| --------- |
-| C0       | Coffee (ID 10) | C0.h5 | C0.tsv    |
+|component | dataset        | model | test_data | precision | accuracy | recall | architecture | #train | #test | len    | #classes | desc                                          |
+|----------|----------------|-------|-----------|-----------|----------|--------|--------------|--------|-------|--------|----------|-----------------------------------------------|
+| C0       | Coffee (ID 10) | C0.h5 | C0.tsv    | 1.0       | 1.0      | 1.0    | FCN          | 28     | 28    | 286    | 2        | spectrographs: dist. Robusta / Arabica coffee |
