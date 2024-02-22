@@ -394,5 +394,5 @@ if __name__ == '__main__':
     test_basic_functionality()
 
     for i in range(args.instances_per_conf):
-        print("gen inst")
+        print("gen instance", i)
         generate_instance(args, i)

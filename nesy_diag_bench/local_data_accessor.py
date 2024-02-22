@@ -5,11 +5,11 @@
 import json
 from typing import List
 
+import pandas as pd
 from nesy_diag_smach.config import SIGNAL_SESSION_FILES
 from nesy_diag_smach.data_types.fault_context import FaultContext
 from nesy_diag_smach.data_types.sensor_data import SensorData
 from nesy_diag_smach.interfaces.data_accessor import DataAccessor
-from oscillogram_classification import preprocess
 
 
 class LocalDataAccessor(DataAccessor):
@@ -45,11 +45,26 @@ class LocalDataAccessor(DataAccessor):
         with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         for comp in components:
-            anomaly_suffix = "NEG" if problem_instance["suspect_components"][comp][0] else "POS"
-            path = "res/" + SIGNAL_SESSION_FILES + "/" + comp + "/dummy_signal_" + anomaly_suffix + ".csv"
-            _, values = preprocess.read_oscilloscope_recording(path, verbose=False)
+            ground_truth_label = "0" if problem_instance["suspect_components"][comp][0] else "1"
+            # TODO: each comp should have its own associated data, not all C0
+            # path = "res/" + SIGNAL_SESSION_FILES + "/" + comp + ".tsv"
+            path = "res/" + SIGNAL_SESSION_FILES + "/" + "C0" + ".tsv"
+            # parse one signal from tsv file
+            _, values = self.read_ucr_recording(path, ground_truth_label)
             signals.append(SensorData(values, comp))
         return signals
+
+    @staticmethod
+    def read_ucr_recording(path, ground_truth_label):
+        # TODO: should be random from those with ground_truth_label
+        sample_idx = 4
+        # dataframe containing all signals from the dataset + label in col 0
+        df = pd.read_csv(path, delimiter='\t', header=None, na_values=['-∞', '∞'])
+        selected_sample_label = int(df.iloc[sample_idx].to_list()[0])
+        selected_sample_values = df.iloc[sample_idx].to_list()[1:]
+        print("label:", selected_sample_label)
+        print("signal:", selected_sample_values[:10])
+        return selected_sample_label, selected_sample_values
 
     def get_manual_judgement_for_component(self, component: str) -> bool:
         """
