@@ -19,3 +19,9 @@ $ python nesy_diag_bench/eval.py --instances instances/
 ```
 <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>_<idx>.json
 ```
+
+## Component-Dataset Mapping
+
+|component | dataset        | model | test_data |
+|----------|----------------|-------| --------- |
+| C0       | Coffee (ID 10) | C0.h5 | C0.tsv    |
