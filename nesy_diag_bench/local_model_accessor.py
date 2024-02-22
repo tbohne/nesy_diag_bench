@@ -39,6 +39,9 @@ class LocalModelAccessor(ModelAccessor):
         """
         try:
             trained_model_file = TRAINED_MODEL_POOL + component + ".h5"
+
+            # TODO: find out whether the models in `dl-4-ts` are trained on raw signals
+
             if self.verbose:
                 print("loading trained model:", trained_model_file)
             model_meta_info = {
