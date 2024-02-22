@@ -20,7 +20,7 @@ $ python nesy_diag_bench/eval.py --instances instances/
 <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>_<idx>.json
 ```
 
-## Component-Dataset Mapping
+## Component -> UCR-Dataset Mapping
 
 |component | dataset        | model | test_data |
 |----------|----------------|-------| --------- |
