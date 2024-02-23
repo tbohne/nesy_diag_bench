@@ -45,6 +45,7 @@ class LocalDataAccessor(DataAccessor):
         with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         for comp in components:
+            # we consider class 0 as anomaly
             ground_truth_label = "0" if problem_instance["suspect_components"][comp][0] else "1"
             # TODO: each comp should have its own associated data, not all C0
             # path = "res/" + SIGNAL_SESSION_FILES + "/" + comp + ".tsv"
@@ -57,7 +58,7 @@ class LocalDataAccessor(DataAccessor):
     @staticmethod
     def read_ucr_recording(path, ground_truth_label):
         # TODO: should be random from those with ground_truth_label
-        sample_idx = 4
+        sample_idx = 4 if ground_truth_label == "0" else 25
         # dataframe containing all signals from the dataset + label in col 0
         df = pd.read_csv(path, delimiter='\t', header=None, na_values=['-∞', '∞'])
         selected_sample_label = int(df.iloc[sample_idx].to_list()[0])

@@ -38,7 +38,9 @@ class LocalModelAccessor(ModelAccessor):
         :return: trained model and model meta info dictionary or `None` if unavailable
         """
         try:
-            trained_model_file = TRAINED_MODEL_POOL + component + ".h5"
+            # TODO: there should be a model for each component
+            # trained_model_file = TRAINED_MODEL_POOL + component + ".h5"
+            trained_model_file = TRAINED_MODEL_POOL + "C0" + ".h5"
 
             # TODO: find out whether the models in `dl-4-ts` are trained on raw signals
 
