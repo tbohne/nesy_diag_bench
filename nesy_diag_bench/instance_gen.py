@@ -372,7 +372,9 @@ def generate_instance(args, idx):
     sim_accuracies = []
     if args.sim_classification_models:
         # we need a model, i.e., acc, for each component
-        sim_accuracies = {comp: random.uniform(args.model_acc_lb, args.model_acc_ub) for comp in sus_comp.keys()}
+        sim_accuracies = {comp: (
+            random.uniform(args.model_acc_lb, args.model_acc_ub), sus_comp[comp][0]
+        ) for comp in sus_comp.keys()}
 
     filename = write_instance_to_file(
         sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
