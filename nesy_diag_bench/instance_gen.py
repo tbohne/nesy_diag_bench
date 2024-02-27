@@ -103,12 +103,13 @@ def add_generated_instance_to_kg(
 
 def write_instance_to_file(
         suspect_components, ground_truth_fault_paths, error_codes, seed, anomaly_percentage, affected_by_ub,
-        fault_path_comp_ub, distractor_ub, idx
+        fault_path_comp_ub, distractor_ub, idx, sim_accuracies
 ):
     data = {
         "suspect_components": suspect_components,
         "ground_truth_fault_paths": ground_truth_fault_paths,
-        "error_codes": error_codes
+        "error_codes": error_codes,
+        "sim-accuracies": sim_accuracies
     }
     # naming scheme:
     # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
@@ -368,9 +369,14 @@ def generate_instance(args, idx):
         ground_truth_fault_paths, list(sus_comp.keys()), args.fault_path_comp_ub_percentage,
         args.distractor_ub_percentage
     )
+    sim_accuracies = []
+    if args.sim_classification_models:
+        # we need a model, i.e., acc, for each component
+        sim_accuracies = [random.uniform(args.model_acc_lb, args.model_acc_ub) for _ in range(len(sus_comp.keys()))]
+
     filename = write_instance_to_file(
         sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
-        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage, idx
+        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage, idx, sim_accuracies
     )
     if args.extend_kg:
         assert clear_hosted_kg()
@@ -388,6 +394,9 @@ if __name__ == '__main__':
     parser.add_argument('--fault-path-comp-ub-percentage', type=float, default=1)
     parser.add_argument('--distractor-ub-percentage', type=float, default=0.5)
     parser.add_argument('--instances-per-conf', type=int, default=1)
+    parser.add_argument('--sim-classification-models', action='store_true', default=False)
+    parser.add_argument('--model-acc-lb', type=float, default=0.6)
+    parser.add_argument('--model-acc-ub', type=float, default=0.95)
     args = parser.parse_args()
 
     random.seed(args.seed)
