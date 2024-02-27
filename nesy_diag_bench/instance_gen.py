@@ -109,7 +109,7 @@ def write_instance_to_file(
         "suspect_components": suspect_components,
         "ground_truth_fault_paths": ground_truth_fault_paths,
         "error_codes": error_codes,
-        "sim-accuracies": sim_accuracies
+        "sim_accuracies": sim_accuracies
     }
     # naming scheme:
     # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
@@ -372,7 +372,7 @@ def generate_instance(args, idx):
     sim_accuracies = []
     if args.sim_classification_models:
         # we need a model, i.e., acc, for each component
-        sim_accuracies = [random.uniform(args.model_acc_lb, args.model_acc_ub) for _ in range(len(sus_comp.keys()))]
+        sim_accuracies = {comp: random.uniform(args.model_acc_lb, args.model_acc_ub) for comp in sus_comp.keys()}
 
     filename = write_instance_to_file(
         sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
