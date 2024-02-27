@@ -25,7 +25,7 @@ def run_smach(instance, verbose):
 
     # init local implementations of I/O interfaces
     data_acc = LocalDataAccessor(instance)
-    model_acc = LocalModelAccessor()
+    model_acc = LocalModelAccessor(instance)
     data_prov = LocalDataProvider()
 
     sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=verbose)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # @author Tim Bohne
 
+import json
 from typing import Union, Tuple
 
 from nesy_diag_smach.config import TRAINED_MODEL_POOL
@@ -14,13 +15,15 @@ class LocalModelAccessor(ModelAccessor):
     Implementation of the model accessor interface for evaluation purposes.
     """
 
-    def __init__(self, verbose: bool = False):
+    def __init__(self, instance, verbose: bool = False):
         """
         Initializes the local model accessor.
 
         :param verbose: sets verbosity of model accessor
+        :param instance: problem instance to be solved
         """
         self.verbose = verbose
+        self.instance = instance
 
     def get_keras_univariate_ts_classification_model_by_component(
             self, component: str
@@ -54,3 +57,8 @@ class LocalModelAccessor(ModelAccessor):
         except OSError as e:
             print("no trained model available for the signal (component) to be classified:", component)
             print("ERROR:", e)
+
+    def get_sim_univariate_ts_classification_model_by_component(self, component: str) -> float:
+        with open(self.instance, "r") as f:
+            problem_instance = json.load(f)
+        return problem_instance["sim_accuracies"][component]
