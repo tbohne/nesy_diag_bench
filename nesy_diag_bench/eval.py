@@ -13,14 +13,14 @@ import tensorflow as tf
 from nesy_diag_smach.nesy_diag_state_machine import NeuroSymbolicDiagnosisStateMachine
 from termcolor import colored
 
-from config import UPDATE_ENDPOINT, DATA_ENDPOINT
+from config import UPDATE_ENDPOINT, DATA_ENDPOINT, SESSION_DIR, SIM_CLASSIFICATION_LOG_FILE
 from local_data_accessor import LocalDataAccessor
 from local_data_provider import LocalDataProvider
 from local_model_accessor import LocalModelAccessor
 from util import log_info, log_debug, log_warn, log_err
 
 
-def run_smach(instance, verbose, sim_models):
+def run_smach(instance, verbose, sim_models, seed):
     smach.set_loggers(log_info, log_debug, log_warn, log_err)  # set custom logging functions
 
     # init local implementations of I/O interfaces
@@ -28,7 +28,9 @@ def run_smach(instance, verbose, sim_models):
     model_acc = LocalModelAccessor(instance)
     data_prov = LocalDataProvider()
 
-    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=verbose, sim_models=sim_models)
+    sm = NeuroSymbolicDiagnosisStateMachine(
+        data_acc, model_acc, data_prov, verbose=verbose, sim_models=sim_models, seed=seed
+    )
     tf.get_logger().setLevel(logging.ERROR)
     sm.execute()
     final_out = sm.userdata.final_output
@@ -66,6 +68,20 @@ def upload_kg_for_instance(instance):
         return False
 
 
+def evaluate_instance_res(ground_truth_fault_paths, determined_fault_paths):
+    # read sim classification log
+    with open(SESSION_DIR + "/" + SIM_CLASSIFICATION_LOG_FILE, "r") as f:
+        log_file = json.load(f)
+        for classification in log_file:
+            comp = list(classification.keys())[0]
+            pred = classification[comp]
+            model_acc = classification["Model Accuracy"]
+            pred_val = classification["Predicted Value"]
+            ground_truth_anomaly = classification["Ground Truth Anomaly"]
+            print("--", comp, "pred:", pred, "model acc:", model_acc, "pred val:", pred_val, "gt:",
+                  ground_truth_anomaly)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
     parser.add_argument('--instances', type=str, required=True)
@@ -77,8 +93,8 @@ if __name__ == '__main__':
         print("working on instance:", instance)
         assert clear_hosted_kg()
         assert upload_kg_for_instance(instance)
-
-        fault_paths = run_smach(instance, args.v, args.sim)
+        seed = instance.split("_")[-2]
+        fault_paths = run_smach(instance, args.v, args.sim, seed)
 
         # compare to ground truth
         with open(instance, "r") as f:
@@ -91,6 +107,8 @@ if __name__ == '__main__':
             print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
             print("DETERMINED FAULT PATHS:", determined_fault_paths)
             print("#####################################################################")
+
+        evaluate_instance_res(ground_truth_fault_paths, determined_fault_paths)
 
         try:
             assert len(ground_truth_fault_paths) == len(fault_paths)
