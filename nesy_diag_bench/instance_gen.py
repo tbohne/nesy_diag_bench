@@ -373,7 +373,7 @@ def generate_instance(args, idx):
     if args.sim_classification_models:
         # we need a model, i.e., acc, for each component
         sim_accuracies = {comp: (
-            random.uniform(args.model_acc_lb, args.model_acc_ub), sus_comp[comp][0]
+            str(random.uniform(args.model_acc_lb, args.model_acc_ub)), str(sus_comp[comp][0])
         ) for comp in sus_comp.keys()}
 
     filename = write_instance_to_file(
