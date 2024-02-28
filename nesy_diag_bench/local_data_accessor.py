@@ -63,8 +63,8 @@ class LocalDataAccessor(DataAccessor):
         df = pd.read_csv(path, delimiter='\t', header=None, na_values=['-∞', '∞'])
         selected_sample_label = int(df.iloc[sample_idx].to_list()[0])
         selected_sample_values = df.iloc[sample_idx].to_list()[1:]
-        print("label:", selected_sample_label)
-        print("signal:", selected_sample_values[:10])
+        #print("label:", selected_sample_label)
+        #print("signal:", selected_sample_values[:10])
         return selected_sample_label, selected_sample_values
 
     def get_manual_judgement_for_component(self, component: str) -> bool:

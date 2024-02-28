@@ -3,7 +3,7 @@
 # @author Tim Bohne
 
 import json
-from typing import Union, Tuple
+from typing import Union, Tuple, List
 
 from nesy_diag_smach.config import TRAINED_MODEL_POOL
 from nesy_diag_smach.interfaces.model_accessor import ModelAccessor
@@ -58,7 +58,7 @@ class LocalModelAccessor(ModelAccessor):
             print("no trained model available for the signal (component) to be classified:", component)
             print("ERROR:", e)
 
-    def get_sim_univariate_ts_classification_model_by_component(self, component: str) -> float:
+    def get_sim_univariate_ts_classification_model_by_component(self, component: str) -> List[str]:
         with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         return problem_instance["sim_accuracies"][component]
