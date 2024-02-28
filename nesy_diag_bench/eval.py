@@ -20,7 +20,7 @@ from local_model_accessor import LocalModelAccessor
 from util import log_info, log_debug, log_warn, log_err
 
 
-def run_smach(instance, verbose):
+def run_smach(instance, verbose, sim_models):
     smach.set_loggers(log_info, log_debug, log_warn, log_err)  # set custom logging functions
 
     # init local implementations of I/O interfaces
@@ -28,7 +28,7 @@ def run_smach(instance, verbose):
     model_acc = LocalModelAccessor(instance)
     data_prov = LocalDataProvider()
 
-    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=verbose)
+    sm = NeuroSymbolicDiagnosisStateMachine(data_acc, model_acc, data_prov, verbose=verbose, sim_models=sim_models)
     tf.get_logger().setLevel(logging.ERROR)
     sm.execute()
     final_out = sm.userdata.final_output
@@ -69,7 +69,8 @@ def upload_kg_for_instance(instance):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
     parser.add_argument('--instances', type=str, required=True)
-    parser.add_argument('--v', action='store_true')
+    parser.add_argument('--v', action='store_true', default=False)
+    parser.add_argument('--sim', action='store_true', default=False)
     args = parser.parse_args()
 
     for instance in glob.glob(args.instances + "/*.json"):
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         assert clear_hosted_kg()
         assert upload_kg_for_instance(instance)
 
-        fault_paths = run_smach(instance, args.v)
+        fault_paths = run_smach(instance, args.v, args.sim)
 
         # compare to ground truth
         with open(instance, "r") as f:
