@@ -3,9 +3,11 @@
 # @author Tim Bohne
 
 import argparse
+import csv
 import glob
 import json
 import logging
+import os
 
 import requests
 import smach
@@ -68,18 +70,103 @@ def upload_kg_for_instance(instance):
         return False
 
 
-def evaluate_instance_res(ground_truth_fault_paths, determined_fault_paths):
+def get_causal_links_from_fault_paths(fault_paths):
+    links = []
+    for fp in fault_paths:
+        for i in range(len(fp) - 1):
+            links.append(fp[i] + "->" + fp[i + 1])
+    return links
+
+
+def write_instance_res_to_csv(
+        instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
+        found_anomaly_links_percentage
+):
+    instance = instance.split("/")[1].replace(".json", "")
+    filename = instance.replace("_" + instance.split("_")[-1], "") + ".csv"
+    file_exists = os.path.isfile(filename)
+    with open(filename, mode='a', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        if not file_exists:
+            writer.writerow(
+                ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc"]
+            )
+        writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
+                         found_anomaly_links_percentage])
+
+
+def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths):
+    true_positives = []
+    false_positives = []
+    true_negatives = []
+    false_negatives = []
+    num_of_fp_deviation = abs(len(ground_truth_fault_paths) - len(determined_fault_paths))
+
+    causal_links_pred = get_causal_links_from_fault_paths(determined_fault_paths)
+    causal_links_ground_truth = get_causal_links_from_fault_paths(ground_truth_fault_paths)
+
+    identified_causal_links = 0
+    for link in causal_links_ground_truth:
+        if link in causal_links_pred:
+            identified_causal_links += 1
+
     # read sim classification log
     with open(SESSION_DIR + "/" + SIM_CLASSIFICATION_LOG_FILE, "r") as f:
         log_file = json.load(f)
         for classification in log_file:
             comp = list(classification.keys())[0]
-            pred = classification[comp]
+            pred_anomaly = classification[comp]
             model_acc = classification["Model Accuracy"]
             pred_val = classification["Predicted Value"]
             ground_truth_anomaly = classification["Ground Truth Anomaly"]
-            print("--", comp, "pred:", pred, "model acc:", model_acc, "pred val:", pred_val, "gt:",
-                  ground_truth_anomaly)
+            print("--", comp, "pred:", pred_anomaly, "model acc:", round(model_acc, 2), "pred val:",
+                  round(pred_val, 2), "gt:", ground_truth_anomaly)
+
+            if pred_anomaly == ground_truth_anomaly:  # true
+                if pred_anomaly:
+                    true_positives.append(comp)
+                else:
+                    true_negatives.append(comp)
+            else:  # false
+                if pred_anomaly:
+                    false_positives.append(comp)
+                else:
+                    false_negatives.append(comp)
+
+    tp = len(true_positives)
+    tn = len(true_negatives)
+    fp = len(false_positives)
+    fn = len(false_negatives)
+    print("---- confusion matrix ----")
+    print("TP:", tp)
+    print("TN:", tn)
+    print("FP:", fp)
+    print("FN (unidentified anomalies):", fn)
+    print("--------")
+    print("num of fault path deviation:", num_of_fp_deviation)
+    # ratio of correct prediction to all predictions
+    accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)
+    # ratio of true pos to all pos
+    precision = round(float(tp) / (tp + fp), 2)
+    print("accuracy:", accuracy, 2)
+    print("precision:", precision)
+    # how well are we able to recall the problems
+    recall = round((float(tp) / (tp + fn)), 2)
+    print("recall aka sensitivity:", recall)
+    # ratio of true neg to all neg
+    specificity = round(float(tn) / (fp + tn), 2)
+    print("specificity:", specificity)
+    f1 = round((2 * precision * recall) / (precision + recall), 2)
+    print("f1-score:", f1)
+    if identified_causal_links == len(causal_links_ground_truth):
+        found_anomaly_links_percentage = 100.0
+    else:
+        found_anomaly_links_percentage = float(identified_causal_links) / len(causal_links_ground_truth)
+    print("percentage of correctly identified causal links between anomalies:", found_anomaly_links_percentage, "%")
+    write_instance_res_to_csv(
+        instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
+        found_anomaly_links_percentage
+    )
 
 
 if __name__ == '__main__':
@@ -108,7 +195,7 @@ if __name__ == '__main__':
             print("DETERMINED FAULT PATHS:", determined_fault_paths)
             print("#####################################################################")
 
-        evaluate_instance_res(ground_truth_fault_paths, determined_fault_paths)
+        evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths)
 
         try:
             assert len(ground_truth_fault_paths) == len(fault_paths)
