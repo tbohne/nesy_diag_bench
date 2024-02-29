@@ -81,7 +81,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc
+        found_anomaly_links_percentage, avg_model_acc, gt_match
 ):
     instance = instance.split("/")[1].replace(".json", "")
     filename = instance.replace("_" + instance.split("_")[-1], "") + ".csv"
@@ -91,10 +91,10 @@ def write_instance_res_to_csv(
         if not file_exists:
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
-                 "avg_model_acc"]
+                 "avg_model_acc", "gt_match"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc])
+                         found_anomaly_links_percentage, avg_model_acc, gt_match])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths):
@@ -168,9 +168,15 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     else:
         found_anomaly_links_percentage = float(identified_causal_links) / len(causal_links_ground_truth)
     print("percentage of correctly identified causal links between anomalies:", found_anomaly_links_percentage, "%")
+
+    gt_match = len(ground_truth_fault_paths) == len(determined_fault_paths) and all(
+        gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
+    if gt_match:
+        print("..gen fault paths for", instance, "match ground truth..")
+
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, round(np.average(model_accuracies), 2)
+        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match
     )
 
 
@@ -201,17 +207,6 @@ if __name__ == '__main__':
             print("#####################################################################")
 
         evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths)
-
-        try:
-            assert len(ground_truth_fault_paths) == len(fault_paths)
-            assert all(gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
-            print("..gen fault paths for", instance, "match ground truth..")
-        except AssertionError as e:
-            print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
-            print("DETERMINED FAULT PATHS:", determined_fault_paths)
-            print("assertion error:", e)
-            print("for instance:", instance)
-            exit(0)
 
         if args.v:
             for fault_path in fault_paths:
