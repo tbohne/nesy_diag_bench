@@ -84,7 +84,8 @@ def write_instance_res_to_csv(
         found_anomaly_links_percentage, avg_model_acc, gt_match
 ):
     instance = instance.split("/")[1].replace(".json", "")
-    filename = instance.replace("_" + instance.split("_")[-1], "") + ".csv"
+    idx_suffix = "_" + instance.split("_")[-1]
+    filename = instance[:len(instance) - len(idx_suffix)] + ".csv"
     file_exists = os.path.isfile(filename)
     with open(filename, mode='a', newline='') as csv_file:
         writer = csv.writer(csv_file)
