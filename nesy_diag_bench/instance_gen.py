@@ -103,7 +103,7 @@ def add_generated_instance_to_kg(
 
 def write_instance_to_file(
         suspect_components, ground_truth_fault_paths, error_codes, seed, anomaly_percentage, affected_by_ub,
-        fault_path_comp_ub, distractor_ub, idx, sim_accuracies
+        fault_path_comp_ub, distractor_ub, idx, sim_accuracies, model_acc_lb, model_acc_ub
 ):
     data = {
         "suspect_components": suspect_components,
@@ -112,10 +112,11 @@ def write_instance_to_file(
         "sim_accuracies": sim_accuracies
     }
     # naming scheme:
-    # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>.json
+    # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<model_acc_lb>_<model_acc_ub>_<seed>_<idx>.json
     filename = (str(len(suspect_components.keys())) + "_" + str(len(error_codes.keys())) + "_"
                 + str(int(anomaly_percentage * 100)) + "_" + str(int(affected_by_ub * 100)) + "_"
                 + str(int(fault_path_comp_ub * 100)) + "_" + str(int(distractor_ub * 100)) + "_"
+                + str(int(model_acc_lb * 100)) + "_" + str(int(model_acc_ub * 100)) + "_"
                 + str(seed) + "_" + str(idx))
     with open("instances/" + filename + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
@@ -378,7 +379,8 @@ def generate_instance(args, idx):
 
     filename = write_instance_to_file(
         sus_comp, ground_truth_fault_paths, errors, args.seed, args.anomaly_percentage, args.affected_by_ub_percentage,
-        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage, idx, sim_accuracies
+        args.fault_path_comp_ub_percentage, args.distractor_ub_percentage, idx, sim_accuracies, args.model_acc_lb,
+        args.model_acc_ub
     )
     if args.extend_kg:
         assert clear_hosted_kg()
