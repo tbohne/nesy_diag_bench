@@ -113,7 +113,7 @@ def write_instance_to_file(
     }
     # naming scheme:
     # <num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<model_acc_lb>_<model_acc_ub>_<seed>_<idx>.json
-    filename = (str(len(suspect_components.keys())) + "_" + str(len(error_codes.keys())) + "_"
+    filename = (str(len(suspect_components.keys())) + "_"
                 + str(int(anomaly_percentage * 100)) + "_" + str(int(affected_by_ub * 100)) + "_"
                 + str(int(fault_path_comp_ub * 100)) + "_" + str(int(distractor_ub * 100)) + "_"
                 + str(int(model_acc_lb * 100)) + "_" + str(int(model_acc_ub * 100)) + "_"
