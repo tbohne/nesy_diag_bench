@@ -9,6 +9,7 @@ import json
 import logging
 import os
 
+import numpy as np
 import requests
 import smach
 import tensorflow as tf
@@ -80,7 +81,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage
+        found_anomaly_links_percentage, avg_model_acc
 ):
     instance = instance.split("/")[1].replace(".json", "")
     filename = instance.replace("_" + instance.split("_")[-1], "") + ".csv"
@@ -89,10 +90,11 @@ def write_instance_res_to_csv(
         writer = csv.writer(csv_file)
         if not file_exists:
             writer.writerow(
-                ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc"]
+                ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
+                 "avg_model_acc"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage])
+                         found_anomaly_links_percentage, avg_model_acc])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths):
@@ -105,6 +107,8 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     causal_links_pred = get_causal_links_from_fault_paths(determined_fault_paths)
     causal_links_ground_truth = get_causal_links_from_fault_paths(ground_truth_fault_paths)
 
+    model_accuracies = []
+
     identified_causal_links = 0
     for link in causal_links_ground_truth:
         if link in causal_links_pred:
@@ -116,11 +120,12 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
         for classification in log_file:
             comp = list(classification.keys())[0]
             pred_anomaly = classification[comp]
-            model_acc = classification["Model Accuracy"]
+            model_acc = round(classification["Model Accuracy"], 2)
+            model_accuracies.append(model_acc)
             pred_val = classification["Predicted Value"]
             ground_truth_anomaly = classification["Ground Truth Anomaly"]
-            print("--", comp, "pred:", pred_anomaly, "model acc:", round(model_acc, 2), "pred val:",
-                  round(pred_val, 2), "gt:", ground_truth_anomaly)
+            print("--", comp, "pred:", pred_anomaly, "model acc:", model_acc, "pred val:", round(pred_val, 2),
+                  "gt:", ground_truth_anomaly)
 
             if pred_anomaly == ground_truth_anomaly:  # true
                 if pred_anomaly:
@@ -165,7 +170,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     print("percentage of correctly identified causal links between anomalies:", found_anomaly_links_percentage, "%")
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage
+        found_anomaly_links_percentage, round(np.average(model_accuracies), 2)
     )
 
 
