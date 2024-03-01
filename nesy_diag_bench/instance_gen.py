@@ -146,8 +146,8 @@ def find_unique_longest_paths(paths):
     unique_paths = []
     paths_sorted = sorted(paths, key=len, reverse=True)
     for path in paths_sorted:
-        if not any(" ".join(path) in " ".join(unique_path) for unique_path in unique_paths):
-            unique_paths.append(path)
+        if not any("-" + "-".join(list(path)) + "-" in "-" + "-".join(up) + "-" for up in unique_paths):
+            unique_paths.append(list(path))
     return unique_paths
 
 
