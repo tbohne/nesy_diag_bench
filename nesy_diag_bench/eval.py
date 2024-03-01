@@ -81,7 +81,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc, gt_match
+        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -92,10 +92,10 @@ def write_instance_res_to_csv(
         if not file_exists:
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
-                 "avg_model_acc", "gt_match"]
+                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc, gt_match])
+                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths):
@@ -154,7 +154,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)
     # ratio of true pos to all pos
     precision = round(float(tp) / (tp + fp), 2)
-    print("accuracy:", accuracy, 2)
+    print("accuracy:", accuracy)
     print("precision:", precision)
     # how well are we able to recall the problems
     recall = round((float(tp) / (tp + fn)), 2)
@@ -175,9 +175,12 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     if gt_match:
         print("..gen fault paths for", instance, "match ground truth..")
 
+    num_fps = len(ground_truth_fault_paths)
+    avg_fp_len = round(np.average([len(fp) for fp in ground_truth_fault_paths]), 2)
+
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match
+        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len
     )
 
 
