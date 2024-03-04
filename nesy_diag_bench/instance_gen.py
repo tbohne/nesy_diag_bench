@@ -173,7 +173,8 @@ def generate_ground_truth_fault_paths(component_net):
 
     # handle one-component-paths
     for anomaly in anomalous_components:
-        if anomaly not in " ".join(edges):
+        edge_comp = "-" + "-".join(["-".join(edge.split(" -> ")) for edge in edges]) + "-"
+        if "-" + anomaly + "-" not in edge_comp:
             fault_paths.append([anomaly])
 
     return fault_paths
