@@ -17,7 +17,7 @@ $ python nesy_diag_bench/eval.py --instances instances/ [--v] [--sim]
 ## Naming scheme for generated instances
 
 ```
-<num_comp>_<num_errors>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<seed>_<idx>.json
+<num_comp>_<anomaly_percentage>_<affected_by_ub>_<fault_path_comp_ub>_<distractor_ub>_<model_acc_lb>_<model_acc_ub>_<seed>_<idx>.json
 ```
 
 ## Component -> UCR-Dataset Mapping
