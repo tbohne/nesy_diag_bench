@@ -4,7 +4,7 @@ Toy world (evaluation system) for neuro-symbolic (**Symbolic[Neuro]**) diagnosis
 
 ## Usage
 
-*Instance generation:*
+*Instance set generation:*
 ```
 $ python nesy_diag_bench/instance_gen.py --seed 42 --components 129 --anomaly-percentage 0.1 --affected-by-ub-percentage 0.2 --fault-path-comp-ub-percentage 0.5 --distractor-ub-percentage 0.5 --instances-per-conf 100 --model-acc-lb 0.6 --model-acc-ub 0.95 [--sim-classification-models] [--extend-kg]
 ```
