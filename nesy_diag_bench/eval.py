@@ -8,6 +8,7 @@ import glob
 import json
 import logging
 import os
+import time
 
 import numpy as np
 import requests
@@ -81,7 +82,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len
+        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -92,13 +93,13 @@ def write_instance_res_to_csv(
         if not file_exists:
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
-                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len"]
+                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len", "runtime (s)"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len])
+                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime])
 
 
-def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths):
+def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime):
     true_positives = []
     false_positives = []
     true_negatives = []
@@ -180,7 +181,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
 
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len
+        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime
     )
 
 
@@ -193,6 +194,7 @@ if __name__ == '__main__':
 
     for instance in glob.glob(args.instances + "/*.json"):
         print("working on instance:", instance)
+        start_time = time.time()
         assert clear_hosted_kg()
         assert upload_kg_for_instance(instance)
         seed = instance.split("_")[-2]
@@ -210,7 +212,9 @@ if __name__ == '__main__':
             print("DETERMINED FAULT PATHS:", determined_fault_paths)
             print("#####################################################################")
 
-        evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths)
+        end_time = time.time()
+        runtime = round(end_time - start_time, 2)
+        evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime)
 
         if args.v:
             for fault_path in fault_paths:
