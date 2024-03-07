@@ -14,6 +14,11 @@ $ python nesy_diag_bench/instance_gen.py --seed 42 --components 129 --anomaly-pe
 $ python nesy_diag_bench/eval.py --instances instances/ [--v] [--sim]
 ```
 
+*Generation of cumulative results:*
+```
+$ python nesy_diag_bench/analyze_res.py --instance-set-sol SOLUTION_DIR/
+```
+
 ## Naming scheme for generated instances
 
 ```
