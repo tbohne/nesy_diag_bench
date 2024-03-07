@@ -82,7 +82,8 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio
+        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio,
+        ratio_of_found_gtfp
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -93,11 +94,12 @@ def write_instance_res_to_csv(
         if not file_exists:
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
-                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len", "runtime (s)", "classification_ratio"]
+                 "avg_model_acc", "gt_match", "#fault_paths", "ratio_of_found_gtfp", "avg_fp_len", "runtime (s)",
+                 "classification_ratio"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime,
-                         classification_ratio])
+                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, ratio_of_found_gtfp,
+                         avg_fp_len, runtime, classification_ratio])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime):
@@ -106,6 +108,12 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     true_negatives = []
     false_negatives = []
     num_of_fp_deviation = abs(len(ground_truth_fault_paths) - len(determined_fault_paths))
+
+    matched_gtfp = 0
+    for fp in determined_fault_paths:
+        if fp in ground_truth_fault_paths:
+            matched_gtfp += 1
+    ratio_of_found_gtfp = round(float(matched_gtfp) / len(ground_truth_fault_paths), 2)
 
     causal_links_pred = get_causal_links_from_fault_paths(determined_fault_paths)
     causal_links_ground_truth = get_causal_links_from_fault_paths(ground_truth_fault_paths)
@@ -186,7 +194,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
         found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime,
-        classification_ratio
+        classification_ratio, ratio_of_found_gtfp
     )
 
 
