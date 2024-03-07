@@ -36,7 +36,7 @@ def write_instance_set_res_to_csv(
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Analyze results and generate cumulated results file.')
     parser.add_argument('--instance-set-sol', type=str, required=True)
-    filename = "cumulated_res.csv"
+    filename = "cumulative_res.csv"
     args = parser.parse_args()
 
     for instance_set_sol in glob.glob(args.instance_set_sol + "/*.csv"):
