@@ -82,7 +82,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime
+        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -93,10 +93,11 @@ def write_instance_res_to_csv(
         if not file_exists:
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
-                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len", "runtime (s)"]
+                 "avg_model_acc", "gt_match", "#fault_paths", "avg_fp_len", "runtime (s)", "classification_ratio"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime])
+                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime,
+                         classification_ratio])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime):
@@ -179,9 +180,13 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     num_fps = len(ground_truth_fault_paths)
     avg_fp_len = round(np.average([len(fp) for fp in ground_truth_fault_paths]), 2)
 
+    # ratio of classified components to all components
+    classification_ratio = round(float(tp + fp + tn + fn) / float(instance.split("/")[1].split("_")[0]), 2)
+
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime
+        found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime,
+        classification_ratio
     )
 
 
