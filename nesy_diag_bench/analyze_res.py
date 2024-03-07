@@ -13,7 +13,7 @@ import pandas as pd
 def write_instance_set_res_to_csv(
         instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max, avg_accuracy,
         avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc, gt_match_percentage,
-        avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename
+        avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime
 ):
     file_exists = os.path.isfile(filename)
     with open(filename, mode='a', newline='') as csv_file:
@@ -23,13 +23,13 @@ def write_instance_set_res_to_csv(
                 ["instance_set", "num_instances", "avg_tp", "avg_tn", "avg_fp", "avg_fn", "fp_dev_mean", "fp_dev_max",
                  "avg_acc", "avg_prec", "avg_rec", "avg_spec", "avg_f1", "avg_ano_link_perc", "avg_model_acc",
                  "gt_match_perc", "avg_num_fault_paths", "max_num_fault_paths", "avg_fault_path_len",
-                 "max_fault_path_len"]
+                 "max_fault_path_len", "avg_runtime (s)"]
             )
         instance_set_sol = instance_set_sol.split("/")[1].replace(".csv", "")
         writer.writerow([instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max,
                          avg_accuracy, avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc,
                          gt_match_percentage, avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len,
-                         max_fault_path_len])
+                         max_fault_path_len, avg_runtime])
 
 
 if __name__ == '__main__':
@@ -65,8 +65,10 @@ if __name__ == '__main__':
         avg_fault_path_len = df["avg_fp_len"].describe()["mean"]
         max_fault_path_len = df["avg_fp_len"].describe()["max"]
 
+        avg_runtime = df["runtime (s)"].describe()["mean"]
+
         write_instance_set_res_to_csv(
             instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max, avg_accuracy,
             avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc, gt_match_percentage,
-            avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename
+            avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime
         )
