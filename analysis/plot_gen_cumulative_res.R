@@ -23,7 +23,7 @@ gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename) {
     ggsave(combined_plot, file = filename, width = 12, height = 6)
 }
 
-input <- read.csv(file = "cumulative_res.csv", header = TRUE, sep = ",")
+input <- read.csv(file = "cumulative_res.csv", header = TRUE, sep = ",", check.name = FALSE)
 
 # instead of the percentage value factor(gt_match_perc) for which I'd need 100
 # colors, I only want to color / group them into 5 groups
@@ -168,3 +168,39 @@ p4 <- ggplot(
 
 # fault path plot
 gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg num of fault paths", "max num of fault paths", "avg fault path len", "max fault path len", "fault_paths.png")
+
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_classification_ratio", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_fp", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "`avg_runtime (s)`", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_fn", color = "gt_match", group = "gt_match"
+    )
+)
+
+# classification ratio, etc.
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance_set",
+    "avg classification ratio",
+    "avg false positives (regular components treated as anomalies)",
+    "avg runtime (s)",
+    "avg false negatives (missed anomalies)",
+    "classification_ratio.png"
+)
