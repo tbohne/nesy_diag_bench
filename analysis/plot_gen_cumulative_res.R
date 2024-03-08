@@ -115,7 +115,7 @@ p1 <- ggplot(
 
 p2 <- ggplot(
     data = input, aes_string(
-        x = "instance_set", y = "avg_model_acc", color = "gt_match", group = "gt_match"
+        x = "instance_set", y = "avg_fp", color = "gt_match", group = "gt_match"
     )
 )
 
@@ -136,7 +136,7 @@ gen_multi_plot_four(
     p1, p2, p3, p4,
     "instance_set",
     "avg anomaly link percentage",
-    "avg model accuracy",
+    "avg false positives (regular components treated as anomalies)",
     "avg ratio of found ground truth fault paths",
     "avg false negatives (missed anomalies)",
     "gt_analysis.png"
