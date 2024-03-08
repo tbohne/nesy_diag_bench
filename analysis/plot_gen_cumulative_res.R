@@ -63,7 +63,7 @@ p4 <- ggplot(
 )
 
 # confusion matrix multiplot
-gen_multi_plot_four(p1, p2, p3, p4, "instances_set", "avg TP", "avg TN", "avg FP", "avg FN", "confusion_matrix.png")
+gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg TP", "avg TN", "avg FP", "avg FN", "confusion_matrix.png")
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -78,7 +78,7 @@ p2 <- ggplot(
 )
 
 # fault path dev multiplot
-gen_multi_plot_two(p1, p2, "instances_set", "avg fault path dev", "max fault path dev", "fault_path_dev.png")
+gen_multi_plot_two(p1, p2, "instance_set", "avg fault path dev", "max fault path dev", "fault_path_dev.png")
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -105,7 +105,7 @@ p4 <- ggplot(
 )
 
 # common eval metrics
-gen_multi_plot_four(p1, p2, p3, p4, "instances_set", "avg accuracy", "avg precision", "avg recall", "avg F1", "eval_metrics.png")
+gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg accuracy", "avg precision", "avg recall", "avg F1", "eval_metrics.png")
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -131,10 +131,10 @@ p4 <- ggplot(
     )
 )
 
-# anomaly link perc + model acc
+# ground truth analysis
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instances_set",
+    "instance_set",
     "avg anomaly link percentage",
     "avg model accuracy",
     "avg ratio of found ground truth fault paths",
@@ -167,4 +167,4 @@ p4 <- ggplot(
 )
 
 # fault path plot
-gen_multi_plot_four(p1, p2, p3, p4, "instances_set", "avg num of fault paths", "max num of fault paths", "avg fault path len", "max fault path len", "fault_paths.png")
+gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg num of fault paths", "max num of fault paths", "avg fault path len", "max fault path len", "fault_paths.png")
