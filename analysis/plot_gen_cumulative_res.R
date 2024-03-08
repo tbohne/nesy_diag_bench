@@ -25,8 +25,8 @@ gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename) {
 
 input <- read.csv(file = "cumulative_res.csv", header = TRUE, sep = ",")
 
-# Instead of the percentage value factor(gt_match_perc) for which I'd need 100 colors,
-# I only want to color / group them into 5 groups:
+# instead of the percentage value factor(gt_match_perc) for which I'd need 100
+# colors, I only want to color / group them into 5 groups
 LABELS <- c("[0,5)%", "[5, 50)%", "[50,75)%", "[75,100)%", "100%")
 color_mapping <- setNames(COLOR_VALS, LABELS)
 
@@ -38,7 +38,6 @@ input$gt_match <- cut(
     right = FALSE
 )
 
-# basic plots
 p1 <- ggplot(
     data = input, aes_string(
         x = "instance_set", y = "avg_tp", color = "gt_match", group = "gt_match"
@@ -120,8 +119,28 @@ p2 <- ggplot(
     )
 )
 
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_ratio_of_found_gtfp", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_fn", color = "gt_match", group = "gt_match"
+    )
+)
+
 # anomaly link perc + model acc
-gen_multi_plot_two(p1, p2, "instances_set", "avg anomaly link percentage", "avg model accuracy", "ano_link_model_acc.png")
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instances_set",
+    "avg anomaly link percentage",
+    "avg model accuracy",
+    "avg ratio of found ground truth fault paths",
+    "avg false negatives (missed anomalies)",
+    "gt_analysis.png"
+)
 
 p1 <- ggplot(
     data = input, aes_string(
