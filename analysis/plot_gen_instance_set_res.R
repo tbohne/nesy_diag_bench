@@ -10,6 +10,17 @@ gen_plot <- function(plot_points_pre, y_name, x_name, filename) {
     ggsave(final_plot, file = filename, width = 6, height = 12)
 }
 
+gen_multi_plot_four <- function(
+        pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename
+    ) {
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + COLOR_VALS
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + COLOR_VALS
+    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + COLOR_VALS
+    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + COLOR_VALS
+    combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 2)
+    ggsave(combined_plot, file = filename, width = 12, height = 20)
+}
+
 gen_fault_path_multi_plot <- function(
         pp1, pp2, pp3, pp4, y1, y2, y3, x1, x2, x3, x4, filename
     ) {
@@ -22,6 +33,8 @@ gen_fault_path_multi_plot <- function(
 }
 
 input <- read.csv(file = "res.csv", header = TRUE, sep = ",", check.name = FALSE)
+
+# fault path plots
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -52,4 +65,37 @@ p4 <- ggplot(
 gen_fault_path_multi_plot(
     p1, p2, p3, p4, "instance", "avg fault path len", "runtime (s)", "avg fault path len", "num of fault paths",
     "num of fault paths", "num of fault paths", "fault_paths.png"
+)
+
+# confusion matrix plots
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "TP", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "TN", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "FP", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "FN", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance",
+    "TP", "TN", "FP", "FN",
+    "confusion_matrix.png"
 )
