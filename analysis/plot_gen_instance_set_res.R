@@ -132,3 +132,39 @@ gen_multi_plot_four(
     "acc", "prec", "rec", "F1",
     "metrics.png"
 )
+
+# runtime, classification ratio and FP / FN
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "classification_ratio", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "FP", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "`runtime (s)`", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "FN", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance",
+    "classification ratio",
+    "false positives (regular components treated as anomalies)",
+    "runtime (s)",
+    "false negatives (missed anomalies)",
+    "class_ratio.png"
+)
