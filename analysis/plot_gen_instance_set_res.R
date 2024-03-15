@@ -201,6 +201,6 @@ gen_multi_plot_four(
     "number of fault path deviations",
     "anomalous link percentage",
     "avg fault path len",
-    "ratio of fround ground truth fault paths",
+    "ratio of found ground truth fault paths",
     "fp_dev.png"
 )
