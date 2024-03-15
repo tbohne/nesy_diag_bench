@@ -99,3 +99,36 @@ gen_multi_plot_four(
     "TP", "TN", "FP", "FN",
     "confusion_matrix.png"
 )
+
+# classic metrics
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "acc", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "prec", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "rec", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "F1", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance",
+    "acc", "prec", "rec", "F1",
+    "metrics.png"
+)
