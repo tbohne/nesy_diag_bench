@@ -3,7 +3,7 @@ library(gridExtra)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
-COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#0bc986", "#0bc986")
+COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
 
 gen_multi_plot_four <- function(
         pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename
