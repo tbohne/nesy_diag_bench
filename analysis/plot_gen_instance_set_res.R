@@ -168,3 +168,39 @@ gen_multi_plot_four(
     "false negatives (missed anomalies)",
     "class_ratio.png"
 )
+
+# fault path dev
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "`#fp_dev`", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "ano_link_perc", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "avg_fp_len", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance", y = "ratio_of_found_gtfp", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance",
+    "number of fault path deviations",
+    "anomalous link percentage",
+    "avg fault path len",
+    "ratio of fround ground truth fault paths",
+    "fp_dev.png"
+)
