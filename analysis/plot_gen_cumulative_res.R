@@ -204,3 +204,39 @@ gen_multi_plot_four(
     "avg false negatives (missed anomalies)",
     "classification_ratio.png"
 )
+
+# visualize compensation capability
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_f1", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_acc", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_ano_link_perc", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_ratio_of_found_gtfp", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance_set",
+    "avg F1",
+    "avg acc",
+    "avg anomaly link percentage",
+    "avg ratio of found gtfp",
+    "compensation.png"
+)
