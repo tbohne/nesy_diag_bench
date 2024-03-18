@@ -15,7 +15,6 @@ gen_multi_plot_four <- function(
     ggsave(combined_plot, file = filename, width = 12, height = 6)
 }
 
-
 # actual compensation insights
 
 input <- read.csv(
@@ -37,7 +36,7 @@ input$gt_match <- cut(
 
 p1 <- ggplot(
     data = input, aes_string(
-        x = "compensation",
+        x = "compensation_ano_link",
         y = "avg_ratio_gtfp",
         color = "gt_match",
         group = "gt_match"
@@ -46,7 +45,7 @@ p1 <- ggplot(
 
 p2 <- ggplot(
     data = input, aes_string(
-        x = "compensation",
+        x = "compensation_ano_link",
         y = "anomaly_perc_aff_by_ratio",
         color = "gt_match",
         group = "gt_match"
@@ -77,8 +76,8 @@ gen_multi_plot_four(
     "anomaly_perc_aff_by_ratio",
     "anomaly_perc_aff_by_ratio",
     "anomaly_perc_aff_by_ratio",
-    "compensation",
-    "compensation",
+    "compensation_ano_link",
+    "compensation_ano_link",
     "anomaly_link_perc_scores",
     "avg_ratio_gtfp",
     "compensation_analysis.png"
