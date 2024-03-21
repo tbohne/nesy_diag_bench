@@ -4,7 +4,7 @@ library(gridExtra)
 PT_DEF <- geom_point(size=5)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
 
-gen_multi_plot_four <- function(
+gen_multi_plot_six <- function(
         pp1, pp2, pp3, pp4, pp5, pp6,
         y1, y2, y3, y4, y5, y6,
         x1, x2, x3, x4, x5, x6,
@@ -93,7 +93,7 @@ p6 <- ggplot(
     )
 )
 
-gen_multi_plot_four(
+gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
     "avg_ratio_gtfp",
     "anomaly_perc_aff_by_ratio",
