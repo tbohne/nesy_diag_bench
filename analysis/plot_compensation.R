@@ -20,6 +20,15 @@ gen_multi_plot_six <- function(
     ggsave(combined_plot, file = filename, width = 12, height = 6)
 }
 
+gen_multi_plot_two <- function(
+        pp1, pp2, y1, y2, x1, x2, filename
+    ) {
+    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping)
+    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping)
+    combined_plot <- grid.arrange(fpp1, fpp2, ncol = 2)
+    ggsave(combined_plot, file = filename, width = 12, height = 6)
+}
+
 # actual compensation insights
 
 input <- read.csv(
@@ -108,4 +117,31 @@ gen_multi_plot_six(
     "compensation_gtfp",
     "compensation_gtfp",
     "compensation_analysis.png"
+)
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "anomaly_link_perc_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_two(
+    p1, p2,
+    "anomaly link perc",
+    "avg ratio gtfp",
+    "F1",
+    "F1",
+    "f1_end_res_corr.png"
 )
