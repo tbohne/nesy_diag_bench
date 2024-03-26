@@ -58,7 +58,7 @@ class LocalModelAccessor(ModelAccessor):
             print("no trained model available for the signal (component) to be classified:", component)
             print("ERROR:", e)
 
-    def get_sim_univariate_ts_classification_model_by_component(self, component: str) -> List[str]:
+    def get_sim_univariate_ts_classification_model_by_component(self, component: str) -> Tuple[List[str], int]:
         with open(self.instance, "r") as f:
             problem_instance = json.load(f)
-        return problem_instance["sim_accuracies"][component]
+        return problem_instance["sim_accuracies"][component], len(problem_instance["sim_accuracies"])
