@@ -163,7 +163,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     # ratio of correct prediction to all predictions
     accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)
     # ratio of true pos to all pos
-    precision = round(float(tp) / (tp + fp), 2) if tp + fp > 0 else "-"
+    precision = round(float(tp) / (tp + fp), 2) if tp + fp > 0 else "NaN"
     print("accuracy:", accuracy)
     print("precision:", precision)
     # how well are we able to recall the problems
@@ -173,7 +173,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     specificity = round(float(tn) / (fp + tn), 2)
     print("specificity:", specificity)
     f1 = round((2 * precision * recall) / (precision + recall),
-               2) if precision != "-" and precision + recall > 0 else "-"
+               2) if precision != "NaN" and precision + recall > 0 else "NaN"
     print("f1-score:", f1)
     if identified_causal_links == len(causal_links_ground_truth):
         found_anomaly_links_percentage = 100.0
