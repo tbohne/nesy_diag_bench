@@ -176,7 +176,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
                2) if precision != "NaN" and precision + recall > 0 else "NaN"
     print("f1-score:", f1)
     if identified_causal_links == len(causal_links_ground_truth):
-        found_anomaly_links_percentage = 100.0
+        found_anomaly_links_percentage = 1.0
     else:
         found_anomaly_links_percentage = float(identified_causal_links) / len(causal_links_ground_truth)
     print("percentage of correctly identified causal links between anomalies:", found_anomaly_links_percentage, "%")
