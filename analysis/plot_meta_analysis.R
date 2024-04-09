@@ -32,7 +32,7 @@ gen_multi_plot_two <- function(
 # actual compensation insights
 
 input <- read.csv(
-    file = "compensation.csv", header = TRUE, sep = ",", check.name = FALSE
+    file = "meta_analysis.csv", header = TRUE, sep = ",", check.name = FALSE
 )
 
 # instead of the percentage value factor(gt_match_perc) for which I'd need 100
@@ -144,4 +144,62 @@ gen_multi_plot_two(
     "F1",
     "F1",
     "f1_end_res_corr.png"
+)
+
+# model acc - connectivity - performance
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_two(
+    p1, p2,
+    "model_acc_connectivity_ratio",
+    "model_acc_connectivity_ratio",
+    "anomaly_link_perc_scores",
+    "avg_ratio_gtfp",
+    "modelacc_connectivity_performance.png"
+)
+
+# how many classifications and how acc models
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "num_classifications_model_acc_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "num_classifications_model_acc_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_two(
+    p1, p2,
+    "num_classifications_model_acc_ratio",
+    "num_classifications_model_acc_ratio",
+    "anomaly_link_perc_scores",
+    "avg_ratio_gtfp",
+    "num_classifications_model_acc.png"
 )
