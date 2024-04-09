@@ -83,7 +83,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio,
-        ratio_of_found_gtfp
+        ratio_of_found_gtfp, diag_success
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -95,14 +95,14 @@ def write_instance_res_to_csv(
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
                  "avg_model_acc", "gt_match", "#fault_paths", "ratio_of_found_gtfp", "avg_fp_len", "runtime (s)",
-                 "classification_ratio"]
+                 "classification_ratio", "diag_success"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
                          found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, ratio_of_found_gtfp,
-                         avg_fp_len, runtime, classification_ratio])
+                         avg_fp_len, runtime, classification_ratio, diag_success])
 
 
-def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime):
+def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime, diag_success):
     true_positives = []
     false_positives = []
     true_negatives = []
@@ -197,7 +197,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
         found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime,
-        classification_ratio, ratio_of_found_gtfp
+        classification_ratio, ratio_of_found_gtfp, diag_success
     )
 
 
@@ -221,7 +221,9 @@ if __name__ == '__main__':
             problem_instance = json.load(f)
 
         ground_truth_fault_paths = problem_instance["ground_truth_fault_paths"]
-        determined_fault_paths = [path.split(" -> ") for path in fault_paths]
+        diag_success = fault_paths != "no_diag"
+        determined_fault_paths = [path.split(" -> ") for path in fault_paths] if diag_success else []
+
         if args.v:
             print("#####################################################################")
             print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
@@ -230,7 +232,7 @@ if __name__ == '__main__':
 
         end_time = time.time()
         runtime = round(end_time - start_time, 2)
-        evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime)
+        evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime, diag_success)
 
         if args.v:
             for fault_path in fault_paths:
