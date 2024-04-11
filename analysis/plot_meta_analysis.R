@@ -319,3 +319,32 @@ gen_multi_plot_two(
     "avg_ratio_gtfp",
     "anomaly_perc_model_acc_ratio_perf.png"
 )
+
+# num classifications against perf
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_two(
+    p1, p2,
+    "num_classifications",
+    "num_classifications",
+    "anomaly_link_perc_scores",
+    "avg_ratio_gtfp",
+    "num_classifications_perf.png"
+)
