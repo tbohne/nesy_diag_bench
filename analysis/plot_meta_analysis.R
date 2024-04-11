@@ -431,11 +431,11 @@ gen_multi_plot_six(
     "avg_model_acc", #y4
     "avg_model_acc", #y5
     "avg_model_acc", #y6
-    "num_classifications", #x1
-    "num_classifications (filtered based on threshold 70%)", #x2
-    "num_classifications (filtered based on threshold 75%)", #x3
-    "num_classifications (filtered based on threshold 80%)", #x4
-    "num_classifications (filtered based on threshold 90%)", #x5
-    "num_classifications (filtered based on max gtfp)", #x6
+    "classifications", #x1
+    "classifications (filt. based on avg_ratio_gtfp 70%)", #x2
+    "classifications (filt. based on avg_ratio_gtfp 75%)", #x3
+    "classifications (filt. based on avg_ratio_gtfp 80%)", #x4
+    "classifications (filt. based on avg_ratio_gtfp 90%)", #x5
+    "classifications (filt. based on max avg_ratio_gtfp)", #x6
     "model_acc_classifications.png"
 )
