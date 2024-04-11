@@ -1,5 +1,6 @@
 library(ggplot2)
 library(gridExtra)
+library(dplyr)
 
 PT_DEF <- geom_point(size=5)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
@@ -347,4 +348,94 @@ gen_multi_plot_two(
     "anomaly_link_perc_scores",
     "avg_ratio_gtfp",
     "num_classifications_perf.png"
+)
+
+# num classifications - model acc
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, avg_ratio_gtfp >= 0.7)
+
+p2 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, avg_ratio_gtfp >= 0.75)
+
+p3 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, avg_ratio_gtfp >= 0.8)
+
+p4 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, avg_ratio_gtfp >= 0.9)
+
+p5 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- input %>%
+  group_by(avg_model_acc) %>%
+  filter(avg_ratio_gtfp == max(avg_ratio_gtfp))
+
+p6 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "avg_model_acc", #y1
+    "avg_model_acc", #y2
+    "avg_model_acc", #y3
+    "avg_model_acc", #y4
+    "avg_model_acc", #y5
+    "avg_model_acc", #y6
+    "num_classifications", #x1
+    "num_classifications (filtered based on threshold 70%)", #x2
+    "num_classifications (filtered based on threshold 75%)", #x3
+    "num_classifications (filtered based on threshold 80%)", #x4
+    "num_classifications (filtered based on threshold 90%)", #x5
+    "num_classifications (filtered based on max gtfp)", #x6
+    "model_acc_classifications.png"
 )
