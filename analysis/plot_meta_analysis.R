@@ -203,3 +203,32 @@ gen_multi_plot_two(
     "avg_ratio_gtfp",
     "num_classifications_model_acc.png"
 )
+
+# affected_by against perf
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_two(
+    p1, p2,
+    "affected_by_perc",
+    "affected_by_perc",
+    "anomaly_link_perc_scores",
+    "avg_ratio_gtfp",
+    "aff_by_perf.png"
+)
