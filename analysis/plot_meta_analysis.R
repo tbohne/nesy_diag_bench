@@ -529,3 +529,93 @@ gen_multi_plot_six(
     "classifications (filt. based on max ano_link_perc)", #x6
     "model_acc_classifications_ano_link.png"
 )
+
+# num classifications - model acc -- filtered based on gt_match_perc
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, gt_match_perc >= 70)
+
+p2 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, gt_match_perc >= 75)
+
+p3 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, gt_match_perc >= 80)
+
+p4 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, gt_match_perc >= 90)
+
+p5 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- input %>%
+  group_by(avg_model_acc) %>%
+  filter(gt_match_perc == max(gt_match_perc))
+
+p6 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "num_classifications",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "avg_model_acc", #y1
+    "avg_model_acc", #y2
+    "avg_model_acc", #y3
+    "avg_model_acc", #y4
+    "avg_model_acc", #y5
+    "avg_model_acc", #y6
+    "classifications", #x1
+    "classifications (filt. based on gt_match_perc 70%)", #x2
+    "classifications (filt. based on gt_match_perc 75%)", #x3
+    "classifications (filt. based on gt_match_perc 80%)", #x4
+    "classifications (filt. based on gt_match_perc 90%)", #x5
+    "classifications (filt. based on max gt_match_perc)", #x6
+    "model_acc_classifications_gt_match_perc.png"
+)
