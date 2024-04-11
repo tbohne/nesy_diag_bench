@@ -53,7 +53,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
     writer.writerow(
         ["anomaly_perc", "affected_by_perc", "anomaly_perc_aff_by_ratio", "f1_scores", "anomaly_link_perc_scores",
         "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
-        "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio"]
+        "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -68,5 +68,6 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["avg_ratio_of_found_gtfp"][i],
             compensation_gtfp[i],
             model_acc_connectivity_ratio[i],
-            num_classifications_model_acc_ratio[i]
+            num_classifications_model_acc_ratio[i],
+            df["avg_model_acc"][i]
         ])
