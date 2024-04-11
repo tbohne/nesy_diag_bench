@@ -31,6 +31,8 @@ num_classifications_model_acc_ratio = [
     for i in range(len(df["avg_classification_ratio"]))
 ]
 
+num_classifications = [df["avg_classification_ratio"][i] * 129 for i in range(len(df["avg_classification_ratio"]))]
+
 anomaly_perc_model_acc_ratio = [
     round(float(anomaly_percentages[i]) / (df["avg_model_acc"][i] * 100), 2)
     for i in range(len(df["avg_model_acc"]))
@@ -59,7 +61,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         ["anomaly_perc", "affected_by_perc", "anomaly_perc_aff_by_ratio", "f1_scores", "anomaly_link_perc_scores",
         "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
         "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
-        "anomaly_perc_model_acc_ratio"]
+        "anomaly_perc_model_acc_ratio", "num_classifications"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -76,5 +78,6 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             model_acc_connectivity_ratio[i],
             num_classifications_model_acc_ratio[i],
             df["avg_model_acc"][i],
-            anomaly_perc_model_acc_ratio[i]
+            anomaly_perc_model_acc_ratio[i],
+            num_classifications[i]
         ])
