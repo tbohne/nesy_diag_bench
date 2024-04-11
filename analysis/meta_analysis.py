@@ -31,6 +31,11 @@ num_classifications_model_acc_ratio = [
     for i in range(len(df["avg_classification_ratio"]))
 ]
 
+anomaly_perc_model_acc_ratio = [
+    round(float(anomaly_percentages[i]) / (df["avg_model_acc"][i] * 100), 2)
+    for i in range(len(df["avg_model_acc"]))
+]
+
 anomaly_link_perc_scores = [round(i / 100.0, 2) for i in df["avg_ano_link_perc"]]
 
 # I don't think this metric makes much sense, it's not really a compensation;
@@ -53,7 +58,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
     writer.writerow(
         ["anomaly_perc", "affected_by_perc", "anomaly_perc_aff_by_ratio", "f1_scores", "anomaly_link_perc_scores",
         "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
-        "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc"]
+        "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
+        "anomaly_perc_model_acc_ratio"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -69,5 +75,6 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             compensation_gtfp[i],
             model_acc_connectivity_ratio[i],
             num_classifications_model_acc_ratio[i],
-            df["avg_model_acc"][i]
+            df["avg_model_acc"][i],
+            anomaly_perc_model_acc_ratio[i]
         ])
