@@ -14,7 +14,7 @@ def write_instance_set_res_to_csv(
         instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max, avg_accuracy,
         avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc, gt_match_percentage,
         avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime,
-        avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage
+        avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage, median_runtime
 ):
     file_exists = os.path.isfile(filename)
     with open(filename, mode='a', newline='') as csv_file:
@@ -25,14 +25,14 @@ def write_instance_set_res_to_csv(
                  "avg_acc", "avg_prec", "avg_rec", "avg_spec", "avg_f1", "avg_ano_link_perc", "avg_model_acc",
                  "gt_match_perc", "avg_ratio_of_found_gtfp", "avg_num_fault_paths", "max_num_fault_paths",
                  "avg_fault_path_len", "max_fault_path_len", "avg_runtime (s)", "avg_classification_ratio",
-                 "diag_success_percentage"]
+                 "diag_success_percentage", "median_runtime (s)"]
             )
         instance_set_sol = instance_set_sol.split("/")[1].replace(".csv", "")
         writer.writerow([instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max,
                          avg_accuracy, avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc,
                          gt_match_percentage, avg_ratio_of_found_gtfp, avg_num_fault_paths, max_num_fault_paths,
                          avg_fault_path_len, max_fault_path_len, avg_runtime, avg_classification_ratio,
-                         diag_success_percentage])
+                         diag_success_percentage, median_runtime])
 
 
 if __name__ == '__main__':
@@ -73,6 +73,8 @@ if __name__ == '__main__':
         max_fault_path_len = df["avg_fp_len"].describe()["max"]
 
         avg_runtime = round(df["runtime (s)"].describe()["mean"], 2)
+        median_runtime = round(df["runtime (s)"].median(), 2)
+
         avg_classification_ratio = round(df["classification_ratio"].describe()["mean"], 2)
         avg_ratio_of_found_gtfp = round(df["ratio_of_found_gtfp"].describe()["mean"], 2)
 
@@ -80,5 +82,5 @@ if __name__ == '__main__':
             instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max, avg_accuracy,
             avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc, gt_match_percentage,
             avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime,
-            avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage
+            avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage, median_runtime
         )
