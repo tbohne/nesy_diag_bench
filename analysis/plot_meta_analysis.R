@@ -120,6 +120,81 @@ gen_multi_plot_six(
     "compensation_analysis.png"
 )
 
+# same with prod #############################
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "compensation_ano_link",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "compensation_ano_link",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "compensation_gtfp",
+        y = "compensation_ano_link",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "compensation_gtfp",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "avg_ratio_gtfp",
+    "anomaly_perc_aff_by_prod",
+    "anomaly_perc_aff_by_prod",
+    "anomaly_perc_aff_by_prod",
+    "compensation_ano_link",
+    "anomaly_perc_aff_by_prod",
+    "compensation_ano_link",
+    "compensation_ano_link",
+    "anomaly_link_perc_scores",
+    "avg_ratio_gtfp",
+    "compensation_gtfp",
+    "compensation_gtfp",
+    "compensation_analysis_prod.png"
+)
+
+##############################################
+
 p1 <- ggplot(
     data = input, aes_string(
         x = "f1_scores",
@@ -618,4 +693,77 @@ gen_multi_plot_six(
     "classifications (filt. based on gt_match_perc 90%)", #x5
     "classifications (filt. based on max gt_match_perc)", #x6
     "model_acc_classifications_gt_match_perc.png"
+)
+
+# correlation affected-by and fault path len / num fault paths
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "avg_num_fault_paths",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fault_path_len",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "avg_num_fault_paths",
+        y = "anomaly_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fault_path_len",
+        y = "anomaly_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "avg_num_fault_paths",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fault_path_len",
+        y = "anomaly_perc_aff_by_prod",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "affected_by_perc", # y1
+    "affected_by_perc", # y2
+    "anomaly_perc", # y3
+    "anomaly_perc", # y4
+    "anomaly_perc_aff_by_prod", # y5
+    "anomaly_perc_aff_by_prod", # y6
+    "avg_num_fault_paths", # x1
+    "avg_fault_path_len", # x2
+    "avg_num_fault_paths", # x3
+    "avg_fault_path_len", # x4
+    "avg_num_fault_paths", # x5
+    "avg_fault_path_len", # x6
+    "correlation_anomaly_perc_aff_by_prod_fault_paths.png"
 )
