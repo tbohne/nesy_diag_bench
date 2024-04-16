@@ -767,3 +767,76 @@ gen_multi_plot_six(
     "avg_fault_path_len", # x6
     "correlation_anomaly_perc_aff_by_prod_fault_paths.png"
 )
+
+# correlation (median + mean) runtime and fault path len / num fault paths
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "avg_num_fault_paths",
+        y = "`avg_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fault_path_len",
+        y = "`avg_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "avg_num_fault_paths",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fault_path_len",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "median_fault_path_len",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "median_num_fault_paths",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "`avg_runtime (s)`", # y1
+    "`avg_runtime (s)`", # y2
+    "`median_runtime (s)`", # y3
+    "`median_runtime (s)`", # y4
+    "`median_runtime (s)`", # y5
+    "`median_runtime (s)`", # y6
+    "avg_num_fault_paths", # x1
+    "avg_fault_path_len", # x2
+    "avg_num_fault_paths", # x3
+    "avg_fault_path_len", # x4
+    "median_fault_path_len", # x5
+    "median_num_fault_paths", # x6
+    "correlation_runtime_fault_paths.png"
+)
