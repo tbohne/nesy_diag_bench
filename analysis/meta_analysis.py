@@ -67,7 +67,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
         "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
         "anomaly_perc_model_acc_ratio", "num_classifications", "avg_num_fault_paths", "avg_fault_path_len",
-        "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)"]
+        "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)", "median_num_fault_paths",
+        "median_fault_path_len"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -90,5 +91,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["avg_fault_path_len"][i],
             anomaly_perc_aff_by_prod[i],
             df["avg_runtime (s)"][i],
-            df["median_runtime (s)"][i]
+            df["median_runtime (s)"][i],
+            df["median_num_fault_paths"][i],
+            df["median_fault_path_len"][i]
         ])
