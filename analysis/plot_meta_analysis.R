@@ -213,12 +213,56 @@ p2 <- ggplot(
     )
 )
 
-gen_multi_plot_two(
-    p1, p2,
-    "anomaly link perc",
-    "avg ratio gtfp",
-    "F1",
-    "F1",
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "f1_scores",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "anomaly link perc", # y1
+    "avg ratio gtfp", # y2
+    "num_classifications", # y3
+    "avg ratio gtfp", # y4
+    "avg ratio gtfp", # y5
+    "avg ratio gtfp", # y6
+    "F1", # x1
+    "F1", # x2
+    "F1", # x3
+    "F1", # x4
+    "F1", # x5
+    "F1", # x6
     "f1_end_res_corr.png"
 )
 
