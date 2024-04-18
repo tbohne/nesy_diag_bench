@@ -60,9 +60,14 @@ compensation_gtfp = [
     for i in range(len(df["avg_f1"]))
 ]
 
-sum_of_fault_pahts_and_dev = [
+sum_of_avg_fault_paths_and_dev = [
     round(df["fp_dev_mean"][i] + df["avg_num_fault_paths"][i], 2)
     for i in range(len(df["fp_dev_mean"]))
+]
+
+sum_of_max_fault_paths_and_dev = [
+    round(df["fp_dev_max"][i] + df["max_num_fault_paths"][i], 2)
+    for i in range(len(df["fp_dev_max"]))
 ]
 
 with open("meta_analysis.csv", mode='a', newline='') as csv_file:
@@ -73,7 +78,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
         "anomaly_perc_model_acc_ratio", "num_classifications", "avg_num_fault_paths", "avg_fault_path_len",
         "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)", "median_num_fault_paths",
-        "median_fault_path_len", "sum_of_fault_pahts_and_dev"]
+        "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
+        "max_runtime (s)"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -99,5 +105,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["median_runtime (s)"][i],
             df["median_num_fault_paths"][i],
             df["median_fault_path_len"][i],
-            sum_of_fault_pahts_and_dev[i]
+            sum_of_avg_fault_paths_and_dev[i],
+            sum_of_max_fault_paths_and_dev[i],
+            df["max_runtime (s)"][i]
         ])
