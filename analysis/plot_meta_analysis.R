@@ -884,3 +884,76 @@ gen_multi_plot_six(
     "median_num_fault_paths", # x6
     "correlation_runtime_fault_paths.png"
 )
+
+# correlation (median + mean) runtime and sum of (mean + max) fp + fp dev
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_avg_fault_paths_and_dev",
+        y = "`avg_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_max_fault_paths_and_dev",
+        y = "`max_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_avg_fault_paths_and_dev",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_avg_fault_paths_and_dev",
+        y = "`max_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_max_fault_paths_and_dev",
+        y = "`avg_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_max_fault_paths_and_dev",
+        y = "`median_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "`avg_runtime (s)`", # y1
+    "`max_runtime (s)`", # y2
+    "`median_runtime (s)`", # y3
+    "`max_runtime (s)`", # y4
+    "`avg_runtime (s)`", # y5
+    "`median_runtime (s)`", # y6
+    "sum_of_avg_fault_paths_and_dev", # x1
+    "sum_of_max_fault_paths_and_dev", # x2
+    "sum_of_avg_fault_paths_and_dev", # x3
+    "sum_of_avg_fault_paths_and_dev", # x4
+    "sum_of_max_fault_paths_and_dev", # x5
+    "sum_of_max_fault_paths_and_dev", # x6
+    "correlation_runtime_fault_paths_sum.png"
+)
