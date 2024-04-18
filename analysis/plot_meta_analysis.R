@@ -885,7 +885,7 @@ gen_multi_plot_six(
     "correlation_runtime_fault_paths.png"
 )
 
-# correlation (median + mean) runtime and sum of (mean + max) fp + fp dev
+# correlation (median + mean + max) runtime and sum of (mean + max) fp + fp dev
 
 p1 <- ggplot(
     data = input, aes_string(
