@@ -958,7 +958,7 @@ gen_multi_plot_six(
     "correlation_runtime_fault_paths_sum.png"
 )
 
-# correlation product of anomaly_perc, aff_by, and model_acc vs. false pos
+# correlation alpha, beta, gamma vs. FPs
 
 p1 <- ggplot(
     data = input, aes_string(
