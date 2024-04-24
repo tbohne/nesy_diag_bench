@@ -1,10 +1,11 @@
 import pandas as pd
 import csv
+import numpy as np
 
 df = pd.read_csv("cumulative_res.csv")
 
-anomaly_percentages = [i.split("_")[1] for i in df["instance_set"]]
-affected_by_percentages = [i.split("_")[2] for i in df["instance_set"]]
+anomaly_percentages = [float(i.split("_")[1]) for i in df["instance_set"]]
+affected_by_percentages = [float(i.split("_")[2]) for i in df["instance_set"]]
 
 # `affected_by` has a positive and a negative effect
 #   - pos: can compensate false negatives by reaching the component again
@@ -18,6 +19,31 @@ anomaly_perc_aff_by_ratio = [
 anomaly_perc_aff_by_prod = [
     float(anomaly_percentages[i]) * float(affected_by_percentages[i])
     for i in range(len(anomaly_percentages))
+]
+
+anomaly_perc_aff_by_model_acc_aggregation = [
+    (float(anomaly_percentages[i]) + float(affected_by_percentages[i])) / df["avg_model_acc"][i]
+    # float(anomaly_percentages[i]) * float(affected_by_percentages[i]) * df["avg_model_acc"][i]
+    # np.average(
+    #     [float(anomaly_percentages[i]), float(affected_by_percentages[i]), df["avg_model_acc"][i]],
+    #     weights=[0.5, 0.3, 1]
+    # )
+    for i in range(len(anomaly_percentages))
+]
+
+anomaly_percentages_filtered = [anomaly_percentages[i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0]
+affected_by_percentages_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if df["avg_model_acc"][i] != 1.0]
+model_acc_filtered = [df["avg_model_acc"][i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0]
+avg_fp_filtered = [df["avg_fp"][i] for i in range(len(df["avg_fp"])) if df["avg_model_acc"][i] != 1.0]
+
+anomaly_perc_aff_by_model_acc_aggregation_filtered = [
+    (float(anomaly_percentages_filtered[i]) + float(affected_by_percentages_filtered[i])) / model_acc_filtered[i]
+    # float(anomaly_percentages[i]) * float(affected_by_percentages[i]) * df["avg_model_acc"][i]
+    # np.average(
+    #     [float(anomaly_percentages[i]), float(affected_by_percentages[i]), df["avg_model_acc"][i]],
+    #     weights=[1, 1, 0.8]
+    # )
+    for i in range(len(anomaly_percentages_filtered))
 ]
 
 # basic idea: the worse the model, the better the graph should be connected in
@@ -79,7 +105,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "anomaly_perc_model_acc_ratio", "num_classifications", "avg_num_fault_paths", "avg_fault_path_len",
         "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)", "median_num_fault_paths",
         "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
-        "max_runtime (s)"]
+        "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -107,5 +133,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["median_fault_path_len"][i],
             sum_of_avg_fault_paths_and_dev[i],
             sum_of_max_fault_paths_and_dev[i],
-            df["max_runtime (s)"][i]
+            df["max_runtime (s)"][i],
+            anomaly_perc_aff_by_model_acc_aggregation[i],
+            df["avg_fp"][i]
         ])
