@@ -753,7 +753,7 @@ p1 <- ggplot(
 p2 <- ggplot(
     data = input, aes_string(
         x = "avg_fault_path_len",
-        y = "affected_by_perc",
+        y = "avg_num_fault_paths",
         color = "gt_match",
         group = "gt_match"
     )
@@ -798,7 +798,7 @@ p6 <- ggplot(
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
     "affected_by_perc", # y1
-    "affected_by_perc", # y2
+    "avg_num_fault_paths", # y2
     "anomaly_perc", # y3
     "anomaly_perc", # y4
     "anomaly_perc_aff_by_prod", # y5
