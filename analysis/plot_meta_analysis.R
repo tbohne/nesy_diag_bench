@@ -1032,3 +1032,78 @@ gen_multi_plot_six(
     "avg_fp", # x6
     "anomaly_perc_aff_by_model_acc_aggregation.png"
 )
+
+# correlation alpha, beta, gamma vs. FNs
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fn",
+        y = "anomaly_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fn",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fn",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fn",
+        y = "anomaly_perc_model_acc_aggregation",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+filtered_data <- subset(input, avg_model_acc < 1)
+
+p5 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_fn",
+        y = "anomaly_perc_model_acc_aggregation",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "avg_fn",
+        y = "num_classifications_model_acc_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "anomaly_perc", # y1
+    "affected_by_perc", # y2
+    "avg_model_acc", # y3
+    "anomaly_perc_model_acc_aggregation", # y4
+    "anomaly_perc_model_acc_aggregation", # y5
+    "num_classifications_model_acc_ratio", # y6
+    "avg_fn", # x1
+    "avg_fn", # x2
+    "avg_fn", # x3
+    "avg_fn", # x4
+    "avg_fn (filtered out 100% acc models)", # x5
+    "avg_fn", # x6
+    "anomaly_perc_aff_by_model_acc_aggregation_fn.png"
+)
