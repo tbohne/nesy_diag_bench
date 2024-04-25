@@ -138,3 +138,28 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["avg_fp"][i],
             df["avg_fn"][i]
         ])
+
+################## correlation coefficients
+
+# FOR FPs
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_model_acc_aggregation, df["avg_fp"])
+print("corrcoef anomaly_perc_aff_by_model_acc_aggregation --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_fp"])
+print("corrcoef anomaly percentage --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_fp"])
+print("corrcoef affected by percentage --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["avg_fp"])
+print("corrcoef avg model acc --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fp"])
+print("corrcoef anomaly perc aff by prod --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["avg_fp"])
+print("corrcoef num classifications model acc ratio --- FP:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_model_acc_aggregation_filtered, avg_fp_filtered)
+print("corrcoef anomaly_perc_aff_by_model_acc_aggregation_filtered --- FP filtered", round(correlation_matrix[0, 1], 2))
