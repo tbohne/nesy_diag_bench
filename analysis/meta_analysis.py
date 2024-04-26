@@ -200,3 +200,16 @@ print("corrcoef num classifications model acc ratio --- FN:", round(correlation_
 
 correlation_matrix = np.corrcoef(anomaly_perc_model_acc_aggregation_filtered, avg_fn_filtered)
 print("corrcoef anomaly_perc_model_acc_aggregation_filtered --- FN filtered", round(correlation_matrix[0, 1], 2))
+
+# for runtime analysis
+
+print("-------------------------------------------------------------------------------------------")
+
+correlation_matrix = np.corrcoef(sum_of_max_fault_paths_and_dev, df["max_runtime (s)"])
+print("corrcoef sum_of_max_fault_paths_and_dev --- max_runtime:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(sum_of_avg_fault_paths_and_dev, df["max_runtime (s)"])
+print("corrcoef sum_of_avg_fault_paths_and_dev --- max_runtime:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_num_fault_paths"], df["avg_fault_path_len"])
+print("corrcoef avg_num_fault_paths --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
