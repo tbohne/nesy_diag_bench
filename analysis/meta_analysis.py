@@ -213,3 +213,16 @@ print("corrcoef sum_of_avg_fault_paths_and_dev --- max_runtime:", round(correlat
 
 correlation_matrix = np.corrcoef(df["avg_num_fault_paths"], df["avg_fault_path_len"])
 print("corrcoef avg_num_fault_paths --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+
+# more
+
+print("-------------------------------------------------------------------------------------------")
+
+correlation_matrix = np.corrcoef(df["avg_f1"], num_classifications)
+print("corrcoef F1 --- num_classifications:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_f1"], df["avg_ratio_of_found_gtfp"])
+print("corrcoef F1 --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_f1"], anomaly_link_perc_scores)
+print("corrcoef F1 --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
