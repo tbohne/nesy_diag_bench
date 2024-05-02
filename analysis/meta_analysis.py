@@ -151,6 +151,47 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             anomaly_perc_model_acc_aggregation[i]
         ])
 
+#################################
+
+true_num_anomalies = [
+    round(129 * anomaly_percentages[i] / 100.0) for i in range(len(df["avg_tp"]))
+]
+print("true num anomalies:\n", true_num_anomalies)
+
+avg_num_found_anomalies = [round(df["avg_fp"][i] + df["avg_tp"][i], 1) for i in range(len(df["avg_tp"]))]
+print("\nfound anomalies:\n", avg_num_found_anomalies)
+
+# negative -> found more than expected due to FPs
+diff_ano = [
+    round(true_num_anomalies[i] - avg_num_found_anomalies[i], 1) for i in range(len(df["avg_tp"]))
+]
+print("\ndiff:\n", diff_ano)
+
+# missed not as some consequence of the misclassification, but only the misclassifications themselves
+miss_due_to_class_iss = [
+    round(df["avg_fn"][i], 2) for i in range(len(avg_num_found_anomalies))
+]
+print("\nmissed due to wrong classification:\n", miss_due_to_class_iss)
+
+correctly_found = [df["avg_tp"][i] for i in range(len(df["avg_tp"]))]
+
+# entirely missed, not even considered due to abortion criterion
+missed_anomalies_unclassified = [
+    round(true_num_anomalies[i] - miss_due_to_class_iss[i] - correctly_found[i], 2) for i in range(len(df["avg_tp"]))
+]
+print("\nentirely missed anomalies:\n", missed_anomalies_unclassified)
+
+all_missed_anomalies = [
+    round(true_num_anomalies[i] - df["avg_tp"][i], 2) for i in range(len(true_num_anomalies))
+]
+print("\nall missed anomalies:\n", all_missed_anomalies)
+
+assert all(round(miss_due_to_class_iss[i] + missed_anomalies_unclassified[i], 2) == all_missed_anomalies[i]
+    for i in range(len(all_missed_anomalies)))
+
+sum_missed_and_correct = [round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1) for i in range(len(true_num_anomalies))]
+assert all(sum_missed_and_correct[i] == true_num_anomalies[i] for i in range(len(true_num_anomalies)))
+
 ################## correlation coefficients
 
 # FOR FPs
@@ -226,3 +267,6 @@ print("corrcoef F1 --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1]
 
 correlation_matrix = np.corrcoef(df["avg_f1"], anomaly_link_perc_scores)
 print("corrcoef F1 --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_f1"], df["gt_match_perc"])
+print("corrcoef F1 --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
