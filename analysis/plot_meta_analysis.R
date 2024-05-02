@@ -1107,3 +1107,76 @@ gen_multi_plot_six(
     "avg_fn", # x6
     "anomaly_perc_aff_by_model_acc_aggregation_fn.png"
 )
+
+# correlation missed anomalies vs. performance
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "all_missed_anomalies",
+        y = "anomaly_link_perc_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "missed_anomalies_unclassified",
+        y = "anomaly_link_perc_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "miss_due_to_class_iss",
+        y = "anomaly_link_perc_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "all_missed_anomalies",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "missed_anomalies_unclassified",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "miss_due_to_class_iss",
+        y = "avg_ratio_gtfp",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "anomaly_link_perc_scores", # y1
+    "anomaly_link_perc_scores", # y2
+    "anomaly_link_perc_scores", # y3
+    "avg_ratio_gtfp", # y4
+    "avg_ratio_gtfp", # y5
+    "avg_ratio_gtfp", # y6
+    "all_missed_anomalies", # x1
+    "missed_anomalies_unclassified", # x2
+    "miss_due_to_class_iss", # x3
+    "all_missed_anomalies", # x4
+    "missed_anomalies_unclassified", # x5
+    "miss_due_to_class_iss", # x6
+    "correlation_missed_anomalies_perf.png"
+)
