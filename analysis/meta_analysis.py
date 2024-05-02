@@ -294,3 +294,6 @@ print("corrcoef missed_anomalies_unclassified --- avg_ratio_of_found_gtfp:", rou
 
 correlation_matrix = np.corrcoef(miss_due_to_class_iss, df["avg_ratio_of_found_gtfp"])
 print("corrcoef miss_due_to_class_iss --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_ano_link)
+print("corrcoef anomaly_perc_aff_by_ratio --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
