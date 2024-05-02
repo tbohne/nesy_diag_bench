@@ -276,3 +276,21 @@ print("corrcoef F1 --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1
 
 correlation_matrix = np.corrcoef(df["avg_f1"], df["gt_match_perc"])
 print("corrcoef F1 --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(all_missed_anomalies, anomaly_link_perc_scores)
+print("corrcoef all_missed_anomalies --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(missed_anomalies_unclassified, anomaly_link_perc_scores)
+print("corrcoef missed_anomalies_unclassified --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(miss_due_to_class_iss, anomaly_link_perc_scores)
+print("corrcoef miss_due_to_class_iss --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(all_missed_anomalies, df["avg_ratio_of_found_gtfp"])
+print("corrcoef all_missed_anomalies --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(missed_anomalies_unclassified, df["avg_ratio_of_found_gtfp"])
+print("corrcoef missed_anomalies_unclassified --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(miss_due_to_class_iss, df["avg_ratio_of_found_gtfp"])
+print("corrcoef miss_due_to_class_iss --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
