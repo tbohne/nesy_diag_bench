@@ -105,18 +105,18 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_ratio_gtfp",
-    "anomaly_perc_aff_by_ratio",
-    "anomaly_perc_aff_by_ratio",
-    "anomaly_perc_aff_by_ratio",
-    "compensation_ano_link",
-    "anomaly_perc_aff_by_ratio",
-    "compensation_ano_link",
-    "compensation_ano_link",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
-    "compensation_gtfp",
-    "compensation_gtfp",
+    "avg_ratio_gtfp", # y1
+    "anomaly_perc_aff_by_ratio", # y2
+    "anomaly_perc_aff_by_ratio", # y3
+    "anomaly_perc_aff_by_ratio", # y4
+    "ano_link - F1", # y5
+    "anomaly_perc_aff_by_ratio", # y6
+    "ano_link - F1", # x1
+    "ano_link - F1", # x2
+    "anomaly_link_perc_scores", # x3
+    "avg_ratio_gtfp", # x4
+    "avg ratio gtfp - F1", # x5
+    "avg ratio gtfp - F1", # x6
     "compensation_analysis.png"
 )
 
