@@ -124,7 +124,7 @@ gen_multi_plot_six(
 
 p1 <- ggplot(
     data = input, aes_string(
-        x = "compensation_ano_link",
+        x = "anomaly_link_perc_scores",
         y = "avg_ratio_gtfp",
         color = "gt_match",
         group = "gt_match"
@@ -160,8 +160,8 @@ p4 <- ggplot(
 
 p5 <- ggplot(
     data = input, aes_string(
-        x = "compensation_gtfp",
-        y = "compensation_ano_link",
+        x = "compensation_ano_link",
+        y = "compensation_gtfp",
         color = "gt_match",
         group = "gt_match"
     )
@@ -178,18 +178,18 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_ratio_gtfp",
-    "anomaly_perc_aff_by_prod",
-    "anomaly_perc_aff_by_prod",
-    "anomaly_perc_aff_by_prod",
-    "compensation_ano_link",
-    "anomaly_perc_aff_by_prod",
-    "compensation_ano_link",
-    "compensation_ano_link",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
-    "compensation_gtfp",
-    "compensation_gtfp",
+    "avg_ratio_gtfp", # y1
+    "anomaly_perc_aff_by_prod", # y2
+    "anomaly_perc_aff_by_prod", # y3
+    "anomaly_perc_aff_by_prod", # y4
+    "avg ratio gtfp - F1", # y5
+    "anomaly_perc_aff_by_prod", # y6
+    "anomaly_link_perc_scores", # x1
+    "ano link perc - F1", # x2
+    "anomaly_link_perc_scores", # x3
+    "avg_ratio_gtfp", # x4
+    "ano link perc - F1", # x5
+    "avg ratio gtfp - F1", # x6
     "compensation_analysis_prod.png"
 )
 
