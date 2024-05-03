@@ -160,7 +160,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
         "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp", "avg_fn",
         "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
-        "all_missed_anomalies"]
+        "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -195,7 +195,10 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             anomaly_perc_model_acc_aggregation[i],
             miss_due_to_class_iss[i],
             missed_anomalies_unclassified[i],
-            all_missed_anomalies[i]
+            all_missed_anomalies[i],
+            df["diag_success_percentage"][i],
+            df["fp_dev_max"][i],
+            df["fp_dev_mean"][i]
         ])
 
 ################## correlation coefficients
