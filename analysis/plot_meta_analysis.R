@@ -724,12 +724,56 @@ p2 <- ggplot(
     )
 )
 
-gen_multi_plot_two(
-    p1, p2,
-    "num_classifications",
-    "num_classifications",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "gt_match_perc",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "diag_success_percentage",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_mean",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_max",
+        y = "num_classifications",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "num_classifications", # y1
+    "num_classifications", # y2
+    "num_classifications", # y3
+    "num_classifications", # y4
+    "num_classifications", # y5
+    "num_classifications", # y6
+    "anomaly_link_perc_scores", # x1
+    "avg_ratio_gtfp", # x2
+    "gt_match_perc", # x3
+    "diag_success_percentage", # x4
+    "fp_dev_mean", # x5
+    "fp_dev_max", # x6
     "num_classifications_perf.png"
 )
 
