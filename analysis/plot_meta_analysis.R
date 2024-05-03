@@ -286,12 +286,56 @@ p2 <- ggplot(
     )
 )
 
-gen_multi_plot_two(
-    p1, p2,
-    "model_acc_connectivity_ratio",
-    "model_acc_connectivity_ratio",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "gt_match_perc",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "diag_success_percentage",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_mean",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_max",
+        y = "model_acc_connectivity_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "model_acc_connectivity_ratio", # y1
+    "model_acc_connectivity_ratio", # y2
+    "model_acc_connectivity_ratio", # y3
+    "model_acc_connectivity_ratio", # y4
+    "model_acc_connectivity_ratio", # y5
+    "model_acc_connectivity_ratio", # y6
+    "anomaly_link_perc_scores", # x1
+    "avg_ratio_gtfp", # x2
+    "gt_match_perc", # x3
+    "diag_success_percentage", # x4
+    "fp_dev_mean", # x5
+    "fp_dev_max", # x6
     "modelacc_connectivity_performance.png"
 )
 
