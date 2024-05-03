@@ -373,12 +373,56 @@ p2 <- ggplot(
     )
 )
 
-gen_multi_plot_two(
-    p1, p2,
-    "avg_model_acc",
-    "avg_model_acc",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "gt_match_perc",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "diag_success_percentage",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_mean",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_max",
+        y = "avg_model_acc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "avg_model_acc", # y1
+    "avg_model_acc", # y2
+    "avg_model_acc", # y3
+    "avg_model_acc", # y4
+    "avg_model_acc", # y5
+    "avg_model_acc", # y6
+    "anomaly_link_perc_scores", # x1
+    "avg_ratio_gtfp", # x2
+    "gt_match_perc", # x3
+    "diag_success_percentage", # x4
+    "fp_dev_mean", # x5
+    "fp_dev_max", # x6
     "model_acc_perf.png"
 )
 
