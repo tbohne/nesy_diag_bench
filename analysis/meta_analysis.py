@@ -390,3 +390,25 @@ print("corrcoef anomaly_percentages --- fp_dev_mean:", round(correlation_matrix[
 
 correlation_matrix = np.corrcoef(anomaly_percentages, df["fp_dev_max"])
 print("corrcoef anomaly_percentages --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# gamme / beta
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, anomaly_link_perc_scores)
+print("corrcoef model_acc_connectivity_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["avg_ratio_of_found_gtfp"])
+print("corrcoef model_acc_connectivity_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["gt_match_perc"])
+print("corrcoef model_acc_connectivity_ratio --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["diag_success_percentage"])
+print("corrcoef model_acc_connectivity_ratio --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["fp_dev_mean"])
+print("corrcoef model_acc_connectivity_ratio --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["fp_dev_max"])
+print("corrcoef model_acc_connectivity_ratio --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
