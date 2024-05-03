@@ -324,3 +324,25 @@ print("corrcoef avg_model_acc --- fp_dev_mean:", round(correlation_matrix[0, 1],
 
 correlation_matrix = np.corrcoef(df["avg_model_acc"], df["fp_dev_max"])
 print("corrcoef avg_model_acc --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# affected by
+
+correlation_matrix = np.corrcoef(affected_by_percentages, anomaly_link_perc_scores)
+print("corrcoef affected_by_percentages --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_ratio_of_found_gtfp"])
+print("corrcoef affected_by_percentages --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["gt_match_perc"])
+print("corrcoef affected_by_percentages --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["diag_success_percentage"])
+print("corrcoef affected_by_percentages --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["fp_dev_mean"])
+print("corrcoef affected_by_percentages --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["fp_dev_max"])
+print("corrcoef affected_by_percentages --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
