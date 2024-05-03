@@ -203,6 +203,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
 
 ################## correlation coefficients
 
+print("\n----- correlation coefficients -----\n")
+
 # FOR FPs
 
 correlation_matrix = np.corrcoef(anomaly_perc_aff_by_model_acc_aggregation, df["avg_fp"])
@@ -300,3 +302,25 @@ print("corrcoef miss_due_to_class_iss --- avg_ratio_of_found_gtfp:", round(corre
 
 correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_ano_link)
 print("corrcoef anomaly_perc_aff_by_ratio --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# model acc
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], anomaly_link_perc_scores)
+print("corrcoef avg_model_acc --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["avg_ratio_of_found_gtfp"])
+print("corrcoef avg_model_acc --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["gt_match_perc"])
+print("corrcoef avg_model_acc --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["diag_success_percentage"])
+print("corrcoef avg_model_acc --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["fp_dev_mean"])
+print("corrcoef avg_model_acc --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_model_acc"], df["fp_dev_max"])
+print("corrcoef avg_model_acc --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
