@@ -434,3 +434,25 @@ print("corrcoef num_classifications_model_acc_ratio --- fp_dev_mean:", round(cor
 
 correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["fp_dev_max"])
 print("corrcoef num_classifications_model_acc_ratio --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# n_c
+
+correlation_matrix = np.corrcoef(num_classifications, anomaly_link_perc_scores)
+print("corrcoef num_classifications --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications, df["avg_ratio_of_found_gtfp"])
+print("corrcoef num_classifications --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications, df["gt_match_perc"])
+print("corrcoef num_classifications --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications, df["diag_success_percentage"])
+print("corrcoef num_classifications --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications, df["fp_dev_mean"])
+print("corrcoef num_classifications --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(num_classifications, df["fp_dev_max"])
+print("corrcoef num_classifications --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
