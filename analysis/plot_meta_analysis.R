@@ -344,12 +344,56 @@ p2 <- ggplot(
     )
 )
 
-gen_multi_plot_two(
-    p1, p2,
-    "affected_by_perc",
-    "affected_by_perc",
-    "anomaly_link_perc_scores",
-    "avg_ratio_gtfp",
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "gt_match_perc",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "diag_success_percentage",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_mean",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "fp_dev_max",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "affected_by_perc", # y1
+    "affected_by_perc", # y2
+    "affected_by_perc", # y3
+    "affected_by_perc", # y4
+    "affected_by_perc", # y5
+    "affected_by_perc", # y6
+    "anomaly_link_perc_scores", # x1
+    "avg_ratio_gtfp", # x2
+    "gt_match_perc", # x3
+    "diag_success_percentage", # x4
+    "fp_dev_mean", # x5
+    "fp_dev_max", # x6
     "aff_by_perf.png"
 )
 
