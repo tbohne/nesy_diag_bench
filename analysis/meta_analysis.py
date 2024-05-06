@@ -478,3 +478,25 @@ print("corrcoef compensation_gtfp --- compensation_ano_link:", round(correlation
 
 correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, compensation_gtfp)
 print("corrcoef anomaly_perc_aff_by_prod --- compensation_gtfp:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# complicated plot -- ratio
+
+correlation_matrix = np.corrcoef(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
+print("corrcoef avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_ano_link)
+print("corrcoef anomaly_perc_aff_by_ratio --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, anomaly_link_perc_scores)
+print("corrcoef anomaly_perc_aff_by_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, df["avg_ratio_of_found_gtfp"])
+print("corrcoef anomaly_perc_aff_by_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(compensation_gtfp, compensation_ano_link)
+print("corrcoef compensation_gtfp --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_gtfp)
+print("corrcoef anomaly_perc_aff_by_ratio --- compensation_gtfp:", round(correlation_matrix[0, 1], 2))
