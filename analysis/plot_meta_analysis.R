@@ -51,7 +51,7 @@ input$gt_match <- cut(
 
 p1 <- ggplot(
     data = input, aes_string(
-        x = "compensation_ano_link",
+        x = "anomaly_link_perc_scores",
         y = "avg_ratio_gtfp",
         color = "gt_match",
         group = "gt_match"
@@ -87,8 +87,8 @@ p4 <- ggplot(
 
 p5 <- ggplot(
     data = input, aes_string(
-        x = "compensation_gtfp",
-        y = "compensation_ano_link",
+        x = "compensation_ano_link",
+        y = "compensation_gtfp",
         color = "gt_match",
         group = "gt_match"
     )
@@ -109,13 +109,13 @@ gen_multi_plot_six(
     "anomaly_perc_aff_by_ratio", # y2
     "anomaly_perc_aff_by_ratio", # y3
     "anomaly_perc_aff_by_ratio", # y4
-    "ano_link - F1", # y5
+    "avg ratio gtfp - F1", # y5
     "anomaly_perc_aff_by_ratio", # y6
-    "ano_link - F1", # x1
-    "ano_link - F1", # x2
+    "anomaly_link_perc_scores", # x1
+    "ano link perc - F1", # x2
     "anomaly_link_perc_scores", # x3
     "avg_ratio_gtfp", # x4
-    "avg ratio gtfp - F1", # x5
+    "ano link perc - F1", # x5
     "avg ratio gtfp - F1", # x6
     "compensation_analysis.png"
 )
