@@ -500,3 +500,25 @@ print("corrcoef compensation_gtfp --- compensation_ano_link:", round(correlation
 
 correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_gtfp)
 print("corrcoef anomaly_perc_aff_by_ratio --- compensation_gtfp:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# num of fault paths / fault path length
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_num_fault_paths"])
+print("corrcoef affected_by_percentages --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_num_fault_paths"], df["avg_fault_path_len"])
+print("corrcoef avg_num_fault_paths --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_num_fault_paths"])
+print("corrcoef anomaly_percentages --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_fault_path_len"])
+print("corrcoef anomaly_percentages --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_num_fault_paths"])
+print("corrcoef anomaly_perc_aff_by_prod --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fault_path_len"])
+print("corrcoef anomaly_perc_aff_by_prod --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
