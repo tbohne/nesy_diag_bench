@@ -147,7 +147,21 @@ assert all(round(miss_due_to_class_iss[i] + missed_anomalies_unclassified[i], 2)
 sum_missed_and_correct = [round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1) for i in range(len(true_num_anomalies))]
 assert all(sum_missed_and_correct[i] == true_num_anomalies[i] for i in range(len(true_num_anomalies)))
 
-##################################
+# permutations -- and approximations (expected fault paths)
+permutations = [np.math.factorial(i) for i in true_num_anomalies]
+permutation_perc = [round(df["avg_num_fault_paths"][i] / permutations[i] * 100.0, 2) for i in range(len(permutations))]
+# there's at least one fault path per anomalous component and then potentially more based on beta, thus "+"
+permutation_approx = [true_num_anomalies[i] + np.math.factorial(1 + round((true_num_anomalies[i] - 1) * affected_by_percentages[i] / 2 / 100.0)) for i in range(len(true_num_anomalies))]
+approx_perc = [round(df["avg_num_fault_paths"][i] / permutation_approx[i] * 100.0, 2) for i in range(len(permutations))]
+permutations = [np.format_float_scientific(i, precision=2) for i in permutations]
+print("\n-----------------------------------------------------------------------")
+print("avg approx perc:", round(np.average(approx_perc), 2))
+print("median approx perc:", round(np.median(approx_perc), 2))
+print("max approx perc:", round(np.max(approx_perc), 2))
+print("min approx perc:", round(np.min(approx_perc), 2))
+print("-----------------------------------------------------------------------")
+
+#################################
 
 with open("meta_analysis.csv", mode='a', newline='') as csv_file:
     writer = csv.writer(csv_file)
@@ -160,7 +174,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
         "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp", "avg_fn",
         "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
-        "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean"]
+        "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
+        "permutation_perc", "permutation_approx", "approx_perc"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -198,7 +213,11 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             all_missed_anomalies[i],
             df["diag_success_percentage"][i],
             df["fp_dev_max"][i],
-            df["fp_dev_mean"][i]
+            df["fp_dev_mean"][i],
+            permutations[i],
+            permutation_perc[i],
+            permutation_approx[i],
+            approx_perc[i]
         ])
 
 ################## correlation coefficients
