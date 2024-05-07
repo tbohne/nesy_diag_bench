@@ -83,7 +83,7 @@ def get_causal_links_from_fault_paths(fault_paths):
 def write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio,
-        ratio_of_found_gtfp, diag_success
+        ratio_of_found_gtfp, diag_success, compensation_by_aff_by_savior, missed_chances, no_second_chance
 ):
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
@@ -95,11 +95,13 @@ def write_instance_res_to_csv(
             writer.writerow(
                 ["instance", "TP", "TN", "FP", "FN", "#fp_dev", "acc", "prec", "rec", "spec", "F1", "ano_link_perc",
                  "avg_model_acc", "gt_match", "#fault_paths", "ratio_of_found_gtfp", "avg_fp_len", "runtime (s)",
-                 "classification_ratio", "diag_success"]
+                 "classification_ratio", "diag_success", "compensation_by_aff_by_savior", "missed_chances",
+                 "no_second_chance"]
             )
         writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
                          found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, ratio_of_found_gtfp,
-                         avg_fp_len, runtime, classification_ratio, diag_success])
+                         avg_fp_len, runtime, classification_ratio, diag_success, compensation_by_aff_by_savior,
+                         missed_chances, no_second_chance])
 
 
 def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime, diag_success):
@@ -194,11 +196,69 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     # ratio of classified components to all components
     classification_ratio = round(float(tp + fp + tn + fn) / float(instance.split("/")[1].split("_")[0]), 2)
 
+    compensation_by_aff_by_savior, missed_chances, no_second_chance = measure_compensation(tp, tn, fp, fn)
+
     write_instance_res_to_csv(
         instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
         found_anomaly_links_percentage, round(np.average(model_accuracies), 2), gt_match, num_fps, avg_fp_len, runtime,
-        classification_ratio, ratio_of_found_gtfp, diag_success
+        classification_ratio, ratio_of_found_gtfp, diag_success, compensation_by_aff_by_savior, missed_chances,
+        no_second_chance
     )
+
+
+def measure_compensation(tp, tn, fp, fn):
+    with open(SESSION_DIR + "/" + "classifications.json", 'r') as file:
+        classifications = json.load(file)
+    classified_comps = {  # mapping component to classification res
+        list(classifications[i].keys())[0]: classifications[i][list(classifications[i].keys())[0]]
+        for i in range(len(classifications))
+    }
+    compensation_aff_by_savior = 0
+    missed_chance = 0
+    no_second_chance = 0
+    already_saved = []
+
+    for c in classified_comps:  # find FNs (+ TNs)
+        pred = classified_comps[c]
+        gt = ground_truth_components[c][0]
+        if pred == False and gt == True:
+            print(c, "is FN")
+        elif pred == False and gt == False:
+            print(c, "is TN")
+        if not pred:  # FN or TN
+            # go through affected by relations of the negatively classified component
+            print("going through aff-by for", c)
+            for aff_by in ground_truth_components[c][1]:
+                # if anomaly + not considered
+                if ground_truth_components[aff_by][0]:  # and aff_by not in classified_comps:
+                    print(aff_by, "ground truth anomaly, i.e., unconsidered (via this link) anomaly")
+                    if aff_by in classified_comps:  # found via another link?
+                        print(aff_by, "classified via another link -- as", classified_comps[aff_by])
+                        if aff_by not in already_saved:  # counting each comp only once
+                            already_saved.append(aff_by)
+                            # TODO: this measure should highly correlate with beta (aff-by) -- this would prove compensation (!)
+                            compensation_aff_by_savior += 1
+                            # TODO: what about following anomalies based on this entry, should I count them as well?
+                            #       could be arbitrary many
+                        else:
+                            print("not counted again...")
+                    else:  # missed anomaly
+                        tmp_missed_chances = missed_chance
+                        # not found, but would it have been possible? what do I mean by possible here?
+                        # it means that there was another classification I performed that was wrong
+                        # it just means that there would've been another component, an unused savior
+                        for comp in ground_truth_components:
+                            if comp not in classified_comps and aff_by in ground_truth_components[comp][1]:
+                                print("there would've been a chance:", comp)
+                                missed_chance += 1
+                                break
+                        if tmp_missed_chances == missed_chance:
+                            no_second_chance += 1
+
+    # some sanity checks
+    assert compensation_aff_by_savior <= tn + fn
+
+    return compensation_aff_by_savior, missed_chance, no_second_chance
 
 
 if __name__ == '__main__':
@@ -221,6 +281,7 @@ if __name__ == '__main__':
             problem_instance = json.load(f)
 
         ground_truth_fault_paths = problem_instance["ground_truth_fault_paths"]
+        ground_truth_components = problem_instance["suspect_components"]
         diag_success = fault_paths != "no_diag"
         determined_fault_paths = [path.split(" -> ") for path in fault_paths] if diag_success else []
 
