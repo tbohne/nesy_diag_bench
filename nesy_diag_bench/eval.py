@@ -236,7 +236,7 @@ def measure_compensation(tp, tn, fp, fn):
                         print(aff_by, "classified via another link -- as", classified_comps[aff_by])
                         if aff_by not in already_saved:  # counting each comp only once
                             already_saved.append(aff_by)
-                            # TODO: this measure should highly correlate with beta (aff-by) -- this would prove compensation (!)
+                            # TODO: this measure should highly correlate with beta (aff-by) -- this would indicate compensation (!)
                             compensation_aff_by_savior += 1
                             # TODO: what about following anomalies based on this entry, should I count them as well?
                             #       could be arbitrary many
