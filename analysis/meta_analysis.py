@@ -128,6 +128,10 @@ miss_due_to_class_iss = [
 ]
 print("\nmissed due to wrong classification:\n", miss_due_to_class_iss)
 
+fn_tn_sum = [
+    round(df["avg_fn"][i] + df["avg_tn"], 2) for i in range(len(avg_num_found_anomalies))
+]
+
 correctly_found = [df["avg_tp"][i] for i in range(len(df["avg_tp"]))]
 
 # entirely missed, not even considered due to abortion criterion
@@ -175,7 +179,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp", "avg_fn",
         "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
         "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
-        "permutation_perc", "permutation_approx", "approx_perc"]
+        "permutation_perc", "permutation_approx", "approx_perc", "avg_compensation_by_aff_by_savior",
+        "avg_missed_chances", "avg_no_second_chance"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -217,7 +222,10 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             permutations[i],
             permutation_perc[i],
             permutation_approx[i],
-            approx_perc[i]
+            approx_perc[i],
+            df["avg_compensation_by_aff_by_savior"][i],
+            df["avg_missed_chances"][i],
+            df["avg_no_second_chance"][i]
         ])
 
 ################## correlation coefficients
@@ -541,3 +549,33 @@ print("corrcoef anomaly_perc_aff_by_prod --- avg_num_fault_paths:", round(correl
 
 correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fault_path_len"])
 print("corrcoef anomaly_perc_aff_by_prod --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# compensation
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_compensation_by_aff_by_savior"])
+print("corrcoef affected_by_percentages --- avg_compensation_by_aff_by_savior:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(fn_tn_sum, df["avg_compensation_by_aff_by_savior"])
+print("corrcoef fn_tn_sum --- avg_compensation_by_aff_by_savior:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_missed_chances"])
+print("corrcoef affected_by_percentages --- avg_missed_chances:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_no_second_chance"])
+print("corrcoef affected_by_percentages --- avg_no_second_chance:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(df["avg_ratio_of_found_gtfp"], df["avg_missed_chances"])
+print("corrcoef avg_ratio_of_found_gtfp --- avg_missed_chances:", round(correlation_matrix[0, 1], 2))
+
+print("-------------------------------------------------------------------------------------------")
+
+# misc
+
+potentially_missed = [
+    all_missed_anomalies[i] + df["avg_compensation_by_aff_by_savior"][i] for i in range(len(all_missed_anomalies))
+]
+
+correlation_matrix = np.corrcoef(df["avg_compensation_by_aff_by_savior"], potentially_missed)
+print("corrcoef avg_compensation_by_aff_by_savior --- potentially_missed:", round(correlation_matrix[0, 1], 2))
