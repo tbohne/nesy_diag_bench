@@ -240,3 +240,39 @@ gen_multi_plot_four(
     "avg ratio of found gtfp",
     "compensation.png"
 )
+
+# visualize actual compensation (!) and missed chances
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_compensation_by_aff_by_savior", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_missed_chances", color = "gt_match", group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_no_second_chance", color = "gt_match", group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "instance_set", y = "avg_no_second_chance", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    "instance_set", # x
+    "avg_compensation_by_aff_by_savior", # y1
+    "avg_missed_chances", # y2
+    "avg_no_second_chance", # y3
+    "avg_no_second_chance", # y3
+    "compensation_metrics.png"
+)
