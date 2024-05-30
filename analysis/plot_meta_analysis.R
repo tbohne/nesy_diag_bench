@@ -1488,3 +1488,76 @@ gen_multi_plot_six(
     "miss_due_to_class_iss", # x6
     "correlation_missed_anomalies_perf.png"
 )
+
+# correlation compensation metrics
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "avg_compensation_by_aff_by_savior",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_missed_chances",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "avg_no_second_chance",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "avg_compensation_by_aff_by_savior",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "avg_compensation_by_aff_by_savior",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "avg_missed_chances",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "affected_by_perc", # y1
+    "affected_by_perc", # y2
+    "affected_by_perc", # y3
+    "avg_compensation_by_aff_by_savior", # y4
+    "avg_compensation_by_aff_by_savior", # y5
+    "avg_missed_chances", # y6
+    "avg_compensation_by_aff_by_savior", # x1
+    "avg_missed_chances", # x2
+    "avg_no_second_chance", # x3
+    "anomaly_link_perc_scores", # x4
+    "avg_ratio_gtfp", # x5
+    "avg_ratio_gtfp", # x6
+    "correlation_compensation_metrics.png"
+)
