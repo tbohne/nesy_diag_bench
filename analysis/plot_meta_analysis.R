@@ -224,8 +224,8 @@ p3 <- ggplot(
 
 p4 <- ggplot(
     data = input, aes_string(
-        x = "f1_scores",
-        y = "avg_ratio_gtfp",
+        x = "gt_match_perc",
+        y = "sum_of_avg_fault_paths_and_dev",
         color = "gt_match",
         group = "gt_match"
     )
@@ -233,8 +233,8 @@ p4 <- ggplot(
 
 p5 <- ggplot(
     data = input, aes_string(
-        x = "f1_scores",
-        y = "avg_ratio_gtfp",
+        x = "avg_ratio_gtfp",
+        y = "sum_of_avg_fault_paths_and_dev",
         color = "gt_match",
         group = "gt_match"
     )
@@ -242,8 +242,8 @@ p5 <- ggplot(
 
 p6 <- ggplot(
     data = input, aes_string(
-        x = "f1_scores",
-        y = "avg_ratio_gtfp",
+        x = "anomaly_link_perc_scores",
+        y = "sum_of_avg_fault_paths_and_dev",
         color = "gt_match",
         group = "gt_match"
     )
@@ -254,15 +254,15 @@ gen_multi_plot_six(
     "anomaly link perc", # y1
     "avg ratio gtfp", # y2
     "num_classifications", # y3
-    "avg ratio gtfp", # y4
-    "avg ratio gtfp", # y5
-    "avg ratio gtfp", # y6
+    "sum_of_avg_fault_paths_and_dev", # y4
+    "sum_of_avg_fault_paths_and_dev", # y5
+    "sum_of_avg_fault_paths_and_dev", # y6
     "F1", # x1
     "F1", # x2
     "F1", # x3
-    "F1", # x4
-    "F1", # x5
-    "F1", # x6
+    "gt_match_perc", # x4
+    "avg_ratio_gtfp", # x5
+    "anomaly_link_perc_scores", # x6
     "f1_end_res_corr.png"
 )
 
