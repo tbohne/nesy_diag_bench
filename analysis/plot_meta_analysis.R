@@ -1561,3 +1561,83 @@ gen_multi_plot_six(
     "avg_ratio_gtfp", # x6
     "correlation_compensation_metrics.png"
 )
+
+# "best of" correlation plots
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "f1_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "f1_scores",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = input, aes_string(
+        x = "sum_of_max_fault_paths_and_dev",
+        y = "`max_runtime (s)`",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = input, aes_string(
+        x = "gt_match_perc",
+        y = "num_classifications_model_acc_ratio",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+# compensation for a=0.2 -- beta vs. comp by savior
+filtered_data <- subset(input, anomaly_perc>=20.0)
+p5 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "avg_compensation_by_aff_by_savior",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+# increased potential for misclassifications for greater beta
+# also for a=0.2
+filtered_data <- subset(input, anomaly_perc>=20.0)
+p6 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "potential_for_misclassification",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "f1_scores", # y1
+    "f1_scores", # y2
+    "`max_runtime (s)`", # y3
+    "num_classifications_model_acc_ratio", # y4
+    "affected_by_perc", # y5
+    "affected_by_perc", # y6
+    "anomaly_link_perc_scores", # x1
+    "avg_ratio_gtfp", # x2
+    "`max_runtime (s)`", # x3
+    "gt_match_perc", # x4
+    "avg_compensation_by_aff_by_savior", # x5
+    "potential_for_misclassification", # x6
+    "best_of_corr.png"
+)
