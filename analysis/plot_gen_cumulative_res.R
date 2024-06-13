@@ -1,5 +1,7 @@
 library(ggplot2)
 library(gridExtra)
+library(dplyr)
+library(scales)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
@@ -297,11 +299,15 @@ p3 <- ggplot(
     )
 )
 
+# avoid log(0)
+input <- input %>%
+    mutate(fp_dev_max = ifelse(fp_dev_max == 0, 1e-1, fp_dev_max))
+
 p4 <- ggplot(
     data = input, aes_string(
-        x = "instance_set", y = "fp_dev_mean", color = "gt_match", group = "gt_match"
+        x = "instance_set", y = "fp_dev_max", color = "gt_match", group = "gt_match"
     )
-)
+) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1e-1, 1e4))
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
@@ -309,6 +315,6 @@ gen_multi_plot_four(
     "avg_classification_ratio", # y1
     "avg_ano_link_perc", # y2
     "avg_ratio_of_found_gtfp", # y3
-    "fp_dev_mean", # y3
+    "fp_dev_max", # y3
     "bestof.png"
 )
