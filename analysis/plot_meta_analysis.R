@@ -1612,8 +1612,7 @@ p5 <- ggplot(
     )
 )
 
-# increased potential for misclassifications for greater beta
-# also for a=0.2
+# increased potential for misclassifications with greater beta (again, a=0.2)
 filtered_data <- subset(input, anomaly_perc>=20.0)
 p6 <- ggplot(
     data = filtered_data,
@@ -1635,7 +1634,7 @@ gen_multi_plot_six(
     "affected_by_perc", # y6
     "anomaly_link_perc_scores", # x1
     "avg_ratio_gtfp", # x2
-    "`max_runtime (s)`", # x3
+    "sum_of_max_fault_paths_and_dev", # x3
     "gt_match_perc", # x4
     "avg_compensation_by_aff_by_savior", # x5
     "potential_for_misclassification", # x6
