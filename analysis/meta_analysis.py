@@ -592,10 +592,11 @@ potentially_missed = [
 correlation_matrix = np.corrcoef(df["avg_compensation_by_aff_by_savior"], potentially_missed)
 print("corrcoef avg_compensation_by_aff_by_savior --- potentially_missed:", round(correlation_matrix[0, 1], 2))
 
+# all filtered based on alpha=0.2
 beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
-compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
+compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20]
 # would be interesting to consider beta vs. potential for misclassifications (for alpha = 0.2)
-pot_misclassifications_filtered = [potential_for_misclassification[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
+pot_misclassifications_filtered = [potential_for_misclassification[i] for i in range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20]
 
 correlation_matrix = np.corrcoef(beta_filtered, compensation_filtered)
 print("corrcoef beta_filtered --- compensation_filtered:", round(correlation_matrix[0, 1], 2))
