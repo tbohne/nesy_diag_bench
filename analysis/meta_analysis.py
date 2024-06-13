@@ -7,6 +7,16 @@ df = pd.read_csv("cumulative_res.csv")
 anomaly_percentages = [float(i.split("_")[1]) for i in df["instance_set"]]
 affected_by_percentages = [float(i.split("_")[2]) for i in df["instance_set"]]
 
+avg_misclassifications = [
+    df["avg_fp"][i] + df["avg_fn"][i] for i in range(len(df["avg_fp"]))
+]
+
+# approximation: #FP * beta / 2 * C * gamma
+potential_for_misclassification = [
+    round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
+    for i in range(len(df["avg_fp"]))
+]
+
 # `affected_by` has a positive and a negative effect
 #   - pos: can compensate false negatives by reaching the component again
 #   - neg: leads to more classifications and thus also to more potential misclassifications
@@ -180,7 +190,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
         "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
         "permutation_perc", "permutation_approx", "approx_perc", "avg_compensation_by_aff_by_savior",
-        "avg_missed_chances", "avg_no_second_chance"]
+        "avg_missed_chances", "avg_no_second_chance", "avg_misclassifications", "potential_for_misclassification"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -225,7 +235,9 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             approx_perc[i],
             df["avg_compensation_by_aff_by_savior"][i],
             df["avg_missed_chances"][i],
-            df["avg_no_second_chance"][i]
+            df["avg_no_second_chance"][i],
+            avg_misclassifications[i],
+            potential_for_misclassification[i]
         ])
 
 ################## correlation coefficients
@@ -579,3 +591,14 @@ potentially_missed = [
 
 correlation_matrix = np.corrcoef(df["avg_compensation_by_aff_by_savior"], potentially_missed)
 print("corrcoef avg_compensation_by_aff_by_savior --- potentially_missed:", round(correlation_matrix[0, 1], 2))
+
+beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
+compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
+# would be interesting to consider beta vs. potential for misclassifications (for alpha = 0.2)
+pot_misclassifications_filtered = [potential_for_misclassification[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
+
+correlation_matrix = np.corrcoef(beta_filtered, compensation_filtered)
+print("corrcoef beta_filtered --- compensation_filtered:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(beta_filtered, pot_misclassifications_filtered)
+print("corrcoef beta_filtered --- pot_misclassifications_filtered:", round(correlation_matrix[0, 1], 2))
