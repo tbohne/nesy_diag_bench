@@ -1087,7 +1087,7 @@ p4 <- ggplot(
 
 p5 <- ggplot(
     data = input, aes_string(
-        x = "avg_num_fault_paths",
+        x = "avg_ratio_gtfp",
         y = "anomaly_perc_aff_by_prod",
         color = "gt_match",
         group = "gt_match"
@@ -1115,7 +1115,7 @@ gen_multi_plot_six(
     "avg_fault_path_len", # x2
     "avg_num_fault_paths", # x3
     "avg_fault_path_len", # x4
-    "avg_num_fault_paths", # x5
+    "avg_ratio_gtfp", # x5
     "avg_fault_path_len", # x6
     "correlation_anomaly_perc_aff_by_prod_fault_paths.png"
 )
@@ -1614,10 +1614,11 @@ p5 <- ggplot(
 
 # increased potential for misclassifications with greater beta (again, a=0.2)
 filtered_data <- subset(input, anomaly_perc>=20.0)
+filtered_data <- subset(filtered_data, avg_model_acc<=0.95)
 p6 <- ggplot(
     data = filtered_data,
     aes_string(
-        x = "potential_for_misclassification",
+        x = "avg_misclassifications",
         y = "affected_by_perc",
         color = "gt_match",
         group = "gt_match"
@@ -1626,17 +1627,17 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "f1_scores", # y1
-    "f1_scores", # y2
-    "`max_runtime (s)`", # y3
+    "F1", # y1
+    "F1", # y2
+    "max runtime (s)", # y3
     "num_classifications_model_acc_ratio", # y4
     "affected_by_perc", # y5
     "affected_by_perc", # y6
-    "anomaly_link_perc_scores", # x1
+    "anomaly_link_perc", # x1
     "avg_ratio_gtfp", # x2
-    "sum_of_max_fault_paths_and_dev", # x3
+    "sum_of_fault_paths_and_dev", # x3
     "gt_match_perc", # x4
-    "avg_compensation_by_aff_by_savior", # x5
-    "potential_for_misclassification", # x6
+    "avg compensation (alpha=0.2)", # x5
+    "misclassifications (alpha=0.2, gamma<=0.95)", # x6
     "best_of_corr.png"
 )
