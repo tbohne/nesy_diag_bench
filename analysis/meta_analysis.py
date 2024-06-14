@@ -13,7 +13,8 @@ avg_misclassifications = [
 
 # approximation: #FP * beta / 2 * C * gamma
 potential_for_misclassification = [
-    round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
+    #round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
+    round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * (1 - df["avg_classification_ratio"][i]), 2)
     for i in range(len(df["avg_fp"]))
 ]
 
@@ -597,9 +598,23 @@ beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_perce
 compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20]
 # would be interesting to consider beta vs. potential for misclassifications (for alpha = 0.2)
 pot_misclassifications_filtered = [potential_for_misclassification[i] for i in range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20]
+misclassifications_filtered = [avg_misclassifications[i] for i in range(len(avg_misclassifications)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
+beta_filtered_more = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
 
 correlation_matrix = np.corrcoef(beta_filtered, compensation_filtered)
 print("corrcoef beta_filtered --- compensation_filtered:", round(correlation_matrix[0, 1], 2))
 
 correlation_matrix = np.corrcoef(beta_filtered, pot_misclassifications_filtered)
 print("corrcoef beta_filtered --- pot_misclassifications_filtered:", round(correlation_matrix[0, 1], 2))
+
+correlation_matrix = np.corrcoef(beta_filtered_more, misclassifications_filtered)
+print("corrcoef beta_filtered_more --- misclassifications_filtered:", round(correlation_matrix[0, 1], 2))
+
+avg_F1 = round(df["avg_f1"].describe()["mean"], 2)
+avg_p0 = round(df["avg_ano_link_perc"].describe()["mean"], 2)
+avg_p1 = round(df["avg_ratio_of_found_gtfp"].describe()["mean"], 2)
+avg_p2 = round(df["gt_match_perc"].describe()["mean"], 2)
+print(avg_F1)
+print(avg_p0)
+print(avg_p1)
+print(avg_p2)
