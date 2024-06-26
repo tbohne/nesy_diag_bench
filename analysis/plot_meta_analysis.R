@@ -1641,3 +1641,81 @@ gen_multi_plot_six(
     "misclassifications (alpha=0.2, gamma<=0.95)", # x6
     "best_of_corr.png"
 )
+
+# 𝛼 = 0.2 and 𝛾 ∈ [0.95, 0.99] to analyze the isolated impact of increasing 𝛽
+filtered_data <- subset(input, anomaly_perc>=20.0)
+filtered_data <- subset(filtered_data, avg_model_acc<=0.99)
+filtered_data <- subset(filtered_data, avg_model_acc>=0.95)
+
+p1 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_misclassifications",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "gt_match_perc",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "avg_compensation_by_aff_by_savior",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = filtered_data,
+    aes_string(
+        x = "avg_missed_chances",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    "affected_by_perc", # y1
+    "affected_by_perc", # y2
+    "affected_by_perc", # y3
+    "affected_by_perc", # y4
+    "affected_by_perc", # y5
+    "affected_by_perc", # y6
+    "avg_misclassifications", # x1
+    "anomaly_link_perc_scores", # x2
+    "avg_ratio_gtfp", # x3
+    "gt_match_perc", # x4
+    "avg_compensation_by_aff_by_savior", # x5
+    "avg_missed_chances", # x6
+    "beta_influence.png"
+)
