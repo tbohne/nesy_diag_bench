@@ -242,12 +242,13 @@ p4 <- ggplot(
 # classification ratio, etc.
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance_set",
-    "avg classification ratio",
-    "avg false positives (regular components treated as anomalies)",
-    "avg runtime (s)",
-    "avg false negatives (missed anomalies)",
-    "classification_ratio.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{c_r}$"),
+    TeX("$\\bar{FP}$ (regular components treated as anomalies)"),
+    TeX("$r^a_i$ (s)"),
+    TeX("$\\bar{FN}$ (missed anomalies)"),
+    "classification_ratio.png",
+    TeX("$p_2$")
 )
 
 # visualize compensation capability
@@ -278,12 +279,13 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance_set",
-    "avg F1",
-    "avg acc",
-    "avg anomaly link percentage",
-    "avg ratio of found gtfp",
-    "compensation.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{F1}$"),
+    TeX("$\\bar{accuracy}$"),
+    TeX("$\\bar{p_0}$"),
+    TeX("$p_1$"),
+    "compensation.png",
+    TeX("$p_2$")
 )
 
 # visualize actual compensation (!) and missed chances
@@ -314,12 +316,13 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance_set", # x
-    "avg_compensation_by_aff_by_savior", # y1
-    "avg_missed_chances", # y2
-    "avg_no_second_chance", # y3
-    "avg_no_second_chance", # y3
-    "compensation_metrics.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{c_1}$"),
+    TeX("$\\bar{c_2}$"),
+    TeX("$\\bar{c_3}$"),
+    TeX("$\\bar{c_3}$"),
+    "compensation_metrics.png",
+    TeX("$p_2$")
 )
 
 # visualize "best of" plots
@@ -350,14 +353,15 @@ p4 <- ggplot(
     data = input, aes_string(
         x = "instance_set", y = "fp_dev_max", color = "gt_match", group = "gt_match"
     )
-) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1e-1, 1e4))
+) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1e-1, 4 * 1e4))
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance_set", # x
-    "avg_classification_ratio", # y1
-    "avg_ano_link_perc", # y2
-    "avg_ratio_of_found_gtfp", # y3
-    "fp_dev_max", # y3
-    "bestof.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{c_r}$"),
+    TeX("$\\bar{p_0}$"),
+    TeX("$p_1$"),
+    TeX("$\\tilde{f^{max}_i}$"),
+    "bestof.png",
+    TeX("$p_2$")
 )
