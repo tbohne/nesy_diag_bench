@@ -128,7 +128,16 @@ p4 <- ggplot(
 )
 
 # common eval metrics
-gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg accuracy", "avg precision", "avg recall", "avg F1", "eval_metrics.png")
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{accuracy}$"),
+    TeX("$\\bar{precision}$"),
+    TeX("$\\bar{recall}$"),
+    TeX("$\\bar{F1}$"),
+    "eval_metrics.png",
+    TeX("$p_2$")
+)
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -157,12 +166,13 @@ p4 <- ggplot(
 # ground truth analysis
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance_set",
-    "avg anomaly link percentage",
-    "avg false positives (regular components treated as anomalies)",
-    "avg ratio of found ground truth fault paths",
-    "avg false negatives (missed anomalies)",
-    "gt_analysis.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{p_0}$"),
+    TeX("$\\bar{FP}$ (regular components treated as anomalies)"),
+    TeX("$\\bar{p_1}$"),
+    TeX("$\\bar{FN}$ (missed anomalies)"),
+    "gt_analysis.png",
+    TeX("$p_2$")
 )
 
 p1 <- ggplot(
@@ -171,11 +181,15 @@ p1 <- ggplot(
     )
 )
 
+# # avoid log(0)
+input <- input %>%
+    mutate(max_num_fault_paths = ifelse(max_num_fault_paths == 0, 1e-1, max_num_fault_paths))
+
 p2 <- ggplot(
     data = input, aes_string(
         x = "instance_set", y = "max_num_fault_paths", color = "gt_match", group = "gt_match"
     )
-)
+) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1, 3 * 1e3))
 
 p3 <- ggplot(
     data = input, aes_string(
@@ -190,8 +204,16 @@ p4 <- ggplot(
 )
 
 # fault path plot
-gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg num of fault paths", "max num of fault paths", "avg fault path len", "max fault path len", "fault_paths.png")
-
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    TeX("instance set ($i \\in I$)"),
+    TeX("$f^a_i$"),
+    TeX("$f^{max}_i$"),
+    TeX("$l^a_i$"),
+    TeX("$l^{max}_i$"),
+    "fault_paths.png",
+    TeX("$p_2$")
+)
 
 p1 <- ggplot(
     data = input, aes_string(
