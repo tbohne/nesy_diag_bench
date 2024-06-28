@@ -2,23 +2,24 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 library(scales)
+library(latex2exp)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
 
-gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping)
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping)
-    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + scale_color_manual(values = color_mapping)
-    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + scale_color_manual(values = color_mapping)
+gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename, group_name) {
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + scale_color_manual(values = color_mapping) + labs(color = group_name)
     combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 2)
     ggsave(combined_plot, file = filename, width = 12, height = 8)
 }
 
-gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping)
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping)
+gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
     combined_plot <- grid.arrange(fpp1, fpp2, ncol = 1)
     ggsave(combined_plot, file = filename, width = 12, height = 8)
 }
@@ -63,7 +64,16 @@ p4 <- ggplot(
 )
 
 # confusion matrix multiplot
-gen_multi_plot_four(p1, p2, p3, p4, "instance_set", "avg TP", "avg TN", "avg FP", "avg FN", "confusion_matrix.png")
+gen_multi_plot_four(
+    p1, p2, p3, p4,
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\bar{TP}$"),
+    TeX("$\\bar{TN}$"),
+    TeX("$\\bar{FP}$"),
+    TeX("$\\bar{FN}$"),
+    "confusion_matrix.png",
+    TeX("$p_2$")
+)
 
 p1 <- ggplot(
     data = input, aes_string(
@@ -78,7 +88,14 @@ p2 <- ggplot(
 )
 
 # fault path dev multiplot
-gen_multi_plot_two(p1, p2, "instance_set", "avg fault path dev", "max fault path dev", "fault_path_dev.png")
+gen_multi_plot_two(
+    p1, p2,
+    TeX("instance set ($i \\in I$)"),
+    TeX("$\\tilde{f^a_i}$"),
+    TeX("$\\tilde{f^{max}_i}$"),
+    "fault_path_dev.png",
+    TeX("$p_2$")
+)
 
 p1 <- ggplot(
     data = input, aes_string(
