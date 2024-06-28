@@ -75,17 +75,23 @@ gen_multi_plot_four(
     TeX("$p_2$")
 )
 
+# avoid log(0)
+input <- input %>%
+    mutate(fp_dev_max = ifelse(fp_dev_max == 0, 1e-1, fp_dev_max))
+input <- input %>%
+    mutate(fp_dev_mean = ifelse(fp_dev_mean == 0, 1e-1, fp_dev_mean))
+
 p1 <- ggplot(
     data = input, aes_string(
         x = "instance_set", y = "fp_dev_mean", color = "gt_match", group = "gt_match"
     )
-)
+) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1e-1, 1e3))
 
 p2 <- ggplot(
     data = input, aes_string(
         x = "instance_set", y = "fp_dev_max", color = "gt_match", group = "gt_match"
     )
-)
+) + scale_y_log10(labels = scales::trans_format("log10", scales::math_format(10^.x)), limits=c(1e-1, 1e5))
 
 # fault path dev multiplot
 gen_multi_plot_two(
