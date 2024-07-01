@@ -1,6 +1,7 @@
-import pandas as pd
 import csv
+
 import numpy as np
+import pandas as pd
 
 df = pd.read_csv("cumulative_res.csv")
 
@@ -13,7 +14,7 @@ avg_misclassifications = [
 
 # approximation: #FP * beta / 2 * C * gamma
 potential_for_misclassification = [
-    #round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
+    # round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
     round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * (1 - df["avg_classification_ratio"][i]), 2)
     for i in range(len(df["avg_fp"]))
 ]
@@ -51,8 +52,10 @@ anomaly_perc_model_acc_aggregation = [
     for i in range(len(anomaly_percentages))
 ]
 
-anomaly_percentages_filtered = [anomaly_percentages[i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0]
-affected_by_percentages_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if df["avg_model_acc"][i] != 1.0]
+anomaly_percentages_filtered = [anomaly_percentages[i] for i in range(len(anomaly_percentages)) if
+                                df["avg_model_acc"][i] != 1.0]
+affected_by_percentages_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
+                                    df["avg_model_acc"][i] != 1.0]
 model_acc_filtered = [df["avg_model_acc"][i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0]
 avg_fp_filtered = [df["avg_fp"][i] for i in range(len(df["avg_fp"])) if df["avg_model_acc"][i] != 1.0]
 avg_fn_filtered = [df["avg_fn"][i] for i in range(len(df["avg_fn"])) if df["avg_model_acc"][i] != 1.0]
@@ -157,16 +160,19 @@ all_missed_anomalies = [
 print("\nall missed anomalies:\n", all_missed_anomalies)
 
 assert all(round(miss_due_to_class_iss[i] + missed_anomalies_unclassified[i], 2) == all_missed_anomalies[i]
-    for i in range(len(all_missed_anomalies)))
+           for i in range(len(all_missed_anomalies)))
 
-sum_missed_and_correct = [round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1) for i in range(len(true_num_anomalies))]
+sum_missed_and_correct = [round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1) for
+                          i in range(len(true_num_anomalies))]
 assert all(sum_missed_and_correct[i] == true_num_anomalies[i] for i in range(len(true_num_anomalies)))
 
 # permutations -- and approximations (expected fault paths)
 permutations = [np.math.factorial(i) for i in true_num_anomalies]
 permutation_perc = [round(df["avg_num_fault_paths"][i] / permutations[i] * 100.0, 2) for i in range(len(permutations))]
 # there's at least one fault path per anomalous component and then potentially more based on beta, thus "+"
-permutation_approx = [true_num_anomalies[i] + np.math.factorial(1 + round((true_num_anomalies[i] - 1) * affected_by_percentages[i] / 2 / 100.0)) for i in range(len(true_num_anomalies))]
+permutation_approx = [true_num_anomalies[i] + np.math.factorial(
+    1 + round((true_num_anomalies[i] - 1) * affected_by_percentages[i] / 2 / 100.0)) for i in
+                      range(len(true_num_anomalies))]
 approx_perc = [round(df["avg_num_fault_paths"][i] / permutation_approx[i] * 100.0, 2) for i in range(len(permutations))]
 permutations = [np.format_float_scientific(i, precision=2) for i in permutations]
 print("\n-----------------------------------------------------------------------")
@@ -182,16 +188,16 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(
         ["anomaly_perc", "affected_by_perc", "anomaly_perc_aff_by_ratio", "f1_scores", "anomaly_link_perc_scores",
-        "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
-        "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
-        "anomaly_perc_model_acc_ratio", "num_classifications", "avg_num_fault_paths", "avg_fault_path_len",
-        "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)", "median_num_fault_paths",
-        "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
-        "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp", "avg_fn",
-        "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
-        "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
-        "permutation_perc", "permutation_approx", "approx_perc", "avg_compensation_by_aff_by_savior",
-        "avg_missed_chances", "avg_no_second_chance", "avg_misclassifications", "potential_for_misclassification"]
+         "compensation_ano_link", "gt_match_perc", "avg_ratio_gtfp", "compensation_gtfp",
+         "model_acc_connectivity_ratio", "num_classifications_model_acc_ratio", "avg_model_acc",
+         "anomaly_perc_model_acc_ratio", "num_classifications", "avg_num_fault_paths", "avg_fault_path_len",
+         "anomaly_perc_aff_by_prod", "avg_runtime (s)", "median_runtime (s)", "median_num_fault_paths",
+         "median_fault_path_len", "sum_of_avg_fault_paths_and_dev", "sum_of_max_fault_paths_and_dev",
+         "max_runtime (s)", "anomaly_perc_aff_by_model_acc_aggregation", "avg_fp", "avg_fn",
+         "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
+         "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
+         "permutation_perc", "permutation_approx", "approx_perc", "avg_compensation_by_aff_by_savior",
+         "avg_missed_chances", "avg_no_second_chance", "avg_misclassifications", "potential_for_misclassification"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -594,12 +600,17 @@ correlation_matrix = np.corrcoef(df["avg_compensation_by_aff_by_savior"], potent
 print("corrcoef avg_compensation_by_aff_by_savior --- potentially_missed:", round(correlation_matrix[0, 1], 2))
 
 # all filtered based on alpha=0.2
-beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20]
-compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20]
+beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
+                 anomaly_percentages[i] == 20]
+compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in
+                         range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20]
 # would be interesting to consider beta vs. potential for misclassifications (for alpha = 0.2)
-pot_misclassifications_filtered = [potential_for_misclassification[i] for i in range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20]
-misclassifications_filtered = [avg_misclassifications[i] for i in range(len(avg_misclassifications)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
-beta_filtered_more = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
+pot_misclassifications_filtered = [potential_for_misclassification[i] for i in
+                                   range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20]
+misclassifications_filtered = [avg_misclassifications[i] for i in range(len(avg_misclassifications)) if
+                               anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
+beta_filtered_more = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
+                      anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
 
 correlation_matrix = np.corrcoef(beta_filtered, compensation_filtered)
 print("corrcoef beta_filtered --- compensation_filtered:", round(correlation_matrix[0, 1], 2))
