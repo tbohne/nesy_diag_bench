@@ -180,19 +180,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_ratio_gtfp", # y1
-    "anomaly_perc_aff_by_prod", # y2
-    "anomaly_perc_aff_by_prod", # y3
-    "anomaly_perc_aff_by_prod", # y4
-    "avg ratio gtfp - F1", # y5
-    "anomaly_perc_aff_by_prod", # y6
-    "anomaly_link_perc_scores", # x1
-    "ano link perc - F1", # x2
-    "anomaly_link_perc_scores", # x3
-    "avg_ratio_gtfp", # x4
-    "ano link perc - F1", # x5
-    "avg ratio gtfp - F1", # x6
-    "compensation_analysis_prod.png"
+    TeX("$p_1$"), # y1
+    TeX("$\\alpha \\beta$"), # y2
+    TeX("$\\alpha \\beta$"), # y3
+    TeX("$\\alpha \\beta$"), # y4
+    TeX("$|p_1 - F1|$"), # y5
+    TeX("$\\alpha \\beta$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$|p_0 - F1|$"), # x2
+    TeX("$p_0$"), # x3
+    TeX("$p_1$"), # x4
+    TeX("$|p_0 - F1|$"), # x5
+    TeX("$|p_1 - F1|$"), # x6
+    "compensation_analysis_prod.png",
+    TeX("$p_2$")
 )
 
 ##############################################
@@ -253,19 +254,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly link perc", # y1
-    "avg ratio gtfp", # y2
-    "num_classifications", # y3
-    "sum_of_avg_fault_paths_and_dev", # y4
-    "sum_of_avg_fault_paths_and_dev", # y5
-    "sum_of_avg_fault_paths_and_dev", # y6
-    "F1", # x1
-    "F1", # x2
-    "F1", # x3
-    "gt_match_perc", # x4
-    "avg_ratio_gtfp", # x5
-    "anomaly_link_perc_scores", # x6
-    "f1_end_res_corr.png"
+    TeX("$p_0$"), # y1
+    TeX("$p_1$"), # y2
+    TeX("$n_c$"), # y3
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # y4
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # y5
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # y6
+    TeX("$F1$"), # x1
+    TeX("$F1$"), # x2
+    TeX("$F1$"), # x3
+    TeX("$p_2$"), # x4
+    TeX("$p_1$"), # x5
+    TeX("$p_0$"), # x6
+    "f1_end_res_corr.png",
+    TeX("$p_2$")
 )
 
 # model acc - connectivity - performance
@@ -326,19 +328,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "model_acc_connectivity_ratio", # y1
-    "model_acc_connectivity_ratio", # y2
-    "model_acc_connectivity_ratio", # y3
-    "model_acc_connectivity_ratio", # y4
-    "model_acc_connectivity_ratio", # y5
-    "model_acc_connectivity_ratio", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "modelacc_connectivity_performance.png"
+    TeX("$\\gamma / \\beta $"), # y1
+    TeX("$\\gamma / \\beta $"), # y2
+    TeX("$\\gamma / \\beta $"), # y3
+    TeX("$\\gamma / \\beta $"), # y4
+    TeX("$\\gamma / \\beta $"), # y5
+    TeX("$\\gamma / \\beta $"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "modelacc_connectivity_performance.png",
+    TeX("$p_2$")
 )
 
 # how many classifications and how acc models
@@ -399,19 +402,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "num_classifications_model_acc_ratio", # y1
-    "num_classifications_model_acc_ratio", # y2
-    "num_classifications_model_acc_ratio", # y3
-    "num_classifications_model_acc_ratio", # y4
-    "num_classifications_model_acc_ratio", # y5
-    "num_classifications_model_acc_ratio", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "num_classifications_model_acc.png"
+    TeX("$n_c / \\gamma$"), # y1
+    TeX("$n_c / \\gamma$"), # y2
+    TeX("$n_c / \\gamma$"), # y3
+    TeX("$n_c / \\gamma$"), # y4
+    TeX("$n_c / \\gamma$"), # y5
+    TeX("$n_c / \\gamma$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "num_classifications_model_acc.png",
+    TeX("$p_2$")
 )
 
 # affected_by against perf
@@ -472,19 +476,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "affected_by_perc", # y1
-    "affected_by_perc", # y2
-    "affected_by_perc", # y3
-    "affected_by_perc", # y4
-    "affected_by_perc", # y5
-    "affected_by_perc", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "aff_by_perf.png"
+    TeX("$\\beta$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\beta$"), # y3
+    TeX("$\\beta$"), # y4
+    TeX("$\\beta$"), # y5
+    TeX("$\\beta$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "aff_by_perf.png",
+    TeX("$p_2$")
 )
 
 # model_acc against perf
@@ -545,19 +550,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_model_acc", # y1
-    "avg_model_acc", # y2
-    "avg_model_acc", # y3
-    "avg_model_acc", # y4
-    "avg_model_acc", # y5
-    "avg_model_acc", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "model_acc_perf.png"
+    TeX("$\\gamma$"), # y1
+    TeX("$\\gamma$"), # y2
+    TeX("$\\gamma$"), # y3
+    TeX("$\\gamma$"), # y4
+    TeX("$\\gamma$"), # y5
+    TeX("$\\gamma$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "model_acc_perf.png",
+    TeX("$p_2$")
 )
 
 # anomaly_perc against perf
