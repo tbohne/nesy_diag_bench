@@ -1,6 +1,7 @@
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
+library(latex2exp)
 
 PT_DEF <- geom_point(size=5)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
@@ -9,23 +10,23 @@ gen_multi_plot_six <- function(
         pp1, pp2, pp3, pp4, pp5, pp6,
         y1, y2, y3, y4, y5, y6,
         x1, x2, x3, x4, x5, x6,
-        filename
+        filename, group_name
     ) {
-    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping)
-    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping)
-    fpp3 <- pp3 + PT_DEF + xlab(x3) + ylab(y3) + scale_color_manual(values = color_mapping)
-    fpp4 <- pp4 + PT_DEF + xlab(x4) + ylab(y4) + scale_color_manual(values = color_mapping)
-    fpp5 <- pp5 + PT_DEF + xlab(x5) + ylab(y5) + scale_color_manual(values = color_mapping)
-    fpp6 <- pp6 + PT_DEF + xlab(x6) + ylab(y6) + scale_color_manual(values = color_mapping)
+    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp3 <- pp3 + PT_DEF + xlab(x3) + ylab(y3) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp4 <- pp4 + PT_DEF + xlab(x4) + ylab(y4) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp5 <- pp5 + PT_DEF + xlab(x5) + ylab(y5) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp6 <- pp6 + PT_DEF + xlab(x6) + ylab(y6) + scale_color_manual(values = color_mapping) + labs(color = group_name)
     combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, fpp5, fpp6, ncol = 3)
     ggsave(combined_plot, file = filename, width = 12, height = 6)
 }
 
 gen_multi_plot_two <- function(
-        pp1, pp2, y1, y2, x1, x2, filename
+        pp1, pp2, y1, y2, x1, x2, filename, group_name
     ) {
-    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping)
-    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping)
+    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
+    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
     combined_plot <- grid.arrange(fpp1, fpp2, ncol = 2)
     ggsave(combined_plot, file = filename, width = 12, height = 6)
 }
@@ -105,19 +106,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_ratio_gtfp", # y1
-    "anomaly_perc_aff_by_ratio", # y2
-    "anomaly_perc_aff_by_ratio", # y3
-    "anomaly_perc_aff_by_ratio", # y4
-    "avg ratio gtfp - F1", # y5
-    "anomaly_perc_aff_by_ratio", # y6
-    "anomaly_link_perc_scores", # x1
-    "ano link perc - F1", # x2
-    "anomaly_link_perc_scores", # x3
-    "avg_ratio_gtfp", # x4
-    "ano link perc - F1", # x5
-    "avg ratio gtfp - F1", # x6
-    "compensation_analysis.png"
+    TeX("$p_1$"), # y1
+    TeX("$\\alpha / \\beta$"), # y2
+    TeX("$\\alpha / \\beta$"), # y3
+    TeX("$\\alpha / \\beta$"), # y4
+    TeX("$|p_1 - F1|$"), # y5
+    TeX("$\\alpha / \\beta$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$|p_0 - F1|$"), # x2
+    TeX("$p_0$"), # x3
+    TeX("$p_1$"), # x4
+    TeX("$|p_0 - F1|$"), # x5
+    TeX("$|p_1 - F1|$"), # x6
+    "compensation_analysis.png",
+    TeX("$p_2$")
 )
 
 # same with prod #############################
