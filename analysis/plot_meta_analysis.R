@@ -624,19 +624,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly_perc", # y1
-    "anomaly_perc", # y2
-    "anomaly_perc", # y3
-    "anomaly_perc", # y4
-    "anomaly_perc", # y5
-    "anomaly_perc", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "anomaly_perc_perf.png"
+    TeX("$\\alpha$"), # y1
+    TeX("$\\alpha$"), # y2
+    TeX("$\\alpha$"), # y3
+    TeX("$\\alpha$"), # y4
+    TeX("$\\alpha$"), # y5
+    TeX("$\\alpha$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "anomaly_perc_perf.png",
+    TeX("$p_2$")
 )
 
 # anomaly_perc - model acc ratio against perf
@@ -697,19 +698,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly_perc_model_acc_ratio", # y1
-    "anomaly_perc_model_acc_ratio", # y2
-    "anomaly_perc_model_acc_ratio", # y3
-    "anomaly_perc_model_acc_ratio", # y4
-    "anomaly_perc_model_acc_ratio", # y5
-    "anomaly_perc_model_acc_ratio", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # 5
-    "fp_dev_max", # x6
-    "anomaly_perc_model_acc_ratio_perf.png"
+    TeX("$\\alpha / \\gamma$"), # y1
+    TeX("$\\alpha / \\gamma$"), # y2
+    TeX("$\\alpha / \\gamma$"), # y3
+    TeX("$\\alpha / \\gamma$"), # y4
+    TeX("$\\alpha / \\gamma$"), # y5
+    TeX("$\\alpha / \\gamma$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # 5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "anomaly_perc_model_acc_ratio_perf.png",
+    TeX("$p_2$")
 )
 
 # num classifications against perf
@@ -770,19 +772,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "num_classifications", # y1
-    "num_classifications", # y2
-    "num_classifications", # y3
-    "num_classifications", # y4
-    "num_classifications", # y5
-    "num_classifications", # y6
-    "anomaly_link_perc_scores", # x1
-    "avg_ratio_gtfp", # x2
-    "gt_match_perc", # x3
-    "diag_success_percentage", # x4
-    "fp_dev_mean", # x5
-    "fp_dev_max", # x6
-    "num_classifications_perf.png"
+    TeX("$n_c$"), # y1
+    TeX("$n_c$"), # y2
+    TeX("$n_c$"), # y3
+    TeX("$n_c$"), # y4
+    TeX("$n_c$"), # y5
+    TeX("$n_c$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$p_2$"), # x3
+    TeX("$d_s$"), # x4
+    TeX("$\\tilde{f^a_i}$"), # x5
+    TeX("$\\tilde{f^{max}_i}$"), # x6
+    "num_classifications_perf.png",
+    TeX("$p_2$")
 )
 
 # num classifications - model acc -- filtered based on avg_ratio_gtfp
@@ -860,19 +863,21 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_model_acc", #y1
-    "avg_model_acc", #y2
-    "avg_model_acc", #y3
-    "avg_model_acc", #y4
-    "avg_model_acc", #y5
-    "avg_model_acc", #y6
-    "classifications", #x1
-    "classifications (filt. based on avg_ratio_gtfp 70%)", #x2
-    "classifications (filt. based on avg_ratio_gtfp 75%)", #x3
-    "classifications (filt. based on avg_ratio_gtfp 80%)", #x4
-    "classifications (filt. based on avg_ratio_gtfp 90%)", #x5
-    "classifications (filt. based on max avg_ratio_gtfp)", #x6
-    "model_acc_classifications.png"
+    TeX("$\\gamma$"), #y1
+    TeX("$\\gamma$"), #y2
+    TeX("$\\gamma$"), #y3
+    TeX("$\\gamma$"), #y4
+    TeX("$\\gamma$"), #y5
+    TeX("$\\gamma$"), #y6
+    TeX("$n_c$"), #x1
+    # filtered based on diff p1 thresholds
+    TeX("$n_c (p_1 \\geq 0.7)$"), #x2
+    TeX("$n_c (p_1 \\geq 0.75)$"), #x3
+    TeX("$n_c (p_1 \\geq 0.8)$"), #x4
+    TeX("$n_c (p_1 \\geq 0.9)$"), #x5
+    TeX("$n_c (\\max p_1)$"), #x6
+    "model_acc_classifications.png",
+    TeX("$p_2$")
 )
 
 # num classifications - model acc -- filtered based on anomaly_link_perc_scores
@@ -950,19 +955,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_model_acc", #y1
-    "avg_model_acc", #y2
-    "avg_model_acc", #y3
-    "avg_model_acc", #y4
-    "avg_model_acc", #y5
-    "avg_model_acc", #y6
-    "classifications", #x1
-    "classifications (filt. based on ano_link_perc 70%)", #x2
-    "classifications (filt. based on ano_link_perc 75%)", #x3
-    "classifications (filt. based on ano_link_perc 80%)", #x4
-    "classifications (filt. based on ano_link_perc 90%)", #x5
-    "classifications (filt. based on max ano_link_perc)", #x6
-    "model_acc_classifications_ano_link.png"
+    TeX("$\\gamma$"), #y1
+    TeX("$\\gamma$"), #y2
+    TeX("$\\gamma$"), #y3
+    TeX("$\\gamma$"), #y4
+    TeX("$\\gamma$"), #y5
+    TeX("$\\gamma$"), #y6
+    TeX("$n_c$"), #x1
+    TeX("$n_c (p_0 \\geq 0.7)$"), #x2
+    TeX("$n_c (p_0 \\geq 0.75)$"), #x3
+    TeX("$n_c (p_0 \\geq 0.8)$"), #x4
+    TeX("$n_c (p_0 \\geq 0.9)$"), #x5
+    TeX("$n_c (\\max p_0)$"), #x6
+    "model_acc_classifications_ano_link.png",
+    TeX("$p_2$")
 )
 
 # num classifications - model acc -- filtered based on gt_match_perc
@@ -1040,19 +1046,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "avg_model_acc", #y1
-    "avg_model_acc", #y2
-    "avg_model_acc", #y3
-    "avg_model_acc", #y4
-    "avg_model_acc", #y5
-    "avg_model_acc", #y6
-    "classifications", #x1
-    "classifications (filt. based on gt_match_perc 70%)", #x2
-    "classifications (filt. based on gt_match_perc 75%)", #x3
-    "classifications (filt. based on gt_match_perc 80%)", #x4
-    "classifications (filt. based on gt_match_perc 90%)", #x5
-    "classifications (filt. based on max gt_match_perc)", #x6
-    "model_acc_classifications_gt_match_perc.png"
+    TeX("$\\gamma$"), #y1
+    TeX("$\\gamma$"), #y2
+    TeX("$\\gamma$"), #y3
+    TeX("$\\gamma$"), #y4
+    TeX("$\\gamma$"), #y5
+    TeX("$\\gamma$"), #y6
+    TeX("$n_c$"), #x1
+    TeX("$n_c (p_2 \\geq 0.7)$"), #x2
+    TeX("$n_c (p_2 \\geq 0.75)$"), #x3
+    TeX("$n_c (p_2 \\geq 0.8)$"), #x4
+    TeX("$n_c (p_2 \\geq 0.9)$"), #x5
+    TeX("$n_c (\\max p_2)$"), #x6
+    "model_acc_classifications_gt_match_perc.png",
+    TeX("$p_2$")
 )
 
 # correlation affected-by and fault path len / num fault paths
@@ -1113,19 +1120,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "affected_by_perc", # y1
-    "avg_num_fault_paths", # y2
-    "anomaly_perc", # y3
-    "anomaly_perc", # y4
-    "anomaly_perc_aff_by_prod", # y5
-    "anomaly_perc_aff_by_prod", # y6
-    "avg_num_fault_paths", # x1
-    "avg_fault_path_len", # x2
-    "avg_num_fault_paths", # x3
-    "avg_fault_path_len", # x4
-    "avg_ratio_gtfp", # x5
-    "avg_fault_path_len", # x6
-    "correlation_anomaly_perc_aff_by_prod_fault_paths.png"
+    TeX("$\\beta$"), # y1
+    TeX("$f^a_i$"), # y2
+    TeX("$\\alpha$"), # y3
+    TeX("$\\alpha$"), # y4
+    TeX("$\\alpha \\beta$"), # y5
+    TeX("$\\alpha \\beta$"), # y6
+    TeX("$f^a_i$"), # x1
+    TeX("$l^a_i$"), # x2
+    TeX("$f^a_i$"), # x3
+    TeX("$l^a_i$"), # x4
+    TeX("$p_1$"), # x5
+    TeX("$l^a_i$"), # x6
+    "correlation_anomaly_perc_aff_by_prod_fault_paths.png",
+    TeX("$p_2$")
 )
 
 # correlation (median + mean) runtime and fault path len / num fault paths
@@ -1186,19 +1194,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "`avg_runtime (s)`", # y1
-    "`avg_runtime (s)`", # y2
-    "`median_runtime (s)`", # y3
-    "`median_runtime (s)`", # y4
-    "`median_runtime (s)`", # y5
-    "`median_runtime (s)`", # y6
-    "avg_num_fault_paths", # x1
-    "avg_fault_path_len", # x2
-    "avg_num_fault_paths", # x3
-    "avg_fault_path_len", # x4
-    "median_fault_path_len", # x5
-    "median_num_fault_paths", # x6
-    "correlation_runtime_fault_paths.png"
+    TeX("$r^a_i$ (s)"), # y1
+    TeX("$r^a_i$ (s)"), # y2
+    TeX("$r^m_i$ (s)"), # y3
+    TeX("$r^m_i$ (s)"), # y4
+    TeX("$r^m_i$ (s)"), # y5
+    TeX("$r^m_i$ (s)"), # y6
+    TeX("$f^a_i$"), # x1
+    TeX("$l^a_i$"), # x2
+    TeX("$f^a_i$"), # x3
+    TeX("$l^a_i$"), # x4
+    TeX("$l^m_i$"), # x5
+    TeX("$f^m_i$"), # x6
+    "correlation_runtime_fault_paths.png",
+    TeX("$p_2$")
 )
 
 # correlation (median + mean + max) runtime and sum of (mean + max) fp + fp dev
@@ -1259,19 +1268,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "`avg_runtime (s)`", # y1
-    "`max_runtime (s)`", # y2
-    "`median_runtime (s)`", # y3
-    "`max_runtime (s)`", # y4
-    "`avg_runtime (s)`", # y5
-    "`median_runtime (s)`", # y6
-    "sum_of_avg_fault_paths_and_dev", # x1
-    "sum_of_max_fault_paths_and_dev", # x2
-    "sum_of_avg_fault_paths_and_dev", # x3
-    "sum_of_avg_fault_paths_and_dev", # x4
-    "sum_of_max_fault_paths_and_dev", # x5
-    "sum_of_max_fault_paths_and_dev", # x6
-    "correlation_runtime_fault_paths_sum.png"
+    TeX("$r^a_i$ (s)"), # y1
+    TeX("$r^{max}_i$ (s)"), # y2
+    TeX("$r^m_i$ (s)"), # y3
+    TeX("$r^{max}_i$ (s)"), # y4
+    TeX("$r^a_i$ (s)"), # y5
+    TeX("$r^m_i$ (s)"), # y6
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # x1
+    TeX("$f^{max}_i + \\tilde{f^{max}_i}$"), # x2
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # x3
+    TeX("$f^a_i + \\tilde{f^a_i}$"), # x4
+    TeX("$f^{max}_i + \\tilde{f^{max}_i}$"), # x5
+    TeX("$f^{max}_i + \\tilde{f^{max}_i}$"), # x6
+    "correlation_runtime_fault_paths_sum.png",
+    TeX("$p_2$")
 )
 
 # correlation alpha, beta, gamma vs. FPs
@@ -1334,19 +1344,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly_perc", # y1
-    "affected_by_perc", # y2
-    "avg_model_acc", # y3
-    "anomaly_perc_aff_by_model_acc_aggregation", # y4
-    "anomaly_perc_aff_by_model_acc_aggregation", # y5
-    "num_classifications_model_acc_ratio", # y6
-    "avg_fp", # x1
-    "avg_fp", # x2
-    "avg_fp", # x3
-    "avg_fp", # x4
-    "avg_fp (filtered out 100% acc models)", # x5
-    "avg_fp", # x6
-    "anomaly_perc_aff_by_model_acc_aggregation.png"
+    TeX("$\\alpha$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\gamma$"), # y3
+    TeX("$(\\alpha + \\beta) / \\gamma$"), # y4
+    TeX("$(\\alpha + \\beta) / \\gamma$"), # y5
+    TeX("$n_c / \\gamma$"), # y6
+    TeX("$\\bar{FP}$"), # x1
+    TeX("$\\bar{FP}$"), # x2
+    TeX("$\\bar{FP}$"), # x3
+    TeX("$\\bar{FP}$"), # x4
+    TeX("$\\bar{FP} (\\gamma \\neq 1.0)$"), # x5
+    TeX("$\\bar{FP}$"), # x6
+    "anomaly_perc_aff_by_model_acc_aggregation.png",
+    TeX("$p_2$")
 )
 
 # correlation alpha, beta, gamma vs. FNs
@@ -1409,19 +1420,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly_perc", # y1
-    "affected_by_perc", # y2
-    "avg_model_acc", # y3
-    "anomaly_perc_model_acc_aggregation", # y4
-    "anomaly_perc_model_acc_aggregation", # y5
-    "num_classifications_model_acc_ratio", # y6
-    "avg_fn", # x1
-    "avg_fn", # x2
-    "avg_fn", # x3
-    "avg_fn", # x4
-    "avg_fn (filtered out 100% acc models)", # x5
-    "avg_fn", # x6
-    "anomaly_perc_aff_by_model_acc_aggregation_fn.png"
+    TeX("$\\alpha$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\gamma$"), # y3
+    TeX("$\\alpha / \\gamma$"), # y4
+    TeX("$\\alpha / \\gamma$"), # y5
+    TeX("$n_c / \\gamma$"), # y6
+    TeX("$\\bar{FN}$"), # x1
+    TeX("$\\bar{FN}$"), # x2
+    TeX("$\\bar{FN}$"), # x3
+    TeX("$\\bar{FN}$"), # x4
+    TeX("$\\bar{FN} (\\gamma \\neq 1.0)$"), # x5
+    TeX("$\\bar{FN}$"), # x6
+    "anomaly_perc_aff_by_model_acc_aggregation_fn.png",
+    TeX("$p_2$")
 )
 
 # correlation missed anomalies vs. performance
@@ -1482,19 +1494,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "anomaly_link_perc_scores", # y1
-    "anomaly_link_perc_scores", # y2
-    "anomaly_link_perc_scores", # y3
-    "avg_ratio_gtfp", # y4
-    "avg_ratio_gtfp", # y5
-    "avg_ratio_gtfp", # y6
-    "all_missed_anomalies", # x1
-    "missed_anomalies_unclassified", # x2
-    "miss_due_to_class_iss", # x3
-    "all_missed_anomalies", # x4
-    "missed_anomalies_unclassified", # x5
-    "miss_due_to_class_iss", # x6
-    "correlation_missed_anomalies_perf.png"
+    TeX("$p_0$"), # y1
+    TeX("$p_0$"), # y2
+    TeX("$p_0$"), # y3
+    TeX("$p_1$"), # y4
+    TeX("$p_1$"), # y5
+    TeX("$p_1$"), # y6
+    TeX("$m_3$"), # x1
+    TeX("$m_2$"), # x2
+    TeX("$m_1$"), # x3
+    TeX("$m_3$"), # x4
+    TeX("$m_2$"), # x5
+    TeX("$m_1$"), # x6
+    "correlation_missed_anomalies_perf.png",
+    TeX("$p_2$")
 )
 
 # correlation compensation metrics
@@ -1555,19 +1568,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "affected_by_perc", # y1
-    "affected_by_perc", # y2
-    "affected_by_perc", # y3
-    "avg_compensation_by_aff_by_savior", # y4
-    "avg_compensation_by_aff_by_savior", # y5
-    "avg_missed_chances", # y6
-    "avg_compensation_by_aff_by_savior", # x1
-    "avg_missed_chances", # x2
-    "avg_no_second_chance", # x3
-    "anomaly_link_perc_scores", # x4
-    "avg_ratio_gtfp", # x5
-    "avg_ratio_gtfp", # x6
-    "correlation_compensation_metrics.png"
+    TeX("$\\beta$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\beta$"), # y3
+    TeX("$\\bar{c_1}$"), # y4
+    TeX("$\\bar{c_1}$"), # y5
+    TeX("$\\bar{c_2}$"), # y6
+    TeX("$\\bar{c_1}$"), # x1
+    TeX("$\\bar{c_2}$"), # x2
+    TeX("$\\bar{c_3}$"), # x3
+    TeX("$p_0$"), # x4
+    TeX("$p_1$"), # x5
+    TeX("$p_1$"), # x6
+    "correlation_compensation_metrics.png",
+    TeX("$p_2$")
 )
 
 # "best of" correlation plots
@@ -1635,19 +1649,20 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "F1", # y1
-    "F1", # y2
-    "max runtime (s)", # y3
-    "num_classifications_model_acc_ratio", # y4
-    "affected_by_perc", # y5
-    "affected_by_perc", # y6
-    "anomaly_link_perc", # x1
-    "avg_ratio_gtfp", # x2
-    "sum_of_fault_paths_and_dev", # x3
-    "gt_match_perc", # x4
-    "avg compensation (alpha=0.2)", # x5
-    "misclassifications (alpha=0.2, gamma<=0.95)", # x6
-    "best_of_corr.png"
+    TeX("$F1$"), # y1
+    TeX("$F1$"), # y2
+    TeX("$r^{max}_i$ (s)"), # y3
+    TeX("$n_c / \\gamma$"), # y4
+    TeX("$\\beta$"), # y5
+    TeX("$\\beta$"), # y6
+    TeX("$p_0$"), # x1
+    TeX("$p_1$"), # x2
+    TeX("$f^{max}_i + \\tilde{f^{max}_i}$"), # x3
+    TeX("$p_2$"), # x4
+    TeX("$\\bar{c_1} (\\alpha=0.2)$"), # x5
+    TeX("$\\bar{FP} + \\bar{FN} (\\alpha=0.2, \\gamma \\leq 0.95)$"), # x6
+    "best_of_corr.png",
+    TeX("$p_2$")
 )
 
 # 𝛼 = 0.2 and 𝛾 ∈ [0.95, 0.99] to analyze the isolated impact of increasing 𝛽
@@ -1713,17 +1728,18 @@ p6 <- ggplot(
 
 gen_multi_plot_six(
     p1, p2, p3, p4, p5, p6,
-    "affected_by_perc", # y1
-    "affected_by_perc", # y2
-    "affected_by_perc", # y3
-    "affected_by_perc", # y4
-    "affected_by_perc", # y5
-    "affected_by_perc", # y6
-    "avg_misclassifications", # x1
-    "anomaly_link_perc_scores", # x2
-    "avg_ratio_gtfp", # x3
-    "gt_match_perc", # x4
-    "avg_compensation_by_aff_by_savior", # x5
-    "avg_missed_chances", # x6
-    "beta_influence.png"
+    TeX("$\\beta$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\beta$"), # y3
+    TeX("$\\beta$"), # y4
+    TeX("$\\beta$"), # y5
+    TeX("$\\beta$"), # y6
+    TeX("$\\bar{FP} + \\bar{FN} (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x1
+    TeX("$p_0 (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x2
+    TeX("$p_1 (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x3
+    TeX("$p_2 (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x4
+    TeX("$\\bar{c_1} (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x5
+    TeX("$\\bar{c_2} (\\alpha \\geq 0.2, \\gamma \\in \\[0.95, 0.99\\])$"), # x6
+    "beta_influence.png",
+    TeX("$p_2$")
 )
