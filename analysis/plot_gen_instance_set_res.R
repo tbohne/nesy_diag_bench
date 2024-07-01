@@ -1,5 +1,6 @@
 library(ggplot2)
 library(gridExtra)
+library(latex2exp)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 COLOR_VALS <- scale_color_manual(values = c("#d44345", "#0bc986", "#ffb641", "#33364d"))
@@ -11,23 +12,23 @@ gen_plot <- function(plot_points_pre, y_name, x_name, filename) {
 }
 
 gen_multi_plot_four <- function(
-        pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename
+        pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename, group_name
     ) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + COLOR_VALS
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + COLOR_VALS
-    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + COLOR_VALS
-    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + COLOR_VALS
-    combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 2)
-    ggsave(combined_plot, file = filename, width = 12, height = 20)
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + COLOR_VALS + labs(color = group_name)
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + COLOR_VALS + labs(color = group_name)
+    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + COLOR_VALS + labs(color = group_name)
+    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + COLOR_VALS + labs(color = group_name)
+    combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 4)
+    ggsave(combined_plot, file = filename, width = 28, height = 14)
 }
 
 gen_fault_path_multi_plot <- function(
-        pp1, pp2, pp3, pp4, y1, y2, y3, x1, x2, x3, x4, filename
+        pp1, pp2, pp3, pp4, y1, y2, y3, x1, x2, x3, x4, filename, group_name
     ) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y1) + ylab(x1) + COLOR_VALS
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y1) + ylab(x2) + COLOR_VALS
-    fpp3 <- pp3 + geom_point(size=5) + xlab(x3) + ylab(y2) + COLOR_VALS
-    fpp4 <- pp4 + geom_point(size=5) + xlab(x4) + ylab(y3) + COLOR_VALS
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y1) + ylab(x1) + COLOR_VALS + labs(color = group_name)
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y1) + ylab(x2) + COLOR_VALS + labs(color = group_name)
+    fpp3 <- pp3 + geom_point(size=5) + xlab(x3) + ylab(y2) + COLOR_VALS + labs(color = group_name)
+    fpp4 <- pp4 + geom_point(size=5) + xlab(x4) + ylab(y3) + COLOR_VALS + labs(color = group_name)
     combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 4)
     ggsave(combined_plot, file = filename, width = 28, height = 14)
 }
@@ -63,8 +64,16 @@ p4 <- ggplot(
 )
 
 gen_fault_path_multi_plot(
-    p1, p2, p3, p4, "instance", "avg fault path len", "runtime (s)", "avg fault path len", "num of fault paths",
-    "num of fault paths", "num of fault paths", "fault_paths.png"
+    p1, p2, p3, p4,
+    TeX("instance set ($i \\in I$)"),
+    TeX("$l^a_i$"),
+    TeX("runtime (s)"),
+    TeX("$l^a_i$"),
+    "num of fault paths",
+    "num of fault paths",
+    "num of fault paths",
+    "fault_paths.png",
+    TeX("$p_2$")
 )
 
 # confusion matrix plots
@@ -95,9 +104,13 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance",
-    "TP", "TN", "FP", "FN",
-    "confusion_matrix.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$TP$"),
+    TeX("$TN$"),
+    TeX("$FP$"),
+    TeX("$FN$"),
+    "confusion_matrix.png",
+    TeX("$p_2$")
 )
 
 # classic metrics
@@ -128,9 +141,13 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance",
-    "acc", "prec", "rec", "F1",
-    "metrics.png"
+    TeX("instance set ($i \\in I$)"),
+    TeX("$accuracy$"),
+    TeX("$precision$"),
+    TeX("$recall$"),
+    TeX("$F1$"),
+    "metrics.png",
+    TeX("$p_2$")
 )
 
 # runtime, classification ratio and FP / FN
@@ -161,12 +178,13 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance",
-    "classification ratio",
-    "false positives (regular components treated as anomalies)",
+    TeX("instance set ($i \\in I$)"),
+    TeX("$c_r$"),
+    TeX("$FP$ (regular components treated as anomalies)"),
     "runtime (s)",
-    "false negatives (missed anomalies)",
-    "class_ratio.png"
+    TeX("$FN$ (missed anomalies)"),
+    "class_ratio.png",
+    TeX("$p_2$")
 )
 
 # fault path dev
@@ -197,10 +215,11 @@ p4 <- ggplot(
 
 gen_multi_plot_four(
     p1, p2, p3, p4,
-    "instance",
+    TeX("instance set ($i \\in I$)"),
     "number of fault path deviations",
-    "anomalous link percentage",
-    "avg fault path len",
+    TeX("$p_0$"),
+    TeX("$l^a_i$"),
     "ratio of found ground truth fault paths",
-    "fp_dev.png"
+    "fp_dev.png",
+    TeX("$p_2$")
 )
