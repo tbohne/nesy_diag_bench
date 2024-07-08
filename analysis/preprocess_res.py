@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @author Tim Bohne
+
 import pandas as pd
 
 df = pd.read_csv("cumulative_res.csv")

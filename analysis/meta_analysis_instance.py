@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @author Tim Bohne
+
 import numpy as np
 import pandas as pd
 
