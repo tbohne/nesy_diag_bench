@@ -33,7 +33,7 @@ gen_fault_path_multi_plot <- function(
     ggsave(combined_plot, file = filename, width = 28, height = 14)
 }
 
-input <- read.csv(file = "res.csv", header = TRUE, sep = ",", check.name = FALSE)
+input <- read.csv(file = "compact_res.csv", header = TRUE, sep = ",", check.name = FALSE)
 
 # fault path plots
 
