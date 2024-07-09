@@ -231,9 +231,9 @@ gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
     TeX("$c_r$"),
-    TeX("$FP$ (regular components treated as anomalies)"),
+    TeX("$FP$"),
     "runtime (s)",
-    TeX("$FN$ (missed anomalies)"),
+    TeX("$FN$"),
     "class_ratio.png",
     TeX("$p_2$")
 )
