@@ -9,7 +9,7 @@ BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
 
-FOUR_THEME <- theme(
+GENERAL_THEME <- theme(
     axis.title.x = element_text(size = 16),
     axis.title.y = element_text(size = 16),
     axis.text.x = element_text(size = 13),
@@ -36,7 +36,7 @@ extract_legend <- function(plot) {
 }
 
 gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename, group_name) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + FOUR_THEME
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
     fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
     fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x3) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
     fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x4) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
@@ -56,10 +56,22 @@ gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename,
 }
 
 gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    combined_plot <- grid.arrange(fpp1, fpp2, ncol = 1)
-    ggsave(combined_plot, file = filename, width = 12, height = 12)
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+
+    # extract legend from one of the plots (avoid redundant legends)
+    legend <- extract_legend(fpp1 + theme(legend.position = "bottom"))
+
+    combined_plot <- plot_grid(
+        fpp1, fpp2, ncol = 2, align = 'h', axis = 'h', rel_widths = c(1, 0.65)
+    )
+
+    # add shared legend
+    final_plot <- plot_grid(
+        combined_plot, legend, ncol = 1, rel_heights = c(1, 0.05)
+    ) + theme(plot.background = element_rect(fill = "white", color = NA))
+
+    ggsave(final_plot, file = filename, width = 12, height = 12)
 }
 
 input <- read.csv(file = "compact_cumulative_res.csv", header = TRUE, sep = ",", check.name = FALSE)
