@@ -3,18 +3,56 @@ library(gridExtra)
 library(dplyr)
 library(scales)
 library(latex2exp)
+library(cowplot)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
 
+FOUR_THEME <- theme(
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x = element_text(size = 13),
+    axis.text.y = element_text(size = 13),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 16),
+    legend.position = "none"  # remove legend for individual plots
+)
+
+SHARED_Y_THEME <- theme(
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_blank(),
+    axis.text.x = element_text(size = 13),
+    axis.text.y = element_blank(),
+    legend.position = "none"  # remove legend for individual plots
+)
+
+# extract legend from a ggplot
+extract_legend <- function(plot) {
+    tmp <- ggplot_gtable(ggplot_build(plot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)
+}
+
 gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename, group_name) {
-    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(y) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(y) + ylab(x3) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(y) + ylab(x4) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, ncol = 2)
-    ggsave(combined_plot, file = filename, width = 12, height = 12)
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + FOUR_THEME
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x3) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+    fpp4 <- pp4 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x4) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+
+    # extract legend from one of the plots (avoid redundant legends)
+    legend <- extract_legend(fpp1 + theme(legend.position = "bottom"))
+
+    combined_plot <- plot_grid(
+        fpp1, fpp2, fpp3, fpp4, ncol = 4, align = 'h', axis = 'h', rel_widths = c(1, 0.65, 0.65, 0.65)
+    )
+    # add shared legend
+    final_plot <- plot_grid(
+        combined_plot, legend, ncol = 1, rel_heights = c(1, 0.05)
+    ) + theme(plot.background = element_rect(fill = "white", color = NA))
+
+    ggsave(final_plot, file = filename, width = 12, height = 9)
 }
 
 gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
@@ -168,9 +206,9 @@ gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
     TeX("$\\bar{p_0}$"),
-    TeX("$\\bar{FP}$ (regular components treated as anomalies)"),
+    TeX("$\\bar{FP}$"),
     TeX("$\\bar{p_1}$"),
-    TeX("$\\bar{FN}$ (missed anomalies)"),
+    TeX("$\\bar{FN}$"),
     "gt_analysis.png",
     TeX("$p_2$")
 )
@@ -244,9 +282,9 @@ gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
     TeX("$\\bar{c_r}$"),
-    TeX("$\\bar{FP}$ (regular components treated as anomalies)"),
+    TeX("$\\bar{FP}$"),
     TeX("$r^a_i$ (s)"),
-    TeX("$\\bar{FN}$ (missed anomalies)"),
+    TeX("$\\bar{FN}$"),
     "classification_ratio.png",
     TeX("$p_2$")
 )
