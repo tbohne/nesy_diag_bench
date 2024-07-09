@@ -2,9 +2,28 @@ library(ggplot2)
 library(gridExtra)
 library(dplyr)
 library(latex2exp)
+library(cowplot)
 
 PT_DEF <- geom_point(size=5)
 COLOR_VALS <- c("#d44345", "#ffb641", "#ffff00", "#ccff99", "#00ff00")
+
+GENERAL_THEME <- theme(
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x = element_text(size = 13),
+    axis.text.y = element_text(size = 13),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 16),
+    legend.position = "none"  # remove legend for individual plots
+)
+
+# extract legend from a ggplot
+extract_legend <- function(plot) {
+    tmp <- ggplot_gtable(ggplot_build(plot))
+    leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+    legend <- tmp$grobs[[leg]]
+    return(legend)
+}
 
 gen_multi_plot_six <- function(
         pp1, pp2, pp3, pp4, pp5, pp6,
@@ -12,14 +31,27 @@ gen_multi_plot_six <- function(
         x1, x2, x3, x4, x5, x6,
         filename, group_name
     ) {
-    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp3 <- pp3 + PT_DEF + xlab(x3) + ylab(y3) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp4 <- pp4 + PT_DEF + xlab(x4) + ylab(y4) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp5 <- pp5 + PT_DEF + xlab(x5) + ylab(y5) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    fpp6 <- pp6 + PT_DEF + xlab(x6) + ylab(y6) + scale_color_manual(values = color_mapping) + labs(color = group_name)
-    combined_plot <- grid.arrange(fpp1, fpp2, fpp3, fpp4, fpp5, fpp6, ncol = 3)
-    ggsave(combined_plot, file = filename, width = 12, height = 6)
+    fpp1 <- pp1 + PT_DEF + xlab(x1) + ylab(y1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp2 <- pp2 + PT_DEF + xlab(x2) + ylab(y2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp3 <- pp3 + PT_DEF + xlab(x3) + ylab(y3) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp4 <- pp4 + PT_DEF + xlab(x4) + ylab(y4) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp5 <- pp5 + PT_DEF + xlab(x5) + ylab(y5) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp6 <- pp6 + PT_DEF + xlab(x6) + ylab(y6) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+
+    # extract legend from one of the plots (avoid redundant legends)
+    legend <- extract_legend(fpp1 + theme(legend.position = "bottom"))
+
+    combined_plot <- plot_grid(
+        fpp1, fpp2, fpp3, fpp4, fpp5, fpp6, ncol = 3, align = 'h', axis = 'h',
+        rel_widths = c(1, 1, 1)
+    )
+
+    # add shared legend
+    final_plot <- plot_grid(
+        combined_plot, legend, ncol = 1, rel_heights = c(1, 0.05)
+    ) + theme(plot.background = element_rect(fill = "white", color = NA))
+
+    ggsave(final_plot, file = filename, width = 12, height = 8)
 }
 
 gen_multi_plot_two <- function(
