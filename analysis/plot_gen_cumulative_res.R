@@ -71,7 +71,7 @@ gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
         combined_plot, legend, ncol = 1, rel_heights = c(1, 0.05)
     ) + theme(plot.background = element_rect(fill = "white", color = NA))
 
-    ggsave(final_plot, file = filename, width = 12, height = 12)
+    ggsave(final_plot, file = filename, width = 12, height = 9)
 }
 
 input <- read.csv(file = "compact_cumulative_res.csv", header = TRUE, sep = ",", check.name = FALSE)
