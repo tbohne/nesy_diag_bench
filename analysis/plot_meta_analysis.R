@@ -1616,6 +1616,81 @@ gen_multi_plot_six(
     TeX("$p_2$")
 )
 
+# correlation compensation metrics (with alpha=0.2)
+filtered_data <- subset(input, anomaly_perc>=20.0)
+
+p1 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_compensation_by_aff_by_savior",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_missed_chances",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p3 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_no_second_chance",
+        y = "affected_by_perc",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p4 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "anomaly_link_perc_scores",
+        y = "avg_compensation_by_aff_by_savior",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p5 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "avg_compensation_by_aff_by_savior",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+p6 <- ggplot(
+    data = filtered_data, aes_string(
+        x = "avg_ratio_gtfp",
+        y = "avg_missed_chances",
+        color = "gt_match",
+        group = "gt_match"
+    )
+)
+
+gen_multi_plot_six(
+    p1, p2, p3, p4, p5, p6,
+    TeX("$\\beta$"), # y1
+    TeX("$\\beta$"), # y2
+    TeX("$\\beta$"), # y3
+    TeX("$\\bar{c_1}$"), # y4
+    TeX("$\\bar{c_1}$"), # y5
+    TeX("$\\bar{c_2}$"), # y6
+    TeX("$\\bar{c_1}$"), # x1
+    TeX("$\\bar{c_2}$"), # x2
+    TeX("$\\bar{c_3}$"), # x3
+    TeX("$p_0$"), # x4
+    TeX("$p_1$"), # x5
+    TeX("$p_1$"), # x6
+    "correlation_compensation_metrics_alpha20.png",
+    TeX("$p_2$")
+)
+
 # "best of" correlation plots
 
 p1 <- ggplot(
