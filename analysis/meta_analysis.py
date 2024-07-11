@@ -174,9 +174,11 @@ assert all(sum_missed_and_correct[i] == true_num_anomalies[i] for i in range(len
 permutations = [np.math.factorial(i) for i in true_num_anomalies]
 permutation_perc = [round(df["avg_num_fault_paths"][i] / permutations[i] * 100.0, 2) for i in range(len(permutations))]
 # there's at least one fault path per anomalous component and then potentially more based on beta, thus "+"
-permutation_approx = [true_num_anomalies[i] + np.math.factorial(
-    1 + round((true_num_anomalies[i] - 1) * affected_by_percentages[i] / 2 / 100.0)) for i in
-                      range(len(true_num_anomalies))]
+permutation_approx = [
+    true_num_anomalies[i]
+    + np.math.factorial(1 + round((true_num_anomalies[i] - 1) * affected_by_percentages[i] / 2 / 100.0))
+    for i in range(len(true_num_anomalies))
+]
 approx_perc = [round(df["avg_num_fault_paths"][i] / permutation_approx[i] * 100.0, 2) for i in range(len(permutations))]
 permutations = [np.format_float_scientific(i, precision=2) for i in permutations]
 print("\n-----------------------------------------------------------------------")
