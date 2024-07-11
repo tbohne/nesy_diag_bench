@@ -279,7 +279,7 @@ def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float
     assert len(arr_a) == len(arr_b)
     # numpy is not estimating the significance
     np_corr_coeff = round(np.corrcoef(arr_a, arr_b)[0, 1], 2)
-    corr_coeff, p_val = pearsonr(anomaly_perc_aff_by_model_acc_aggregation, df["avg_fp"])
+    corr_coeff, p_val = pearsonr(arr_a, arr_b)
     assert np_corr_coeff == round(corr_coeff, 2)
     return corr_coeff, p_val, p_val < 0.05
 
@@ -291,8 +291,9 @@ corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_model
 print("anomaly_perc_aff_by_model_acc_aggregation --- FP:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_fp"])
-print("corrcoef anomaly percentage --- FP:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_fp"])
+print("anomaly percentage --- FP:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_fp"])
 print("corrcoef affected by percentage --- FP:", round(correlation_matrix[0, 1], 2))
