@@ -149,7 +149,7 @@ miss_due_to_class_iss = [
 print("\nmissed due to wrong classification:\n", miss_due_to_class_iss)
 
 fn_tn_sum = [
-    round(df["avg_fn"][i] + df["avg_tn"], 2) for i in range(len(avg_num_found_anomalies))
+    round(df["avg_fn"][i] + df["avg_tn"][i], 2) for i in range(len(avg_num_found_anomalies))
 ]
 
 correctly_found = [df["avg_tp"][i] for i in range(len(df["avg_tp"]))]
@@ -295,334 +295,429 @@ corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["
 print("anomaly percentage --- FP:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_fp"])
-print("corrcoef affected by percentage --- FP:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_fp"])
+print("affected by percentage --- FP:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["avg_fp"])
-print("corrcoef avg model acc --- FP:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["avg_fp"])
+print("avg model acc --- FP:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fp"])
-print("corrcoef anomaly perc aff by prod --- FP:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, df["avg_fp"])
+print("anomaly perc aff by prod --- FP:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["avg_fp"])
-print("corrcoef num classifications model acc ratio --- FP:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, df["avg_fp"])
+print("num classifications model acc ratio --- FP:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_model_acc_aggregation_filtered, avg_fp_filtered)
-print("corrcoef anomaly_perc_aff_by_model_acc_aggregation_filtered --- FP filtered", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(
+    anomaly_perc_aff_by_model_acc_aggregation_filtered, avg_fp_filtered
+)
+print("anomaly_perc_aff_by_model_acc_aggregation_filtered --- FP filtered")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 # FOR FNs
 
 print("-------------------------------------------------------------------------------------------")
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_aggregation, df["avg_fn"])
-print("corrcoef anomaly_perc_model_acc_aggregation --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_aggregation, df["avg_fn"])
+print("anomaly_perc_model_acc_aggregation --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_fn"])
-print("corrcoef anomaly percentage --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_fn"])
+print("anomaly percentage --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_fn"])
-print("corrcoef affected by percentage --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_fn"])
+print("affected by percentage --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["avg_fn"])
-print("corrcoef avg model acc --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["avg_fn"])
+print("avg model acc --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fn"])
-print("corrcoef anomaly perc aff by prod --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, df["avg_fn"])
+print("anomaly perc aff by prod --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["avg_fn"])
-print("corrcoef num classifications model acc ratio --- FN:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, df["avg_fn"])
+print("num classifications model acc ratio --- FN:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_aggregation_filtered, avg_fn_filtered)
-print("corrcoef anomaly_perc_model_acc_aggregation_filtered --- FN filtered", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_aggregation_filtered, avg_fn_filtered)
+print("anomaly_perc_model_acc_aggregation_filtered --- FN filtered")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 # for runtime analysis
 
 print("-------------------------------------------------------------------------------------------")
 
-correlation_matrix = np.corrcoef(sum_of_max_fault_paths_and_dev, df["max_runtime (s)"])
-print("corrcoef sum_of_max_fault_paths_and_dev --- max_runtime:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(sum_of_max_fault_paths_and_dev, df["max_runtime (s)"])
+print("sum_of_max_fault_paths_and_dev --- max_runtime:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(sum_of_avg_fault_paths_and_dev, df["max_runtime (s)"])
-print("corrcoef sum_of_avg_fault_paths_and_dev --- max_runtime:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(sum_of_avg_fault_paths_and_dev, df["max_runtime (s)"])
+print("sum_of_avg_fault_paths_and_dev --- max_runtime:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_num_fault_paths"], df["avg_fault_path_len"])
-print("corrcoef avg_num_fault_paths --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_num_fault_paths"], df["avg_fault_path_len"])
+print("avg_num_fault_paths --- avg_fault_path_len:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 # more
 
 print("-------------------------------------------------------------------------------------------")
 
-correlation_matrix = np.corrcoef(df["avg_f1"], num_classifications)
-print("corrcoef F1 --- num_classifications:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], num_classifications)
+print("F1 --- num_classifications:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_f1"], df["avg_ratio_of_found_gtfp"])
-print("corrcoef F1 --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], df["avg_ratio_of_found_gtfp"])
+print("F1 --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_f1"], anomaly_link_perc_scores)
-print("corrcoef F1 --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], anomaly_link_perc_scores)
+print("F1 --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_f1"], df["gt_match_perc"])
-print("corrcoef F1 --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], df["gt_match_perc"])
+print("F1 --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(all_missed_anomalies, anomaly_link_perc_scores)
-print("corrcoef all_missed_anomalies --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(all_missed_anomalies, anomaly_link_perc_scores)
+print("all_missed_anomalies --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(missed_anomalies_unclassified, anomaly_link_perc_scores)
-print("corrcoef missed_anomalies_unclassified --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(missed_anomalies_unclassified, anomaly_link_perc_scores)
+print("missed_anomalies_unclassified --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(miss_due_to_class_iss, anomaly_link_perc_scores)
-print("corrcoef miss_due_to_class_iss --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(miss_due_to_class_iss, anomaly_link_perc_scores)
+print("miss_due_to_class_iss --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(all_missed_anomalies, df["avg_ratio_of_found_gtfp"])
-print("corrcoef all_missed_anomalies --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(all_missed_anomalies, df["avg_ratio_of_found_gtfp"])
+print("all_missed_anomalies --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(missed_anomalies_unclassified, df["avg_ratio_of_found_gtfp"])
-print("corrcoef missed_anomalies_unclassified --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(missed_anomalies_unclassified, df["avg_ratio_of_found_gtfp"])
+print("missed_anomalies_unclassified --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(miss_due_to_class_iss, df["avg_ratio_of_found_gtfp"])
-print("corrcoef miss_due_to_class_iss --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(miss_due_to_class_iss, df["avg_ratio_of_found_gtfp"])
+print("miss_due_to_class_iss --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_ano_link)
-print("corrcoef anomaly_perc_aff_by_ratio --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio, compensation_ano_link)
+print("anomaly_perc_aff_by_ratio --- compensation_ano_link:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # model acc
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], anomaly_link_perc_scores)
-print("corrcoef avg_model_acc --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], anomaly_link_perc_scores)
+print("avg_model_acc --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["avg_ratio_of_found_gtfp"])
-print("corrcoef avg_model_acc --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["avg_ratio_of_found_gtfp"])
+print("avg_model_acc --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["gt_match_perc"])
-print("corrcoef avg_model_acc --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["gt_match_perc"])
+print("avg_model_acc --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["diag_success_percentage"])
-print("corrcoef avg_model_acc --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["diag_success_percentage"])
+print("avg_model_acc --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["fp_dev_mean"])
-print("corrcoef avg_model_acc --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["fp_dev_mean"])
+print("avg_model_acc --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_model_acc"], df["fp_dev_max"])
-print("corrcoef avg_model_acc --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["fp_dev_max"])
+print("avg_model_acc --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # affected by
 
-correlation_matrix = np.corrcoef(affected_by_percentages, anomaly_link_perc_scores)
-print("corrcoef affected_by_percentages --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, anomaly_link_perc_scores)
+print("affected_by_percentages --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_ratio_of_found_gtfp"])
-print("corrcoef affected_by_percentages --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_ratio_of_found_gtfp"])
+print("affected_by_percentages --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["gt_match_perc"])
-print("corrcoef affected_by_percentages --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["gt_match_perc"])
+print("affected_by_percentages --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["diag_success_percentage"])
-print("corrcoef affected_by_percentages --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["diag_success_percentage"])
+print("affected_by_percentages --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["fp_dev_mean"])
-print("corrcoef affected_by_percentages --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["fp_dev_mean"])
+print("affected_by_percentages --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["fp_dev_max"])
-print("corrcoef affected_by_percentages --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["fp_dev_max"])
+print("affected_by_percentages --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # alpha / gamma
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, anomaly_link_perc_scores)
-print("corrcoef anomaly_perc_model_acc_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, anomaly_link_perc_scores)
+print("anomaly_perc_model_acc_ratio --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, df["avg_ratio_of_found_gtfp"])
-print("corrcoef anomaly_perc_model_acc_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["avg_ratio_of_found_gtfp"])
+print("anomaly_perc_model_acc_ratio --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, df["gt_match_perc"])
-print("corrcoef anomaly_perc_model_acc_ratio --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["gt_match_perc"])
+print("anomaly_perc_model_acc_ratio --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, df["diag_success_percentage"])
-print("corrcoef anomaly_perc_model_acc_ratio --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["diag_success_percentage"])
+print("anomaly_perc_model_acc_ratio --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, df["fp_dev_mean"])
-print("corrcoef anomaly_perc_model_acc_ratio --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["fp_dev_mean"])
+print("anomaly_perc_model_acc_ratio --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_model_acc_ratio, df["fp_dev_max"])
-print("corrcoef anomaly_perc_model_acc_ratio --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["fp_dev_max"])
+print("anomaly_perc_model_acc_ratio --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # alpha
 
-correlation_matrix = np.corrcoef(anomaly_percentages, anomaly_link_perc_scores)
-print("corrcoef anomaly_percentages --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, anomaly_link_perc_scores)
+print("anomaly_percentages --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_ratio_of_found_gtfp"])
-print("corrcoef anomaly_percentages --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_ratio_of_found_gtfp"])
+print("anomaly_percentages --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["gt_match_perc"])
-print("corrcoef anomaly_percentages --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["gt_match_perc"])
+print("anomaly_percentages --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["diag_success_percentage"])
-print("corrcoef anomaly_percentages --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["diag_success_percentage"])
+print("anomaly_percentages --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["fp_dev_mean"])
-print("corrcoef anomaly_percentages --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["fp_dev_mean"])
+print("anomaly_percentages --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["fp_dev_max"])
-print("corrcoef anomaly_percentages --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["fp_dev_max"])
+print("anomaly_percentages --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # gamma / beta
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, anomaly_link_perc_scores)
-print("corrcoef model_acc_connectivity_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, anomaly_link_perc_scores)
+print("model_acc_connectivity_ratio --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["avg_ratio_of_found_gtfp"])
-print("corrcoef model_acc_connectivity_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, df["avg_ratio_of_found_gtfp"])
+print("model_acc_connectivity_ratio --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["gt_match_perc"])
-print("corrcoef model_acc_connectivity_ratio --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, df["gt_match_perc"])
+print("model_acc_connectivity_ratio --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["diag_success_percentage"])
-print("corrcoef model_acc_connectivity_ratio --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, df["diag_success_percentage"])
+print("model_acc_connectivity_ratio --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["fp_dev_mean"])
-print("corrcoef model_acc_connectivity_ratio --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, df["fp_dev_mean"])
+print("model_acc_connectivity_ratio --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(model_acc_connectivity_ratio, df["fp_dev_max"])
-print("corrcoef model_acc_connectivity_ratio --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(model_acc_connectivity_ratio, df["fp_dev_max"])
+print("model_acc_connectivity_ratio --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # n_c / gamma
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, anomaly_link_perc_scores)
-print("corrcoef num_classifications_model_acc_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, anomaly_link_perc_scores)
+print("num_classifications_model_acc_ratio --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["avg_ratio_of_found_gtfp"])
-print("corrcoef num_classifications_model_acc_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
+                                                       df["avg_ratio_of_found_gtfp"])
+print("num_classifications_model_acc_ratio --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["gt_match_perc"])
-print("corrcoef num_classifications_model_acc_ratio --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, df["gt_match_perc"])
+print("num_classifications_model_acc_ratio --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["diag_success_percentage"])
-print("corrcoef num_classifications_model_acc_ratio --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
+                                                       df["diag_success_percentage"])
+print("num_classifications_model_acc_ratio --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["fp_dev_mean"])
-print("corrcoef num_classifications_model_acc_ratio --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, df["fp_dev_mean"])
+print("num_classifications_model_acc_ratio --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications_model_acc_ratio, df["fp_dev_max"])
-print("corrcoef num_classifications_model_acc_ratio --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio, df["fp_dev_max"])
+print("num_classifications_model_acc_ratio --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # n_c
 
-correlation_matrix = np.corrcoef(num_classifications, anomaly_link_perc_scores)
-print("corrcoef num_classifications --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, anomaly_link_perc_scores)
+print("num_classifications --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications, df["avg_ratio_of_found_gtfp"])
-print("corrcoef num_classifications --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["avg_ratio_of_found_gtfp"])
+print("num_classifications --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications, df["gt_match_perc"])
-print("corrcoef num_classifications --- gt_match_perc:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["gt_match_perc"])
+print("num_classifications --- gt_match_perc:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications, df["diag_success_percentage"])
-print("corrcoef num_classifications --- diag_success_percentage:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["diag_success_percentage"])
+print("num_classifications --- diag_success_percentage:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications, df["fp_dev_mean"])
-print("corrcoef num_classifications --- fp_dev_mean:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["fp_dev_mean"])
+print("num_classifications --- fp_dev_mean:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(num_classifications, df["fp_dev_max"])
-print("corrcoef num_classifications --- fp_dev_max:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["fp_dev_max"])
+print("num_classifications --- fp_dev_max:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # complicated plot
 
-correlation_matrix = np.corrcoef(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
-print("corrcoef avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
+print("avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, compensation_ano_link)
-print("corrcoef anomaly_perc_aff_by_prod --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, compensation_ano_link)
+print("anomaly_perc_aff_by_prod --- compensation_ano_link:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, anomaly_link_perc_scores)
-print("corrcoef anomaly_perc_aff_by_prod --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, anomaly_link_perc_scores)
+print("anomaly_perc_aff_by_prod --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_ratio_of_found_gtfp"])
-print("corrcoef anomaly_perc_aff_by_prod --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, df["avg_ratio_of_found_gtfp"])
+print("anomaly_perc_aff_by_prod --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(compensation_gtfp, compensation_ano_link)
-print("corrcoef compensation_gtfp --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(compensation_gtfp, compensation_ano_link)
+print("compensation_gtfp --- compensation_ano_link:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, compensation_gtfp)
-print("corrcoef anomaly_perc_aff_by_prod --- compensation_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, compensation_gtfp)
+print("anomaly_perc_aff_by_prod --- compensation_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # complicated plot -- ratio
 
-correlation_matrix = np.corrcoef(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
-print("corrcoef avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
+print("avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_ano_link)
-print("corrcoef anomaly_perc_aff_by_ratio --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio, compensation_ano_link)
+print("anomaly_perc_aff_by_ratio --- compensation_ano_link:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, anomaly_link_perc_scores)
-print("corrcoef anomaly_perc_aff_by_ratio --- anomaly_link_perc_scores:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio, anomaly_link_perc_scores)
+print("anomaly_perc_aff_by_ratio --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, df["avg_ratio_of_found_gtfp"])
-print("corrcoef anomaly_perc_aff_by_ratio --- avg_ratio_of_found_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio, df["avg_ratio_of_found_gtfp"])
+print("anomaly_perc_aff_by_ratio --- avg_ratio_of_found_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(compensation_gtfp, compensation_ano_link)
-print("corrcoef compensation_gtfp --- compensation_ano_link:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(compensation_gtfp, compensation_ano_link)
+print("compensation_gtfp --- compensation_ano_link:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_ratio, compensation_gtfp)
-print("corrcoef anomaly_perc_aff_by_ratio --- compensation_gtfp:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio, compensation_gtfp)
+print("anomaly_perc_aff_by_ratio --- compensation_gtfp:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # num of fault paths / fault path length
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_num_fault_paths"])
-print("corrcoef affected_by_percentages --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_num_fault_paths"])
+print("affected_by_percentages --- avg_num_fault_paths:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_num_fault_paths"], df["avg_fault_path_len"])
-print("corrcoef avg_num_fault_paths --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_num_fault_paths"], df["avg_fault_path_len"])
+print("avg_num_fault_paths --- avg_fault_path_len:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_num_fault_paths"])
-print("corrcoef anomaly_percentages --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_num_fault_paths"])
+print("anomaly_percentages --- avg_num_fault_paths:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_percentages, df["avg_fault_path_len"])
-print("corrcoef anomaly_percentages --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_fault_path_len"])
+print("anomaly_percentages --- avg_fault_path_len:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_num_fault_paths"])
-print("corrcoef anomaly_perc_aff_by_prod --- avg_num_fault_paths:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, df["avg_num_fault_paths"])
+print("anomaly_perc_aff_by_prod --- avg_num_fault_paths:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(anomaly_perc_aff_by_prod, df["avg_fault_path_len"])
-print("corrcoef anomaly_perc_aff_by_prod --- avg_fault_path_len:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod, df["avg_fault_path_len"])
+print("anomaly_perc_aff_by_prod --- avg_fault_path_len:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
 # compensation
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_compensation_by_aff_by_savior"])
-print("corrcoef affected_by_percentages --- avg_compensation_by_aff_by_savior:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_compensation_by_aff_by_savior"])
+print("affected_by_percentages --- avg_compensation_by_aff_by_savior:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(fn_tn_sum, df["avg_compensation_by_aff_by_savior"])
-print("corrcoef fn_tn_sum --- avg_compensation_by_aff_by_savior:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(fn_tn_sum, df["avg_compensation_by_aff_by_savior"])
+print("fn_tn_sum --- avg_compensation_by_aff_by_savior:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_missed_chances"])
-print("corrcoef affected_by_percentages --- avg_missed_chances:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_missed_chances"])
+print("affected_by_percentages --- avg_missed_chances:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(affected_by_percentages, df["avg_no_second_chance"])
-print("corrcoef affected_by_percentages --- avg_no_second_chance:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_no_second_chance"])
+print("affected_by_percentages --- avg_no_second_chance:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(df["avg_ratio_of_found_gtfp"], df["avg_missed_chances"])
-print("corrcoef avg_ratio_of_found_gtfp --- avg_missed_chances:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_ratio_of_found_gtfp"], df["avg_missed_chances"])
+print("avg_ratio_of_found_gtfp --- avg_missed_chances:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 print("-------------------------------------------------------------------------------------------")
 
@@ -632,8 +727,9 @@ potentially_missed = [
     all_missed_anomalies[i] + df["avg_compensation_by_aff_by_savior"][i] for i in range(len(all_missed_anomalies))
 ]
 
-correlation_matrix = np.corrcoef(df["avg_compensation_by_aff_by_savior"], potentially_missed)
-print("corrcoef avg_compensation_by_aff_by_savior --- potentially_missed:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(df["avg_compensation_by_aff_by_savior"], potentially_missed)
+print("avg_compensation_by_aff_by_savior --- potentially_missed:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 # all filtered based on alpha=0.2
 beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
@@ -648,14 +744,21 @@ misclassifications_filtered = [avg_misclassifications[i] for i in range(len(avg_
 beta_filtered_more = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
                       anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
 
-correlation_matrix = np.corrcoef(beta_filtered, compensation_filtered)
-print("corrcoef beta_filtered --- compensation_filtered:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(beta_filtered, compensation_filtered)
+print("beta_filtered --- compensation_filtered:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(beta_filtered, pot_misclassifications_filtered)
-print("corrcoef beta_filtered --- pot_misclassifications_filtered:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(beta_filtered, pot_misclassifications_filtered)
+print("beta_filtered --- pot_misclassifications_filtered:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-correlation_matrix = np.corrcoef(beta_filtered_more, misclassifications_filtered)
-print("corrcoef beta_filtered_more --- misclassifications_filtered:", round(correlation_matrix[0, 1], 2))
+corr_coeff, p_val, significant = determine_correlation(beta_filtered_more, misclassifications_filtered)
+print("beta_filtered_more --- misclassifications_filtered:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+print("-------------------------------------------------------------------------------------------")
+
+# averages of performance metrics
 
 avg_F1 = round(df["avg_f1"].describe()["mean"], 2)
 avg_p0 = round(df["avg_ano_link_perc"].describe()["mean"], 2)
