@@ -224,7 +224,7 @@ def measure_compensation(tp, tn, fp, fn):
         if pred == False and gt == True:
             print(c, "is FN")
         elif pred == False and gt == False:
-            print(c, "is TN")
+            print(c, "is TN")  # this case can actually never lead to any missed anomalies in the synth. instances
         if not pred:  # FN or TN
             # go through affected by relations of the negatively classified component
             print("going through aff-by for", c)
