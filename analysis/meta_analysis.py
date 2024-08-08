@@ -703,8 +703,8 @@ corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, 
 print("affected_by_percentages --- avg_compensation_by_aff_by_savior:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-corr_coeff, p_val, significant = determine_correlation(fn_tn_sum, df["avg_compensation_by_aff_by_savior"])
-print("fn_tn_sum --- avg_compensation_by_aff_by_savior:")
+corr_coeff, p_val, significant = determine_correlation(df["avg_fn"], df["avg_compensation_by_aff_by_savior"])
+print("FN --- avg_compensation_by_aff_by_savior:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_missed_chances"])
