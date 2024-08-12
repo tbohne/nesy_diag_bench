@@ -116,10 +116,10 @@ p4 <- ggplot(
 
 gen_fault_path_multi_plot(
     p1, p2, p3, p4,
-    TeX("instance set ($i \\in I$)"),
-    TeX("$l^a_i$"),
+    TeX("instance ($i_j \\in i, i \\in I$)"),
+    TeX("$l^a_{i_j}$"),
     TeX("runtime (s)"),
-    TeX("$l^a_i$"),
+    TeX("$l^a_{i_j}$"),
     "num of fault paths",
     "num of fault paths",
     "num of fault paths",
