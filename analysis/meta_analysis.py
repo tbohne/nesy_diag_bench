@@ -133,6 +133,13 @@ true_num_anomalies = [
 ]
 print("true num anomalies:\n", true_num_anomalies)
 
+print("beta:\n", affected_by_percentages)
+tp_fp_sum = [
+    round(df["avg_tp"][i] + df["avg_fp"][i], 2) for i in range(len(affected_by_percentages))
+]
+print("TP+FP:\n", tp_fp_sum)
+
+
 avg_num_found_anomalies = [round(df["avg_fp"][i] + df["avg_tp"][i], 1) for i in range(len(df["avg_tp"]))]
 print("\nfound anomalies:\n", avg_num_found_anomalies)
 
@@ -277,6 +284,10 @@ def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float
     :return: (correlation coefficient, p-value, whether corr. statistically significant)
     """
     assert len(arr_a) == len(arr_b)
+
+    if len(np.unique(arr_a)) <= 1 or len(np.unique(arr_b)) <= 1:
+        return 0, 0, False
+
     # numpy is not estimating the significance
     np_corr_coeff = round(np.corrcoef(arr_a, arr_b)[0, 1], 2)
     corr_coeff, p_val = pearsonr(arr_a, arr_b)
