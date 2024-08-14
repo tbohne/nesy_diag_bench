@@ -10,6 +10,10 @@ def create_compact_instance_notation_cumulative(data_frame):
         e = data_frame["instance_set"][i].split("_")
         data_frame.at[i, "instance_set"] = "_".join([e[1], e[2], e[5], e[6]])
 
+        # transform p0 from [0, 100] to [0, 1]
+        e = round(float(data_frame["avg_ano_link_perc"][i]) / 100.0, 2)
+        data_frame.at[i, "avg_ano_link_perc"] = e
+
 
 def create_compact_instance_notation_instance_level(data_frame):
     for i in range(len(data_frame["instance"])):
