@@ -17,11 +17,29 @@ GENERAL_THEME <- theme(
     legend.position = "none"  # remove legend for individual plots
 )
 
+GENERAL_THEME_HORI <- theme(
+    axis.title.x = element_text(size = 16),
+    axis.title.y = element_text(size = 16),
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 13),
+    legend.title = element_text(size = 16),
+    legend.text = element_text(size = 16),
+    legend.position = "none"  # remove legend for individual plots
+)
+
 SHARED_Y_THEME <- theme(
     axis.title.x = element_text(size = 16),
     axis.title.y = element_blank(),
     axis.text.x = element_text(size = 13),
     axis.text.y = element_blank(),
+    legend.position = "none"  # remove legend for individual plots
+)
+
+SHARED_X_THEME <- theme(
+    axis.title.y = element_text(size = 16),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 13),
+    axis.text.x = element_blank(),
     legend.position = "none"  # remove legend for individual plots
 )
 
@@ -59,6 +77,15 @@ gen_multi_plot_four <- function(
     ) + theme(plot.background = element_rect(fill = "white", color = NA))
 
     ggsave(final_plot, file = filename, width = 18, height = 20)
+}
+
+gen_multi_plot_two_shared_x <- function(pp1, pp2, y, x1, x2, filename) {
+    fpp1 <- pp1 + BAR_DEF + xlab(NULL) + ylab(x1) + SHARED_X_THEME
+    fpp2 <- pp2 + BAR_DEF + xlab(y) + ylab(x2) + GENERAL_THEME_HORI
+    combined_plot <- plot_grid(
+        fpp1, fpp2, ncol = 1, nrow = 2, align = 'v', axis = 'v', rel_heights = c(0.65, 0.85)
+    )
+    ggsave(combined_plot, file = filename, width = 15, height = 3)
 }
 
 gen_fault_path_multi_plot <- function(
@@ -116,10 +143,10 @@ p4 <- ggplot(
 
 gen_fault_path_multi_plot(
     p1, p2, p3, p4,
-    TeX("instance ($i_j \\in i, i \\in I$)"),
-    TeX("$l^a_{i_j}$"),
+    TeX("instance ($i_\\eta \\in i, i \\in I$)"),
+    TeX("$l^a_{i_\\eta}$"),
     TeX("runtime (s)"),
-    TeX("$l^a_{i_j}$"),
+    TeX("$l^a_{i_\\eta}$"),
     "num of fault paths",
     "num of fault paths",
     "num of fault paths",
@@ -236,6 +263,33 @@ gen_multi_plot_four(
     TeX("$FN$"),
     "class_ratio.png",
     TeX("$p_2$")
+)
+
+# comparing runtime and deviations
+
+input$instance_suffix <- sub(".*_(.*)$", "\\1", input$instance)
+input$instance_suffix <- factor(
+    input$instance_suffix, levels = input$instance_suffix[order(as.numeric(input$instance_suffix))]
+)
+
+p1 <- ggplot(
+    data = input, aes_string(
+        x = "instance_suffix", y = "`runtime (s)`", color = "gt_match", group = "gt_match"
+    )
+)
+
+p2 <- ggplot(
+    data = input, aes_string(
+        x = "instance_suffix", y = "`#fp_dev`", color = "gt_match", group = "gt_match"
+    )
+)
+
+gen_multi_plot_two_shared_x(
+    p1, p2,
+    TeX("instance ($i_\\eta \\in i, i \\in I$)"),
+    "runtime (s)",
+    "deviations",
+    "the_new.png"
 )
 
 # fault path dev
