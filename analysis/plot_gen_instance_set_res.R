@@ -267,9 +267,13 @@ gen_multi_plot_four(
 
 # comparing runtime and deviations
 
-input$instance_suffix <- sub(".*_(.*)$", "\\1", input$instance)
+instance_idx_regex <- ".*_(.*)$"
+
+# \\1 -> replace matched string with text captured by first group "()"
+instance_indices <- sub(instance_idx_regex, "\\1", input$instance)
+
 input$instance_suffix <- factor(
-    input$instance_suffix, levels = input$instance_suffix[order(as.numeric(input$instance_suffix))]
+    instance_indices, levels = instance_indices[order(as.numeric(instance_indices))]
 )
 
 p1 <- ggplot(
@@ -289,7 +293,7 @@ gen_multi_plot_two_shared_x(
     TeX("instance ($i_\\eta \\in i, i \\in I$)"),
     "runtime (s)",
     "deviations",
-    "the_new.png"
+    "dev_runtime.png"
 )
 
 # fault path dev
