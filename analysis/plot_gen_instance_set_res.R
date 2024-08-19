@@ -113,6 +113,15 @@ gen_fault_path_multi_plot <- function(
 
 input <- read.csv(file = "compact_res.csv", header = TRUE, sep = ",", check.name = FALSE)
 
+instance_idx_regex <- ".*_(.*)$"
+
+# \\1 -> replace matched string with text captured by first group "()"
+instance_indices <- sub(instance_idx_regex, "\\1", input$instance)
+
+input$instance_suffix <- factor(
+    instance_indices, levels = instance_indices[order(as.numeric(instance_indices))]
+)
+
 # fault path plots
 
 p1 <- ggplot(
@@ -266,15 +275,6 @@ gen_multi_plot_four(
 )
 
 # comparing runtime and deviations
-
-instance_idx_regex <- ".*_(.*)$"
-
-# \\1 -> replace matched string with text captured by first group "()"
-instance_indices <- sub(instance_idx_regex, "\\1", input$instance)
-
-input$instance_suffix <- factor(
-    instance_indices, levels = instance_indices[order(as.numeric(instance_indices))]
-)
 
 p1 <- ggplot(
     data = input, aes_string(
