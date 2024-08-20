@@ -16,7 +16,7 @@ def write_instance_set_res_to_csv(
         avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime,
         avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage, median_runtime,
         median_num_fault_paths, median_fault_path_len, max_runtime, avg_compensation_by_aff_by_savior,
-        avg_missed_chances, avg_no_second_chance, fp_dev_min
+        avg_missed_chances, avg_no_second_chance, fp_dev_min, avg_ratio_found_anomalies
 ):
     file_exists = os.path.isfile(filename)
     with open(filename, mode='a', newline='') as csv_file:
@@ -29,7 +29,7 @@ def write_instance_set_res_to_csv(
                  "avg_fault_path_len", "max_fault_path_len", "avg_runtime (s)", "avg_classification_ratio",
                  "diag_success_percentage", "median_runtime (s)", "median_num_fault_paths", "median_fault_path_len",
                  "max_runtime (s)", "avg_compensation_by_aff_by_savior", "avg_missed_chances", "avg_no_second_chance",
-                 "fp_dev_min"]
+                 "fp_dev_min", "avg_ratio_found_anomalies"]
             )
         instance_set_sol = instance_set_sol.split("/")[1].replace(".csv", "")
         writer.writerow([instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max,
@@ -38,7 +38,7 @@ def write_instance_set_res_to_csv(
                          avg_fault_path_len, max_fault_path_len, avg_runtime, avg_classification_ratio,
                          diag_success_percentage, median_runtime, median_num_fault_paths, median_fault_path_len,
                          max_runtime, avg_compensation_by_aff_by_savior, avg_missed_chances, avg_no_second_chance,
-                         fp_dev_min])
+                         fp_dev_min, avg_ratio_found_anomalies])
 
 
 if __name__ == '__main__':
@@ -92,11 +92,17 @@ if __name__ == '__main__':
         avg_missed_chances = round(df["missed_chances"].describe()["mean"], 2)
         avg_no_second_chance = round(df["no_second_chance"].describe()["mean"], 2)
 
+        components = int(instance_set_sol.split("/")[1].split("_")[0])
+        alpha = int(instance_set_sol.split("/")[1].split("_")[1])
+        num_anomalies = round(components * (alpha / 100.0))  # same rounding is applied in instance gen
+        avg_missed_anomalies = num_anomalies - avg_tp
+        avg_ratio_found_anomalies = round(float(num_anomalies - avg_missed_anomalies) / num_anomalies, 2)
+
         write_instance_set_res_to_csv(
             instance_set_sol, num_of_instances, avg_tp, avg_tn, avg_fp, avg_fn, fp_dev_mean, fp_dev_max, avg_accuracy,
             avg_prec, avg_rec, avg_spec, avg_f1, avg_ano_link_percentage, avg_model_acc, gt_match_percentage,
             avg_num_fault_paths, max_num_fault_paths, avg_fault_path_len, max_fault_path_len, filename, avg_runtime,
             avg_classification_ratio, avg_ratio_of_found_gtfp, diag_success_percentage, median_runtime,
             median_num_fault_paths, median_fault_path_len, max_runtime, avg_compensation_by_aff_by_savior,
-            avg_missed_chances, avg_no_second_chance, fp_dev_min
+            avg_missed_chances, avg_no_second_chance, fp_dev_min, avg_ratio_found_anomalies
         )
