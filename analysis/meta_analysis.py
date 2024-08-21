@@ -139,7 +139,6 @@ tp_fp_sum = [
 ]
 print("TP+FP:\n", tp_fp_sum)
 
-
 avg_num_found_anomalies = [round(df["avg_fp"][i] + df["avg_tp"][i], 1) for i in range(len(df["avg_tp"]))]
 print("\nfound anomalies:\n", avg_num_found_anomalies)
 
@@ -392,6 +391,10 @@ corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], anomaly_lin
 print("F1 --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
+corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], df["avg_ratio_found_anomalies"])
+print("F1 --- anomaly scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
 corr_coeff, p_val, significant = determine_correlation(df["avg_f1"], df["gt_match_perc"])
 print("F1 --- gt_match_perc:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -406,6 +409,18 @@ print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significan
 
 corr_coeff, p_val, significant = determine_correlation(miss_due_to_class_iss, anomaly_link_perc_scores)
 print("miss_due_to_class_iss --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(all_missed_anomalies, df["avg_ratio_found_anomalies"])
+print("all_missed_anomalies --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(missed_anomalies_unclassified, df["avg_ratio_found_anomalies"])
+print("missed_anomalies_unclassified --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(miss_due_to_class_iss, df["avg_ratio_found_anomalies"])
+print("miss_due_to_class_iss --- avg_ratio_found_anomalies:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 corr_coeff, p_val, significant = determine_correlation(all_missed_anomalies, df["avg_ratio_of_found_gtfp"])
@@ -460,6 +475,10 @@ corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, 
 print("affected_by_percentages --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
+corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_ratio_found_anomalies"])
+print("affected_by_percentages --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
 corr_coeff, p_val, significant = determine_correlation(affected_by_percentages, df["avg_ratio_of_found_gtfp"])
 print("affected_by_percentages --- avg_ratio_of_found_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -486,6 +505,10 @@ print("-------------------------------------------------------------------------
 
 corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, anomaly_link_perc_scores)
 print("anomaly_perc_model_acc_ratio --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["avg_ratio_found_anomalies"])
+print("anomaly_perc_model_acc_ratio --- avg_ratio_found_anomalies:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 corr_coeff, p_val, significant = determine_correlation(anomaly_perc_model_acc_ratio, df["avg_ratio_of_found_gtfp"])
