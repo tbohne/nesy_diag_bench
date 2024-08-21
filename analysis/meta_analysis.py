@@ -211,7 +211,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
          "anomaly_perc_model_acc_aggregation", "miss_due_to_class_iss", "missed_anomalies_unclassified",
          "all_missed_anomalies", "diag_success_percentage", "fp_dev_max", "fp_dev_mean", "permutations",
          "permutation_perc", "permutation_approx", "approx_perc", "avg_compensation_by_aff_by_savior",
-         "avg_missed_chances", "avg_no_second_chance", "avg_misclassifications", "potential_for_misclassification"]
+         "avg_missed_chances", "avg_no_second_chance", "avg_misclassifications", "potential_for_misclassification",
+         "avg_ratio_found_anomalies"]
     )
 
     for i in range(len(compensation_ano_link)):
@@ -258,7 +259,8 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
             df["avg_missed_chances"][i],
             df["avg_no_second_chance"][i],
             avg_misclassifications[i],
-            potential_for_misclassification[i]
+            potential_for_misclassification[i],
+            df["avg_ratio_found_anomalies"][i]
         ])
 
 
