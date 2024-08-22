@@ -17,7 +17,7 @@ def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float
     correlation at least as extreme as the one computed from these datasets. The p-values are not entirely
     reliable but are probably reasonable for datasets larger than 500 or so." -- pydoc.help
 
-    IMPORTANT: we only have a dataset size of 39 (!)
+    IMPORTANT: we only have a dataset size of 100 on the instance level (!)
 
     --> p-value associated with the chosen alternative
         p-value low (generally < 0.05), corr. statistically significant
