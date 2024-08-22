@@ -122,7 +122,7 @@ gen_multi_plot_four(
     TeX("$\\bar{FP}$"),
     TeX("$\\bar{FN}$"),
     "confusion_matrix.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 # avoid log(0)
@@ -150,7 +150,7 @@ gen_multi_plot_two(
     TeX("$\\tilde{f^a_i}$"),
     TeX("$\\tilde{f^{max}_i}$"),
     "fault_path_dev.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 p1 <- ggplot(
@@ -186,7 +186,7 @@ gen_multi_plot_four(
     TeX("$\\bar{recall}$"),
     TeX("$\\bar{F1}$"),
     "eval_metrics.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 p1 <- ggplot(
@@ -217,12 +217,12 @@ p4 <- ggplot(
 gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
-    TeX("$\\bar{p_0}$"),
+    TeX("$\\bar{p_0}^i$"),
     TeX("$\\bar{FP}$"),
-    TeX("$\\bar{p_1}$"),
+    TeX("$\\bar{p_1}^i$"),
     TeX("$\\bar{FN}$"),
     "gt_analysis.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 p1 <- ggplot(
@@ -262,7 +262,7 @@ gen_multi_plot_four(
     TeX("$l^a_i$"),
     TeX("$l^{max}_i$"),
     "fault_paths.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 p1 <- ggplot(
@@ -293,12 +293,12 @@ p4 <- ggplot(
 gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
-    TeX("$\\bar{c_r}$"),
+    TeX("$\\bar{c_r}^i$"),
     TeX("$\\bar{FP}$"),
     TeX("$r^a_i$ (s)"),
     TeX("$\\bar{FN}$"),
     "classification_ratio.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 # visualize compensation capability
@@ -332,10 +332,10 @@ gen_multi_plot_four(
     TeX("instance set ($i \\in I$)"),
     TeX("$\\bar{F1}$"),
     TeX("$\\bar{accuracy}$"),
-    TeX("$\\bar{p_0}$"),
-    TeX("$p_1$"),
+    TeX("$\\bar{p_0}^i$"),
+    TeX("$\\bar{p_1}^i$"),
     "compensation.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 # visualize actual compensation (!) and missed chances
@@ -367,12 +367,12 @@ p4 <- ggplot(
 gen_multi_plot_four(
     p1, p2, p3, p4,
     TeX("instance set ($i \\in I$)"),
-    TeX("$\\bar{c_1}$"),
-    TeX("$\\bar{c_2}$"),
-    TeX("$\\bar{c_3}$"),
-    TeX("$\\bar{c_3}$"),
+    TeX("$\\bar{c_1}^i$"),
+    TeX("$\\bar{c_2}^i$"),
+    TeX("$\\bar{c_3}^i$"),
+    TeX("$\\bar{c_3}^i$"),
     "compensation_metrics.png",
-    TeX("$p_2$")
+    TeX("$p_2^i$")
 )
 
 # visualize "best of" plots
