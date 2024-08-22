@@ -449,6 +449,10 @@ corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], anom
 print("avg_model_acc --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
+corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["avg_ratio_found_anomalies"])
+print("avg_model_acc --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
 corr_coeff, p_val, significant = determine_correlation(df["avg_model_acc"], df["avg_ratio_of_found_gtfp"])
 print("avg_model_acc --- avg_ratio_of_found_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -541,6 +545,10 @@ corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, anom
 print("anomaly_percentages --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
+corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_ratio_found_anomalies"])
+print("anomaly_percentages --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
 corr_coeff, p_val, significant = determine_correlation(anomaly_percentages, df["avg_ratio_of_found_gtfp"])
 print("anomaly_percentages --- avg_ratio_of_found_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -598,6 +606,11 @@ print("num_classifications_model_acc_ratio --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
+                                                       df["avg_ratio_found_anomalies"])
+print("num_classifications_model_acc_ratio --- avg_ratio_found_anomalies:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
                                                        df["avg_ratio_of_found_gtfp"])
 print("num_classifications_model_acc_ratio --- avg_ratio_of_found_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -625,6 +638,10 @@ print("-------------------------------------------------------------------------
 
 corr_coeff, p_val, significant = determine_correlation(num_classifications, anomaly_link_perc_scores)
 print("num_classifications --- anomaly_link_perc_scores:")
+print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
+
+corr_coeff, p_val, significant = determine_correlation(num_classifications, df["avg_ratio_found_anomalies"])
+print("num_classifications --- avg_ratio_found_anomalies:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 corr_coeff, p_val, significant = determine_correlation(num_classifications, df["avg_ratio_of_found_gtfp"])
