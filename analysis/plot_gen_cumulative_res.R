@@ -55,6 +55,25 @@ gen_multi_plot_four <- function(pp1, pp2, pp3, pp4, y, x1, x2, x3, x4, filename,
     ggsave(final_plot, file = filename, width = 12, height = 9)
 }
 
+gen_multi_plot_three <- function(pp1, pp2, pp3, y, x1, x2, x3, filename, group_name) {
+    fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
+    fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+    fpp3 <- pp3 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x3) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
+
+    # extract legend from one of the plots (avoid redundant legends)
+    legend <- extract_legend(fpp1 + theme(legend.position = "bottom"))
+
+    combined_plot <- plot_grid(
+        fpp1, fpp2, fpp3, ncol = 3, align = 'h', axis = 'h', rel_widths = c(1, 0.65, 0.65)
+    )
+    # add shared legend
+    final_plot <- plot_grid(
+        combined_plot, legend, ncol = 1, rel_heights = c(1, 0.05)
+    ) + theme(plot.background = element_rect(fill = "white", color = NA))
+
+    ggsave(final_plot, file = filename, width = 12, height = 9)
+}
+
 gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
     fpp1 <- pp1 + BAR_DEF + coord_flip() + xlab(y) + ylab(x1) + scale_color_manual(values = color_mapping) + labs(color = group_name) + GENERAL_THEME
     fpp2 <- pp2 + BAR_DEF + coord_flip() + xlab(NULL) + ylab(x2) + scale_color_manual(values = color_mapping) + labs(color = group_name) + SHARED_Y_THEME
@@ -358,18 +377,11 @@ p3 <- ggplot(
     )
 )
 
-p4 <- ggplot(
-    data = input, aes_string(
-        x = "instance_set", y = "avg_no_second_chance", color = "gt_match", group = "gt_match"
-    )
-)
-
-gen_multi_plot_four(
-    p1, p2, p3, p4,
+gen_multi_plot_three(
+    p1, p2, p3,
     TeX("instance set ($i \\in I$)"),
     TeX("$\\bar{c_1}^i$"),
     TeX("$\\bar{c_2}^i$"),
-    TeX("$\\bar{c_3}^i$"),
     TeX("$\\bar{c_3}^i$"),
     "compensation_metrics.png",
     TeX("$p_2^i$")
