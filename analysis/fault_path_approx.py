@@ -45,6 +45,7 @@ def approx_exponent():
 len_exp_0 = math.log(C) / math.log(1 / (beta / 2))
 print("expected LENGTH of fault paths (m0):", len_exp_0)
 
+# floor() empirically works better compared to ceil()
 len_exp_1 = math.log((math.floor(alpha * C) - 1) * (beta / 2)) / math.log(1 / (1 - (beta / 2)))
 print("expected LENGTH of fault paths (m1):", len_exp_1)
 
@@ -68,6 +69,7 @@ print("---------------------------------------------------------")
 print("method 2")
 print("---------------------------------------------------------")
 
+# floor() empirically works better compared to ceil()
 num_anomalies = math.floor(alpha * C)
 expected_fault_paths = num_anomalies * (1 - (beta / 2) / num_anomalies) ** num_anomalies
 print("expected num of fault paths:", expected_fault_paths)
