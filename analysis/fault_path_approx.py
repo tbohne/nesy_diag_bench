@@ -6,7 +6,7 @@ import math
 
 ########################################################################
 ########################################################################
-CONF = "c12"
+CONF = "c5"
 
 configs = {
     "c0": {"C": 129, "alpha": 0.2, "beta": 0.1, "gt": 64.55},
@@ -89,7 +89,9 @@ def method_three(exponent):
 
 print("expected num of fault paths:", method_three(approx_exponent()))
 print("expected num of fault paths:", method_three(len_exp_0))
-print("expected num of fault paths:", method_three(len_exp_1))
+print("**************************************************************")
+print("expected num of fault paths: (!!!)", method_three(len_exp_1), "(!!!)")
+print("**************************************************************")
 
 print("---------------------------------------------------------")
 print("method 4")
