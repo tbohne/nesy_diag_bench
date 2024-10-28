@@ -6,7 +6,7 @@ import math
 
 ########################################################################
 ########################################################################
-CONF = "c5"
+CONF = "c12"
 
 configs = {
     "c0": {"C": 129, "alpha": 0.2, "beta": 0.1, "gt": 64.55},
@@ -14,7 +14,14 @@ configs = {
     "c2": {"C": 129, "alpha": 0.1, "beta": 0.05, "gt": 10.54},
     "c3": {"C": 129, "alpha": 0.1, "beta": 0.2, "gt": 17.99},
     "c4": {"C": 129, "alpha": 0.05, "beta": 0.2, "gt": 4.53},
-    "c5": {"C": 129, "alpha": 0.3, "beta": 0.1, "gt": 810}
+    "c5": {"C": 129, "alpha": 0.3, "beta": 0.1, "gt": 810},
+    "c6": {"C": 129, "alpha": 0.2, "beta": 0.05, "gt": 19.3},
+    "c7": {"C": 129, "alpha": 0.05, "beta": 0.05, "gt": 5.35},
+    "c8": {"C": 129, "alpha": 0.05, "beta": 0.1, "gt": 4.92},
+    "c9": {"C": 129, "alpha": 0.2, "beta": 0.02, "gt": 21.87},
+    "c10": {"C": 129, "alpha": 0.1, "beta": 0.1, "gt": 9.56},
+    "c11": {"C": 129, "alpha": 0.2, "beta": 0.07, "gt": 24.25},
+    "c12": {"C": 129, "alpha": 0.4, "beta": 0.05, "gt": 142},
 }
 
 print(configs[CONF])
@@ -22,7 +29,7 @@ alpha = configs[CONF]["alpha"]
 beta = configs[CONF]["beta"]
 C = configs[CONF]["C"]
 
-num_of_anomalous_conn = alpha * (beta / 2) * C
+num_of_anomalous_conn = (math.ceil(alpha * C) - 1) * (beta / 2)
 p_cont = num_of_anomalous_conn / (1 + num_of_anomalous_conn)
 
 
@@ -38,7 +45,7 @@ def approx_exponent():
 len_exp_0 = math.log(C) / math.log(1 / (beta / 2))
 print("expected LENGTH of fault paths (m0):", len_exp_0)
 
-len_exp_1 = math.log(C * (beta / 2)) / math.log(1 / (1 - (beta / 2)))
+len_exp_1 = math.log((math.floor(alpha * C) - 1) * (beta / 2)) / math.log(1 / (1 - (beta / 2)))
 print("expected LENGTH of fault paths (m1):", len_exp_1)
 
 print("---------------------------------------------------------")
@@ -61,7 +68,7 @@ print("---------------------------------------------------------")
 print("method 2")
 print("---------------------------------------------------------")
 
-num_anomalies = alpha * C
+num_anomalies = math.floor(alpha * C)
 expected_fault_paths = num_anomalies * (1 - (beta / 2) / num_anomalies) ** num_anomalies
 print("expected num of fault paths:", expected_fault_paths)
 
@@ -73,11 +80,8 @@ print("---------------------------------------------------------")
 def method_three(exponent):
     average_branching_factor = beta / 2
     total_fault_paths = num_anomalies
-    current_anomalies = num_anomalies
     for _ in range(int(exponent)):
-        new_branches = current_anomalies * average_branching_factor * num_anomalies
-        total_fault_paths += new_branches
-        current_anomalies = new_branches
+        total_fault_paths += average_branching_factor * (num_anomalies - 1) ** 2
     return total_fault_paths
 
 
