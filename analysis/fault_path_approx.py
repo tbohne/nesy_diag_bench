@@ -8,20 +8,21 @@ import math
 ########################################################################
 CONF = "c5"
 
+# gt comprises the avg / median number of fault paths across the entire instance set
 configs = {
-    "c0": {"C": 129, "alpha": 0.2, "beta": 0.1, "gt": 64.55},
-    "c1": {"C": 129, "alpha": 0.2, "beta": 0.01, "gt": 23.56},
-    "c2": {"C": 129, "alpha": 0.1, "beta": 0.05, "gt": 10.54},
-    "c3": {"C": 129, "alpha": 0.1, "beta": 0.2, "gt": 17.99},
-    "c4": {"C": 129, "alpha": 0.05, "beta": 0.2, "gt": 4.53},
-    "c5": {"C": 129, "alpha": 0.3, "beta": 0.1, "gt": 810},
-    "c6": {"C": 129, "alpha": 0.2, "beta": 0.05, "gt": 19.3},
-    "c7": {"C": 129, "alpha": 0.05, "beta": 0.05, "gt": 5.35},
-    "c8": {"C": 129, "alpha": 0.05, "beta": 0.1, "gt": 4.92},
-    "c9": {"C": 129, "alpha": 0.2, "beta": 0.02, "gt": 21.87},
-    "c10": {"C": 129, "alpha": 0.1, "beta": 0.1, "gt": 9.56},
-    "c11": {"C": 129, "alpha": 0.2, "beta": 0.07, "gt": 24.25},
-    "c12": {"C": 129, "alpha": 0.4, "beta": 0.05, "gt": 142},
+    "c0": {"C": 129, "alpha": 0.2, "beta": 0.1, "gt_avg": 64.55, "gt_median": 35},
+    "c1": {"C": 129, "alpha": 0.2, "beta": 0.01, "gt_avg": 23.56, "gt_median": 24},
+    "c2": {"C": 129, "alpha": 0.1, "beta": 0.05, "gt_avg": 10.54, "gt_median": 11},
+    "c3": {"C": 129, "alpha": 0.1, "beta": 0.2, "gt_avg": 17.99, "gt_median": 13.5},
+    "c4": {"C": 129, "alpha": 0.05, "beta": 0.2, "gt_avg": 4.53, "gt_median": 5},
+    "c5": {"C": 129, "alpha": 0.3, "beta": 0.1, "gt_avg": 2352.1, "gt_median": 804.5},
+    "c6": {"C": 129, "alpha": 0.2, "beta": 0.05, "gt_avg": 19.3, "gt_median": 19},
+    "c7": {"C": 129, "alpha": 0.05, "beta": 0.05, "gt_avg": 5.35, "gt_median": 5.5},
+    "c8": {"C": 129, "alpha": 0.05, "beta": 0.1, "gt_avg": 4.92, "gt_median": 5},
+    "c9": {"C": 129, "alpha": 0.2, "beta": 0.02, "gt_avg": 21.87, "gt_median": 22},
+    "c10": {"C": 129, "alpha": 0.1, "beta": 0.1, "gt_avg": 9.56, "gt_median": 10},
+    "c11": {"C": 129, "alpha": 0.2, "beta": 0.07, "gt_avg": 24.25, "gt_median": 22},
+    "c12": {"C": 129, "alpha": 0.4, "beta": 0.05, "gt_avg": 345.8, "gt_median": 118}
 }
 
 print(configs[CONF])
@@ -82,8 +83,8 @@ print("---------------------------------------------------------")
 def method_three(exponent):
     average_branching_factor = beta / 2
     total_fault_paths = num_anomalies
-    for _ in range(int(exponent)):
-        total_fault_paths += average_branching_factor * (num_anomalies - 1) ** 2
+    for i in range(int(exponent)):
+        total_fault_paths += average_branching_factor * (num_anomalies - i) ** 2
     return total_fault_paths
 
 
