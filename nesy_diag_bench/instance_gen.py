@@ -4,7 +4,9 @@
 
 import argparse
 import json
+import os
 import random
+import shutil
 from collections import defaultdict
 from typing import Dict, Tuple, List
 
@@ -346,6 +348,13 @@ def clear_hosted_kg():
     resp = requests.post(UPDATE_ENDPOINT, data={"update": clear_query})
     if resp.status_code == 200:
         print("dataset successfully cleared..")
+        # get home dir in platform-independent way
+        home_dir = os.path.expanduser("~")
+        target_dir = os.path.join(home_dir, "run", "databases", "nesy_diag")
+
+        # remove backups to not clutter SSD
+        if os.path.exists(target_dir):
+            shutil.rmtree(target_dir)
         return True
     else:
         print("failed to clear dataset..")
