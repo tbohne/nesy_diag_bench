@@ -1,0 +1,2 @@
+instance,TP,TN,FP,FN,#fp_dev,acc,prec,rec,spec,F1,ano_link_perc,avg_model_acc,gt_match,#fault_paths,ratio_of_found_gtfp,avg_fp_len,runtime (s),classification_ratio,diag_success,compensation_by_aff_by_savior,missed_chances,no_second_chance
+129_30_10_50_50_95_99_42_0,39,87,3,0,1069,0.98,0.93,1.0,0.97,0.96,100.0,0.97,False,810,1.0,9.24,461.25,1.0,True,39,0,0
