@@ -1134,7 +1134,7 @@ p4 <- ggplot(
 
 p5 <- ggplot(
     data = input, aes_string(
-        x = "avg_ratio_gtfp",
+        x = "avg_num_fault_paths",
         y = "anomaly_perc_aff_by_prod",
         color = "gt_match",
         group = "gt_match"
@@ -1162,7 +1162,7 @@ gen_multi_plot_six(
     TeX("$l^a_i$"), # x2
     TeX("$f^a_i$"), # x3
     TeX("$l^a_i$"), # x4
-    TeX("$\\bar{p_1}^i$"), # x5
+    TeX("$f^a_i$"), # x5
     TeX("$l^a_i$"), # x6
     "correlation_anomaly_perc_aff_by_prod_fault_paths.png",
     TeX("$p_2^i$")
