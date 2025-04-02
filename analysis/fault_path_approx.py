@@ -4,12 +4,10 @@
 
 import math
 
-########################################################################
-########################################################################
 CONF = "c5"
-
-# gt comprises the avg / median number of fault paths across the entire instance set
-configs = {
+PROB_EPSILON = 0.03
+MAX_EXP = 20
+CONFIGS = {  # gt comprises the avg / median number of fault paths across the entire instance set
     "c0": {"C": 129, "alpha": 0.2, "beta": 0.1, "gt_avg": 64.55, "gt_median": 35},
     "c1": {"C": 129, "alpha": 0.2, "beta": 0.01, "gt_avg": 23.56, "gt_median": 24},
     "c2": {"C": 129, "alpha": 0.1, "beta": 0.05, "gt_avg": 10.54, "gt_median": 11},
@@ -25,22 +23,26 @@ configs = {
     "c12": {"C": 129, "alpha": 0.4, "beta": 0.05, "gt_avg": 345.8, "gt_median": 118}
 }
 
-print(configs[CONF])
-alpha = configs[CONF]["alpha"]
-beta = configs[CONF]["beta"]
-C = configs[CONF]["C"]
+print(CONFIGS[CONF])
+alpha = CONFIGS[CONF]["alpha"]
+beta = CONFIGS[CONF]["beta"]
+C = CONFIGS[CONF]["C"]
 
 num_of_anomalous_conn = (math.ceil(alpha * C) - 1) * (beta / 2)
 p_cont = num_of_anomalous_conn / (1 + num_of_anomalous_conn)
 
 
-########################################################################
-########################################################################
+def approx_exponent() -> int:
+    """
+    Approximates the exponent, i.e., the number of levels of the fault path approximation procedure.
+    With each iteration, the probability of continuation gets smaller.
 
-def approx_exponent():
-    for i in range(20):
-        if p_cont ** i <= 0.03:
+    :return: approximated exponent
+    """
+    for i in range(MAX_EXP):
+        if p_cont ** i <= PROB_EPSILON:
             return i
+    return MAX_EXP
 
 
 len_exp_0 = math.log(C) / math.log(1 / (beta / 2))
@@ -55,16 +57,22 @@ print("method 1")
 print("---------------------------------------------------------")
 
 
-def method_one(exponent):
-    end_sum = 0
+def method_one(exponent: float) -> float:
+    """
+    Fault path approximation method one.
+
+    :param exponent: number of levels of the fault path approximation procedure
+    :return: approximated num of fault paths
+    """
+    exp_fault_paths = 0
     for i in range(int(exponent)):
-        end_sum += (alpha ** i) * (((beta / 2) * C) ** i)
-    return end_sum
+        exp_fault_paths += (alpha ** i) * (((beta / 2) * C) ** i)
+    return exp_fault_paths
 
 
-print("expected num of fault paths:", method_one(approx_exponent()))
-print("expected num of fault paths:", method_one(len_exp_0))
-print("expected num of fault paths:", method_one(len_exp_1))
+print("expected num of fault paths (approx_exponent):", method_one(approx_exponent()))
+print("expected num of fault paths (len_exp_0):", method_one(len_exp_0))
+print("expected num of fault paths (len_exp_1):", method_one(len_exp_1))
 
 print("---------------------------------------------------------")
 print("method 2")
@@ -72,26 +80,32 @@ print("---------------------------------------------------------")
 
 # floor() empirically works better compared to ceil()
 num_anomalies = math.floor(alpha * C)
-expected_fault_paths = num_anomalies * (1 - (beta / 2) / num_anomalies) ** num_anomalies
-print("expected num of fault paths:", expected_fault_paths)
+exp_fault_paths = num_anomalies * (1 - (beta / 2) / num_anomalies) ** num_anomalies
+print("expected num of fault paths:", exp_fault_paths)
 
 print("---------------------------------------------------------")
 print("method 3")
 print("---------------------------------------------------------")
 
 
-def method_three(exponent):
-    average_branching_factor = beta / 2
+def method_three(exponent: float) -> float:
+    """
+    Fault path approximation method three.
+
+    :param exponent: number of levels of the fault path approximation procedure
+    :return: approximated num of fault paths
+    """
+    avg_branching_factor = beta / 2
     total_fault_paths = num_anomalies
     for i in range(int(exponent)):
-        total_fault_paths += average_branching_factor * (num_anomalies - i) ** 2
+        total_fault_paths += avg_branching_factor * (num_anomalies - i) ** 2
     return total_fault_paths
 
 
-print("expected num of fault paths:", method_three(approx_exponent()))
-print("expected num of fault paths:", method_three(len_exp_0))
+print("expected num of fault paths (approx_exponent):", method_three(approx_exponent()))
+print("expected num of fault paths (len_exp_0):", method_three(len_exp_0))
 print("**************************************************************")
-print("expected num of fault paths: (!!!)", method_three(len_exp_1), "(!!!)")
+print("expected num of fault paths (len_exp_1): (!!!)", method_three(len_exp_1), "(!!!)")
 print("**************************************************************")
 
 print("---------------------------------------------------------")
@@ -99,13 +113,19 @@ print("method 4")
 print("---------------------------------------------------------")
 
 
-def method_four(exponent):
+def method_four(exponent: float) -> float:
+    """
+    Fault path approximation method four.
+
+    :param exponent: number of levels of the fault path approximation procedure
+    :return: approximated num of fault paths
+    """
     return (alpha * C) * (1 + (beta / 2)) ** exponent
 
 
-print("expected num of fault paths:", method_four(approx_exponent()))
-print("expected num of fault paths:", method_four(len_exp_0))
-print("expected num of fault paths:", method_four(len_exp_1))
+print("expected num of fault paths (approx_exponent):", method_four(approx_exponent()))
+print("expected num of fault paths (len_exp_0):", method_four(len_exp_0))
+print("expected num of fault paths (len_exp_1):", method_four(len_exp_1))
 
 print("---------------------------------------------------------")
 print("method 5")
