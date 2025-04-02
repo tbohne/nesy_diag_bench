@@ -1,9 +1,16 @@
-library(ggplot2)
-library(gridExtra)
-library(dplyr)
-library(scales)
-library(latex2exp)
-library(cowplot)
+#!/usr/bin/env Rscript
+# -*- coding: utf-8 -*-
+# @author Tim Bohne
+
+# required packages
+packages <- c("ggplot2", "gridExtra", "dplyr", "latex2exp", "cowplot", "scales")
+# check for missing packages + installation
+new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
+if (length(new_packages)) {
+  install.packages(new_packages)
+}
+# load packages
+lapply(packages, library, character.only = TRUE)
 
 BAR_COLOR <- c(rgb(32, 43, 50, maxColorValue = 255))
 BAR_DEF <- geom_bar(stat = "identity", fill = BAR_COLOR, width = 0.75)
@@ -93,7 +100,7 @@ gen_multi_plot_two <- function(pp1, pp2, y, x1, x2, filename, group_name) {
     ggsave(final_plot, file = filename, width = 12, height = 9)
 }
 
-input <- read.csv(file = "compact_cumulative_res.csv", header = TRUE, sep = ",", check.name = FALSE)
+input <- read.csv(file = "results/compact_cumulative_res.csv", header = TRUE, sep = ",", check.name = FALSE)
 
 # instead of the percentage value factor(gt_match_perc) for which I'd need 100
 # colors, I only want to color / group them into 5 groups
