@@ -1,3 +1,7 @@
+#!/usr/bin/env Rscript
+# -*- coding: utf-8 -*-
+# @author Tim Bohne
+
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
@@ -112,7 +116,7 @@ gen_multi_plot_two <- function(
 # actual compensation insights
 
 input <- read.csv(
-  file = "meta_analysis.csv", header = TRUE, sep = ",", check.name = FALSE
+  file = "results/meta_analysis.csv", header = TRUE, sep = ",", check.name = FALSE
 )
 
 # instead of the percentage value factor(gt_match_perc) for which I'd need 100
@@ -200,7 +204,7 @@ gen_multi_plot_six(
   TeX("$p_2^i$")
 )
 
-# same with prod #############################
+# same with prod
 
 p1 <- ggplot(
   data = input, aes_string(
@@ -274,7 +278,7 @@ gen_multi_plot_six(
   TeX("$p_2^i$")
 )
 
-##############################################
+# F1 end res
 
 p1 <- ggplot(
   data = input, aes_string(
