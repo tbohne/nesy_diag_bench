@@ -10,8 +10,9 @@ import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr
 
-df = pd.read_csv("cumulative_res.csv")
+df = pd.read_csv("results/cumulative_res.csv")
 
+NUM_COMP = 129
 anomaly_percentages = [float(i.split("_")[1]) for i in df["instance_set"]]
 affected_by_percentages = [float(i.split("_")[2]) for i in df["instance_set"]]
 
@@ -21,8 +22,11 @@ avg_misclassifications = [
 
 # approximation: #FP * beta / 2 * C * gamma
 potential_for_misclassification = [
-    # round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * df["avg_model_acc"][i], 2)
-    round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * 129 * (1 - df["avg_classification_ratio"][i]), 2)
+    # round(df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * NUM_COMP * df["avg_model_acc"][i], 2)
+    round(
+        df["avg_fp"][i] * (affected_by_percentages[i] / 100.0 / 2) * NUM_COMP * (1 - df["avg_classification_ratio"][i]),
+        2
+    )
     for i in range(len(df["avg_fp"]))
 ]
 
@@ -31,13 +35,11 @@ potential_for_misclassification = [
 #   - neg: leads to more classifications and thus also to more potential misclassifications
 # -> do these effects cancel each other out?
 anomaly_perc_aff_by_ratio = [
-    float(anomaly_percentages[i]) / float(affected_by_percentages[i])
-    for i in range(len(anomaly_percentages))
+    float(anomaly_percentages[i]) / float(affected_by_percentages[i]) for i in range(len(anomaly_percentages))
 ]
 
 anomaly_perc_aff_by_prod = [
-    float(anomaly_percentages[i]) * float(affected_by_percentages[i])
-    for i in range(len(anomaly_percentages))
+    float(anomaly_percentages[i]) * float(affected_by_percentages[i]) for i in range(len(anomaly_percentages))
 ]
 
 anomaly_perc_aff_by_model_acc_aggregation = [
@@ -59,10 +61,12 @@ anomaly_perc_model_acc_aggregation = [
     for i in range(len(anomaly_percentages))
 ]
 
-anomaly_percentages_filtered = [anomaly_percentages[i] for i in range(len(anomaly_percentages)) if
-                                df["avg_model_acc"][i] != 1.0]
-affected_by_percentages_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
-                                    df["avg_model_acc"][i] != 1.0]
+anomaly_percentages_filtered = [
+    anomaly_percentages[i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0
+]
+affected_by_percentages_filtered = [
+    affected_by_percentages[i] for i in range(len(affected_by_percentages)) if df["avg_model_acc"][i] != 1.0
+]
 model_acc_filtered = [df["avg_model_acc"][i] for i in range(len(anomaly_percentages)) if df["avg_model_acc"][i] != 1.0]
 avg_fp_filtered = [df["avg_fp"][i] for i in range(len(df["avg_fp"])) if df["avg_model_acc"][i] != 1.0]
 avg_fn_filtered = [df["avg_fn"][i] for i in range(len(df["avg_fn"])) if df["avg_model_acc"][i] != 1.0]
@@ -73,31 +77,26 @@ anomaly_perc_aff_by_model_acc_aggregation_filtered = [
 ]
 
 anomaly_perc_model_acc_aggregation_filtered = [
-    float(anomaly_percentages_filtered[i]) / model_acc_filtered[i]
-    for i in range(len(anomaly_percentages_filtered))
+    float(anomaly_percentages_filtered[i]) / model_acc_filtered[i] for i in range(len(anomaly_percentages_filtered))
 ]
 
-# basic idea: the worse the model, the better the graph should be connected in
-# order to compensate wrong classifications, however, this also has the neg
-# side-effect again of leading to more classifications and thus also to more
+# basic idea: the worse the model, the better the graph should be connected in order to compensate wrong
+# classifications, however, this also has the neg side effect of leading to more classifications and thus also to more
 # potential for wrong classifications
 model_acc_connectivity_ratio = [
-    df["avg_model_acc"][i] / (float(affected_by_percentages[i]) / 100.0)
-    for i in range(len(df["avg_model_acc"]))
+    df["avg_model_acc"][i] / (float(affected_by_percentages[i]) / 100.0) for i in range(len(df["avg_model_acc"]))
 ]
 
-# idea: the performance should get worse when having too many classifications
-# with a too poor model acc
+# idea: the performance should get worse when having too many classifications with a too poor model acc
 num_classifications_model_acc_ratio = [
-    round(df["avg_classification_ratio"][i] * 129 / (df["avg_model_acc"][i] * 100), 2)
+    round(df["avg_classification_ratio"][i] * NUM_COMP / (df["avg_model_acc"][i] * 100), 2)
     for i in range(len(df["avg_classification_ratio"]))
 ]
 
-num_classifications = [df["avg_classification_ratio"][i] * 129 for i in range(len(df["avg_classification_ratio"]))]
+num_classifications = [df["avg_classification_ratio"][i] * NUM_COMP for i in range(len(df["avg_classification_ratio"]))]
 
 anomaly_perc_model_acc_ratio = [
-    round(float(anomaly_percentages[i]) / (df["avg_model_acc"][i] * 100), 2)
-    for i in range(len(df["avg_model_acc"]))
+    round(float(anomaly_percentages[i]) / (df["avg_model_acc"][i] * 100), 2) for i in range(len(df["avg_model_acc"]))
 ]
 
 anomaly_link_perc_scores = [round(i / 100.0, 2) for i in df["avg_ano_link_perc"]]
@@ -105,32 +104,25 @@ anomaly_link_perc_scores = [round(i / 100.0, 2) for i in df["avg_ano_link_perc"]
 # I don't think this metric makes much sense, it's not really a compensation;
 # there should be a clear correlation between the two, but both F1 and the
 # ano link perc depend on the number of anomalies, the model acc and the
-# affected-by percentage -- but still, could look at this later...
+# affected-by percentage -- but still, could evaluate this later
 compensation_ano_link = [
-    abs(round(anomaly_link_perc_scores[i] - df["avg_f1"][i], 2))
-    for i in range(len(df["avg_f1"]))
+    abs(round(anomaly_link_perc_scores[i] - df["avg_f1"][i], 2)) for i in range(len(df["avg_f1"]))
 ]
-
-# same thing: I don't think this makes much sense
 compensation_gtfp = [
-    abs(round(df["avg_ratio_of_found_gtfp"][i] - df["avg_f1"][i], 2))
-    for i in range(len(df["avg_f1"]))
+    abs(round(df["avg_ratio_of_found_gtfp"][i] - df["avg_f1"][i], 2)) for i in range(len(df["avg_f1"]))
 ]
 
 sum_of_avg_fault_paths_and_dev = [
-    round(df["fp_dev_mean"][i] + df["avg_num_fault_paths"][i], 2)
-    for i in range(len(df["fp_dev_mean"]))
+    round(df["fp_dev_mean"][i] + df["avg_num_fault_paths"][i], 2) for i in range(len(df["fp_dev_mean"]))
 ]
-
 sum_of_max_fault_paths_and_dev = [
-    round(df["fp_dev_max"][i] + df["max_num_fault_paths"][i], 2)
-    for i in range(len(df["fp_dev_max"]))
+    round(df["fp_dev_max"][i] + df["max_num_fault_paths"][i], 2) for i in range(len(df["fp_dev_max"]))
 ]
 
-################################## missed anomalies
+################################## missed anomalies ##################################
 
 true_num_anomalies = [
-    round(129 * anomaly_percentages[i] / 100.0) for i in range(len(df["avg_tp"]))
+    round(NUM_COMP * anomaly_percentages[i] / 100.0) for i in range(len(df["avg_tp"]))
 ]
 print("true num anomalies:\n", true_num_anomalies)
 
@@ -171,17 +163,20 @@ all_missed_anomalies = [
     round(true_num_anomalies[i] - df["avg_tp"][i], 2) for i in range(len(true_num_anomalies))
 ]
 print("\nall missed anomalies:\n", all_missed_anomalies)
-
 print("\np3:\n", list(df["avg_ratio_found_anomalies"]))
 
-assert all(round(miss_due_to_class_iss[i] + missed_anomalies_unclassified[i], 2) == all_missed_anomalies[i]
-           for i in range(len(all_missed_anomalies)))
+assert all(
+    round(miss_due_to_class_iss[i] + missed_anomalies_unclassified[i], 2) == all_missed_anomalies[i]
+    for i in range(len(all_missed_anomalies))
+)
 
-sum_missed_and_correct = [round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1) for
-                          i in range(len(true_num_anomalies))]
+sum_missed_and_correct = [
+    round(missed_anomalies_unclassified[i] + miss_due_to_class_iss[i] + correctly_found[i], 1)
+    for i in range(len(true_num_anomalies))
+]
 assert all(sum_missed_and_correct[i] == true_num_anomalies[i] for i in range(len(true_num_anomalies)))
 
-# permutations -- and approximations (expected fault paths)
+# permutations and approximations (expected fault paths)
 permutations = [np.math.factorial(i) for i in true_num_anomalies]
 permutation_perc = [round(df["avg_num_fault_paths"][i] / permutations[i] * 100.0, 2) for i in range(len(permutations))]
 # there's at least one fault path per anomalous component and then potentially more based on beta, thus "+"
@@ -191,17 +186,31 @@ permutation_perc = [round(df["avg_num_fault_paths"][i] / permutations[i] * 100.0
 #     for i in range(len(true_num_anomalies))
 # ]
 
-# new way (!)
-C = 129
+C = NUM_COMP
 
 
-def length_est(alpha, beta):
+def length_est(alpha: float, beta: float) -> float:
+    """
+    Length estimation for fault paths.
+
+    :param alpha: anomaly percentage
+    :param beta: affected-by percentage
+    :return: estimated fault path length
+    """
     if math.floor(alpha * C) == 1:
         return 1
     return math.log((math.floor(alpha * C) - 1) * (beta / 2)) / math.log(1 / (1 - (beta / 2)))
 
 
-def method_three(exponent, alpha, beta):
+def approximate_num_of_fault_paths(exponent: float, alpha: float, beta: float) -> float:
+    """
+    Approximates the number of fault paths (cf. `fault_path_approx.py` -- method three).
+
+    :param exponent: number of levels of the fault path approximation procedure
+    :param alpha: anomaly percentage
+    :param beta: affected-by percentage
+    :return: approximated num of fault paths
+    """
     num_anomalies = math.floor(alpha * C)
     average_branching_factor = beta / 2
     total_fault_paths = num_anomalies
@@ -211,7 +220,7 @@ def method_three(exponent, alpha, beta):
 
 
 permutation_approx = [
-    method_three(
+    approximate_num_of_fault_paths(
         length_est(anomaly_percentages[i] / 100.0, affected_by_percentages[i] / 100.0),
         anomaly_percentages[i] / 100.0,
         affected_by_percentages[i] / 100.0
@@ -228,9 +237,7 @@ print("max approx perc:", round(np.max(approx_perc), 2))
 print("min approx perc:", round(np.min(approx_perc), 2))
 print("-----------------------------------------------------------------------")
 
-#################################
-
-with open("meta_analysis.csv", mode='a', newline='') as csv_file:
+with open("results/meta_analysis.csv", mode='a', newline='') as csv_file:
     writer = csv.writer(csv_file)
     writer.writerow(
         ["anomaly_perc", "affected_by_perc", "anomaly_perc_aff_by_ratio", "f1_scores", "anomaly_link_perc_scores",
@@ -296,7 +303,7 @@ with open("meta_analysis.csv", mode='a', newline='') as csv_file:
         ])
 
 
-################## correlation coefficients
+################## correlation coefficients ##################
 
 def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float, float, bool]:
     """
@@ -331,6 +338,7 @@ def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float
 print("\n----- correlation coefficients -----\n")
 
 # FOR FPs
+
 corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_model_acc_aggregation, df["avg_fp"])
 print("anomaly_perc_aff_by_model_acc_aggregation --- FP:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -637,13 +645,15 @@ corr_coeff, p_val, significant = determine_correlation(num_classifications_model
 print("num_classifications_model_acc_ratio --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
-                                                       df["avg_ratio_found_anomalies"])
+corr_coeff, p_val, significant = determine_correlation(
+    num_classifications_model_acc_ratio, df["avg_ratio_found_anomalies"]
+)
 print("num_classifications_model_acc_ratio --- avg_ratio_found_anomalies:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
-                                                       df["avg_ratio_of_found_gtfp"])
+corr_coeff, p_val, significant = determine_correlation(
+    num_classifications_model_acc_ratio, df["avg_ratio_of_found_gtfp"]
+)
 print("num_classifications_model_acc_ratio --- avg_ratio_of_found_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
@@ -651,8 +661,9 @@ corr_coeff, p_val, significant = determine_correlation(num_classifications_model
 print("num_classifications_model_acc_ratio --- gt_match_perc:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-corr_coeff, p_val, significant = determine_correlation(num_classifications_model_acc_ratio,
-                                                       df["diag_success_percentage"])
+corr_coeff, p_val, significant = determine_correlation(
+    num_classifications_model_acc_ratio, df["diag_success_percentage"]
+)
 print("num_classifications_model_acc_ratio --- diag_success_percentage:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
@@ -698,19 +709,22 @@ print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significan
 
 print("-------------------------------------------------------------------------------------------")
 
-# complicated plot
+# varia plot
 
 corr_coeff, p_val, significant = determine_correlation(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
 print("avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-anomaly_perc_aff_by_prod_filtered = [anomaly_perc_aff_by_prod[i] for i in range(len(anomaly_perc_aff_by_prod)) if
-                                     df["avg_model_acc"][i] != 1.0]
-compensation_ano_link_filtered = [compensation_ano_link[i] for i in range(len(compensation_ano_link)) if
-                                  df["avg_model_acc"][i] != 1.0]
+anomaly_perc_aff_by_prod_filtered = [
+    anomaly_perc_aff_by_prod[i] for i in range(len(anomaly_perc_aff_by_prod)) if df["avg_model_acc"][i] != 1.0
+]
+compensation_ano_link_filtered = [
+    compensation_ano_link[i] for i in range(len(compensation_ano_link)) if df["avg_model_acc"][i] != 1.0
+]
 
-corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_prod_filtered,
-                                                       compensation_ano_link_filtered)
+corr_coeff, p_val, significant = determine_correlation(
+    anomaly_perc_aff_by_prod_filtered, compensation_ano_link_filtered
+)
 print("anomaly_perc_aff_by_prod --- compensation_ano_link:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
@@ -732,20 +746,23 @@ print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significan
 
 print("-------------------------------------------------------------------------------------------")
 
-# complicated plot -- ratio
+# varia plot -- ratio
 
 corr_coeff, p_val, significant = determine_correlation(df["avg_ratio_of_found_gtfp"], anomaly_link_perc_scores)
 print("avg_ratio_of_found_gtfp --- anomaly_link_perc_scores:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-# TODO: filter out the 100% cases
-anomaly_perc_aff_by_ratio_filtered = [anomaly_perc_aff_by_ratio[i] for i in range(len(anomaly_perc_aff_by_ratio)) if
-                                      df["avg_model_acc"][i] != 1.0]
-compensation_ano_link_filtered = [compensation_ano_link[i] for i in range(len(compensation_ano_link)) if
-                                  df["avg_model_acc"][i] != 1.0]
+# filter out the 100% cases
+anomaly_perc_aff_by_ratio_filtered = [
+    anomaly_perc_aff_by_ratio[i] for i in range(len(anomaly_perc_aff_by_ratio)) if df["avg_model_acc"][i] != 1.0
+]
+compensation_ano_link_filtered = [
+    compensation_ano_link[i] for i in range(len(compensation_ano_link)) if df["avg_model_acc"][i] != 1.0
+]
 
-corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio_filtered,
-                                                       compensation_ano_link_filtered)
+corr_coeff, p_val, significant = determine_correlation(
+    anomaly_perc_aff_by_ratio_filtered, compensation_ano_link_filtered
+)
 print("anomaly_perc_aff_by_ratio --- compensation_ano_link:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
@@ -761,9 +778,9 @@ corr_coeff, p_val, significant = determine_correlation(compensation_gtfp, compen
 print("compensation_gtfp --- compensation_ano_link:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-compensation_gtfp_filtered = [compensation_gtfp[i] for i in range(len(compensation_gtfp)) if
-                              df["avg_model_acc"][i] != 1.0]
-
+compensation_gtfp_filtered = [
+    compensation_gtfp[i] for i in range(len(compensation_gtfp)) if df["avg_model_acc"][i] != 1.0
+]
 corr_coeff, p_val, significant = determine_correlation(anomaly_perc_aff_by_ratio_filtered, compensation_gtfp_filtered)
 print("anomaly_perc_aff_by_ratio --- compensation_gtfp:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -800,10 +817,13 @@ print("-------------------------------------------------------------------------
 
 # compensation
 
-aff_by_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
-                   df["avg_model_acc"][i] != 1.0]
-savior_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in
-                   range(len(df["avg_compensation_by_aff_by_savior"])) if df["avg_model_acc"][i] != 1.0]
+aff_by_filtered = [
+    affected_by_percentages[i] for i in range(len(affected_by_percentages)) if df["avg_model_acc"][i] != 1.0
+]
+savior_filtered = [
+    df["avg_compensation_by_aff_by_savior"][i]
+    for i in range(len(df["avg_compensation_by_aff_by_savior"])) if df["avg_model_acc"][i] != 1.0
+]
 
 corr_coeff, p_val, significant = determine_correlation(aff_by_filtered, savior_filtered)
 print("affected_by_percentages --- avg_compensation_by_aff_by_savior:")
@@ -813,8 +833,9 @@ corr_coeff, p_val, significant = determine_correlation(df["avg_fn"], df["avg_com
 print("FN --- avg_compensation_by_aff_by_savior:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
-missed_filtered = [df["avg_missed_chances"][i] for i in range(len(df["avg_missed_chances"])) if
-                   df["avg_model_acc"][i] != 1.0]
+missed_filtered = [
+    df["avg_missed_chances"][i] for i in range(len(df["avg_missed_chances"])) if df["avg_model_acc"][i] != 1.0
+]
 corr_coeff, p_val, significant = determine_correlation(aff_by_filtered, missed_filtered)
 print("affected_by_percentages --- avg_missed_chances:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
@@ -840,17 +861,26 @@ print("avg_compensation_by_aff_by_savior --- potentially_missed:")
 print("\tcorr. coeff.:", corr_coeff, "p-val:", p_val, "significant:", significant)
 
 # all filtered based on alpha=0.2
-beta_filtered = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
-                 anomaly_percentages[i] == 20]
-compensation_filtered = [df["avg_compensation_by_aff_by_savior"][i] for i in
-                         range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20]
+beta_filtered = [
+    affected_by_percentages[i] for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20
+]
+compensation_filtered = [
+    df["avg_compensation_by_aff_by_savior"][i]
+    for i in range(len(df["avg_compensation_by_aff_by_savior"])) if anomaly_percentages[i] == 20
+]
 # would be interesting to consider beta vs. potential for misclassifications (for alpha = 0.2)
-pot_misclassifications_filtered = [potential_for_misclassification[i] for i in
-                                   range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20]
-misclassifications_filtered = [avg_misclassifications[i] for i in range(len(avg_misclassifications)) if
-                               anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
-beta_filtered_more = [affected_by_percentages[i] for i in range(len(affected_by_percentages)) if
-                      anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95]
+pot_misclassifications_filtered = [
+    potential_for_misclassification[i]
+    for i in range(len(potential_for_misclassification)) if anomaly_percentages[i] == 20
+]
+misclassifications_filtered = [
+    avg_misclassifications[i]
+    for i in range(len(avg_misclassifications)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95
+]
+beta_filtered_more = [
+    affected_by_percentages[i]
+    for i in range(len(affected_by_percentages)) if anomaly_percentages[i] == 20 and df["avg_model_acc"][i] <= 0.95
+]
 
 corr_coeff, p_val, significant = determine_correlation(beta_filtered, compensation_filtered)
 print("beta_filtered --- compensation_filtered:")
