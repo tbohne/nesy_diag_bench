@@ -1,3 +1,7 @@
+#!/usr/bin/env Rscript
+# -*- coding: utf-8 -*-
+# @author Tim Bohne
+
 library(ggplot2)
 library(gridExtra)
 library(latex2exp)
@@ -176,10 +180,8 @@ gen_fault_path_multi_plot <- function(
   ggsave(combined_plot, file = filename, width = 15, height = 7)
 }
 
-input <- read.csv(file = "compact_res.csv", header = TRUE, sep = ",", check.name = FALSE)
-
+input <- read.csv(file = "results/compact_res.csv", header = TRUE, sep = ",", check.name = FALSE)
 instance_idx_regex <- ".*_(.*)$"
-
 # \\1 -> replace matched string with text captured by first group "()"
 instance_indices <- sub(instance_idx_regex, "\\1", input$instance)
 
