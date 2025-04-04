@@ -33,20 +33,20 @@ The semantics of all specified parameters are defined in the paper. All paramete
 - $C \in [10, 25, 50, 75, 100, 250, 500, 1000]$
 - $\alpha \in [.01, .02, .03, .05, .1, .15, .2]$
 - $\beta \in [.05, .1, .2]$
-- $\epsilon \in [.25, .5, 1.0]$
-- $\delta \in [.05, .1, .25, .5]$
 - $\gamma^{LB} \in [.65, .75, .85, .90, .95, 1.0]$
 - $\gamma^{UB} \in [.75, .85, .95, .95, .99, 1.0]$
+- $\delta \in [.05, .1, .25, .5]$
+- $\epsilon \in [.25, .5, 1.0]$
 
 ## Reduced Parameter Config Used in the Paper
 
 - $C := 129$
 - $\alpha \in [.01, .05, .1, .2]$
 - $\beta \in [.05, .1, .2]$
-- $\epsilon := .5$
-- $\delta := .1$
 - $\gamma^{LB} \in [.90, .95, 1.0]$
 - $\gamma^{UB} \in [.95, .99, 1.0]$
+- $\delta := .1$
+- $\epsilon := .5$
 
 ## Component -> UCR-Dataset (`UCRArchive_2018`) Mapping
 
