@@ -1,0 +1,10 @@
+numpy
+requests
+standalone-smach
+tensorflow
+termcolor
+pandas
+Pillow>=10.0.1
+scipy
+git+https://github.com/tbohne/nesy_diag_smach.git@v0.1.1
+git+https://github.com/tbohne/nesy_diag_ontology.git@v0.0.1
