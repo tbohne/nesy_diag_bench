@@ -1,4 +1,5 @@
 .idea/
+build/
 UCRArchive_2018/
 __pycache__/
 session_files/
