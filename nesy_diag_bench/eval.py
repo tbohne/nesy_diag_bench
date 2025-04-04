@@ -9,6 +9,7 @@ import json
 import logging
 import os
 import time
+from typing import List, Tuple
 
 import numpy as np
 import requests
@@ -24,7 +25,16 @@ from local_model_accessor import LocalModelAccessor
 from util import log_info, log_debug, log_warn, log_err
 
 
-def run_smach(instance, verbose, sim_models, seed):
+def run_smach(instance: str, verbose: bool, sim_models: bool, seed: int) -> str:
+    """
+    Runs the diagnosis state machine.
+
+    :param instance: problem instance file
+    :param verbose: whether logging should be activated
+    :param sim_models: whether model simulation should be activated
+    :param seed: seed for random processes
+    :return: final output of the state machine, i.e., diagnosis
+    """
     smach.set_loggers(log_info, log_debug, log_warn, log_err)  # set custom logging functions
 
     # init local implementations of I/O interfaces
@@ -43,7 +53,12 @@ def run_smach(instance, verbose, sim_models, seed):
     return final_out
 
 
-def clear_hosted_kg():
+def clear_hosted_kg() -> bool:
+    """
+    Clears the hosted knowledge graph.
+
+    :return: whether KG was successfully cleared
+    """
     clear_query = """
         PREFIX rdfs: <http://www.w3.org/2000/01-rdf-syntax-ns#>
         DELETE WHERE {
@@ -59,8 +74,13 @@ def clear_hosted_kg():
         return False
 
 
-def upload_kg_for_instance(instance):
-    # upload new KG file (.nt)
+def upload_kg_for_instance(instance: str) -> bool:
+    """
+    Uploads KG (.nt) for the specified instance.
+
+    :param instance: problem instance
+    :return: whether KG was successfully uploaded
+    """
     kg_file = instance.replace(".json", ".nt")
     with open(kg_file, "r") as f:
         resp = requests.post(DATA_ENDPOINT, data=f, headers={"Content-Type": "application/n-triples"})
@@ -72,7 +92,13 @@ def upload_kg_for_instance(instance):
         return False
 
 
-def get_causal_links_from_fault_paths(fault_paths):
+def get_causal_links_from_fault_paths(fault_paths: List[List[str]]) -> List[str]:
+    """
+    Retrieves causal links from fault paths.
+
+    :param fault_paths: fault paths to retrieve causal links for
+    :return: causal links
+    """
     links = []
     for fp in fault_paths:
         for i in range(len(fp) - 1):
@@ -81,10 +107,39 @@ def get_causal_links_from_fault_paths(fault_paths):
 
 
 def write_instance_res_to_csv(
-        instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-        found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, avg_fp_len, runtime, classification_ratio,
-        ratio_of_found_gtfp, diag_success, compensation_by_aff_by_savior, missed_chances, no_second_chance
-):
+        instance: str, tp: int, tn: int, fp: int, fn: int, num_of_fp_deviation: int, accuracy: float, precision: float,
+        recall: float, specificity: float, f1: float, found_anomaly_links_percentage: float, avg_model_acc: float,
+        gt_match: bool, num_fps: int, avg_fp_len: float, runtime: float, classification_ratio: float,
+        ratio_of_found_gtfp: float, diag_success: bool, compensation_by_aff_by_savior: int, missed_chances: int,
+        no_second_chance: int
+) -> None:
+    """
+    Writes the results for the instance to csv file.
+
+    :param instance: problem instance file
+    :param tp: number of true positives
+    :param tn: number of true negatives
+    :param fp: number of false positives
+    :param fn: number of false negatives
+    :param num_of_fp_deviation: number of fault path deviations
+    :param accuracy: classification accuracy
+    :param precision: classification precision
+    :param recall: classification recall
+    :param specificity: classification specificity
+    :param f1: F1 score
+    :param found_anomaly_links_percentage: found anomaly links percentage
+    :param avg_model_acc: average model accuracy
+    :param gt_match: whether the result matches the ground truth
+    :param num_fps: number of fault paths
+    :param avg_fp_len: average fault path length
+    :param runtime: runtime
+    :param classification_ratio: classification ratio
+    :param ratio_of_found_gtfp: ratio of found ground truth fault paths
+    :param diag_success: diagnosis success
+    :param compensation_by_aff_by_savior: compensation by affected-by savior
+    :param missed_chances: number of missed chances
+    :param no_second_chance: 'no second chance' cases
+    """
     instance = instance.split("/")[1].replace(".json", "")
     idx_suffix = "_" + instance.split("_")[-1]
     filename = instance[:len(instance) - len(idx_suffix)] + ".csv"
@@ -98,13 +153,26 @@ def write_instance_res_to_csv(
                  "classification_ratio", "diag_success", "compensation_by_aff_by_savior", "missed_chances",
                  "no_second_chance"]
             )
-        writer.writerow([instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
-                         found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, ratio_of_found_gtfp,
-                         avg_fp_len, runtime, classification_ratio, diag_success, compensation_by_aff_by_savior,
-                         missed_chances, no_second_chance])
+        writer.writerow(
+            [instance, tp, tn, fp, fn, num_of_fp_deviation, accuracy, precision, recall, specificity, f1,
+             found_anomaly_links_percentage, avg_model_acc, gt_match, num_fps, ratio_of_found_gtfp, avg_fp_len, runtime,
+             classification_ratio, diag_success, compensation_by_aff_by_savior, missed_chances, no_second_chance]
+        )
 
 
-def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime, diag_success):
+def evaluate_instance_res(
+        instance: str, ground_truth_fault_paths: List[List[str]], determined_fault_paths: List[List[str]],
+        runtime: float, diag_success: bool
+) -> None:
+    """
+    Evaluates the instance-level results.
+
+    :param instance: problem instance file
+    :param ground_truth_fault_paths: ground truth fault paths
+    :param determined_fault_paths: determined fault paths
+    :param runtime: runtime
+    :param diag_success: whether diagnosis successful
+    """
     true_positives = []
     false_positives = []
     true_negatives = []
@@ -127,8 +195,7 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
         if link in causal_links_pred:
             identified_causal_links += 1
 
-    # read sim classification log
-    with open(SESSION_DIR + "/" + SIM_CLASSIFICATION_LOG_FILE, "r") as f:
+    with open(SESSION_DIR + "/" + SIM_CLASSIFICATION_LOG_FILE, "r") as f:  # read sim classification log
         log_file = json.load(f)
         for classification in log_file:
             comp = list(classification.keys())[0]
@@ -137,9 +204,10 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
             model_accuracies.append(model_acc)
             pred_val = classification["Predicted Value"]
             ground_truth_anomaly = classification["Ground Truth Anomaly"]
-            print("--", comp, "pred:", pred_anomaly, "model acc:", model_acc, "pred val:", round(pred_val, 2),
-                  "gt:", ground_truth_anomaly)
-
+            print(
+                "--", comp, "pred:", pred_anomaly, "model acc:", model_acc, "pred val:",
+                round(pred_val, 2), "gt:", ground_truth_anomaly
+            )
             if pred_anomaly == ground_truth_anomaly:  # true
                 if pred_anomaly:
                     true_positives.append(comp)
@@ -162,20 +230,16 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     print("FN (unidentified anomalies):", fn)
     print("--------")
     print("num of fault path deviation:", num_of_fp_deviation)
-    # ratio of correct prediction to all predictions
-    accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)
-    # ratio of true pos to all pos
-    precision = round(float(tp) / (tp + fp), 2) if tp + fp > 0 else "NaN"
+    accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)  # ratio of correct prediction to all predictions
+    precision = round(float(tp) / (tp + fp), 2) if tp + fp > 0 else "NaN"  # ratio of true pos to all pos
     print("accuracy:", accuracy)
     print("precision:", precision)
-    # how well are we able to recall the problems
-    recall = round((float(tp) / (tp + fn)), 2)
+    recall = round((float(tp) / (tp + fn)), 2)  # how well are we able to recall the problems
     print("recall aka sensitivity:", recall)
-    # ratio of true neg to all neg
-    specificity = round(float(tn) / (fp + tn), 2)
+    specificity = round(float(tn) / (fp + tn), 2)  # ratio of true neg to all neg
     print("specificity:", specificity)
-    f1 = round((2 * precision * recall) / (precision + recall),
-               2) if precision != "NaN" and precision + recall > 0 else "NaN"
+    prec_rec_sum = precision + recall
+    f1 = round((2 * precision * recall) / prec_rec_sum, 2) if precision != "NaN" and prec_rec_sum > 0 else "NaN"
     print("f1-score:", f1)
     if identified_causal_links == len(causal_links_ground_truth):
         found_anomaly_links_percentage = 100.0
@@ -186,7 +250,8 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     print("percentage of correctly identified causal links between anomalies:", found_anomaly_links_percentage, "%")
 
     gt_match = len(ground_truth_fault_paths) == len(determined_fault_paths) and all(
-        gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths)
+        gtfp in determined_fault_paths for gtfp in ground_truth_fault_paths
+    )
     if gt_match:
         print("..gen fault paths for", instance, "match ground truth..")
 
@@ -206,7 +271,19 @@ def evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_p
     )
 
 
-def measure_compensation(tp, tn, fp, fn):
+def measure_compensation(tp: int, tn: int, fp: int, fn: int) -> Tuple[int, int, int]:
+    """
+    Measures the three types of compensation (cf. paper for definitions):
+        - compensation_by_aff_by_savior
+        - missed_chances
+        - no_second_chance
+
+    :param tp: number of true positives
+    :param tn: number of true negatives
+    :param fp: number of false positives
+    :param fn: number of false negatives
+    :return: (compensation_by_aff_by_savior, missed_chances, no_second_chance)
+    """
     with open(SESSION_DIR + "/" + "classifications.json", 'r') as file:
         classifications = json.load(file)
     classified_comps = {  # mapping component to classification res
@@ -225,28 +302,27 @@ def measure_compensation(tp, tn, fp, fn):
             print(c, "is FN")
         elif pred == False and gt == False:
             print(c, "is TN")  # this case can actually never lead to any missed anomalies in the synth. instances
-        if not pred:  # FN or TN
-            # go through affected by relations of the negatively classified component
+        if not pred:  # FN or TN -- go through affected-by relations of the negatively classified component
             print("going through aff-by for", c)
             for aff_by in ground_truth_components[c][1]:
                 # if anomaly + not considered
-                if ground_truth_components[aff_by][0]:  # and aff_by not in classified_comps:
+                if ground_truth_components[aff_by][0]:  # and aff_by not in classified_comps
                     print(aff_by, "ground truth anomaly, i.e., unconsidered (via this link) anomaly")
                     if aff_by in classified_comps:  # found via another link?
                         print(aff_by, "classified via another link -- as", classified_comps[aff_by])
                         if aff_by not in already_saved:  # counting each comp only once
                             already_saved.append(aff_by)
-                            # TODO: this measure should highly correlate with beta (aff-by) -- this would indicate compensation (!)
+                            # this measure should highly correlate with beta (aff-by) -- would indicate compensation (!)
                             compensation_aff_by_savior += 1
-                            # TODO: what about following anomalies based on this entry, should I count them as well?
-                            #       could be arbitrary many
+                            # what about following anomalies based on this entry, should they be counted as well?
+                            # --> could be arbitrary many
                         else:
                             print("not counted again...")
                     else:  # missed anomaly
                         tmp_missed_chances = missed_chance
-                        # not found, but would it have been possible? what do I mean by possible here?
-                        # it means that there was another classification I performed that was wrong
-                        # it just means that there would've been another component, an unused savior
+                        # not found, but would it have been possible?
+                        # - another classification that was wrong
+                        # - there would've been another component, an unused savior
                         for comp in ground_truth_components:
                             if comp not in classified_comps and aff_by in ground_truth_components[comp][1]:
                                 print("there would've been a chance:", comp)
@@ -254,15 +330,13 @@ def measure_compensation(tp, tn, fp, fn):
                                 break
                         if tmp_missed_chances == missed_chance:
                             no_second_chance += 1
-
     # some sanity checks
     assert compensation_aff_by_savior <= tn + fn
-
     return compensation_aff_by_savior, missed_chance, no_second_chance
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with generated instances.')
+    parser = argparse.ArgumentParser(description='Systematically evaluate NeSy diag system with synth. instances.')
     parser.add_argument('--instances', type=str, required=True)
     parser.add_argument('--v', action='store_true', default=False)
     parser.add_argument('--sim', action='store_true', default=False)
@@ -279,7 +353,6 @@ if __name__ == '__main__':
         # compare to ground truth
         with open(instance, "r") as f:
             problem_instance = json.load(f)
-
         ground_truth_fault_paths = problem_instance["ground_truth_fault_paths"]
         ground_truth_components = problem_instance["suspect_components"]
         diag_success = fault_paths != "no_diag"
@@ -290,11 +363,9 @@ if __name__ == '__main__':
             print("GROUND TRUTH FAULT PATHS:", ground_truth_fault_paths)
             print("DETERMINED FAULT PATHS:", determined_fault_paths)
             print("#####################################################################")
-
         end_time = time.time()
         runtime = round(end_time - start_time, 2)
         evaluate_instance_res(instance, ground_truth_fault_paths, determined_fault_paths, runtime, diag_success)
-
         if args.v:
             for fault_path in fault_paths:
                 print(colored(fault_path, "red", "on_white", ["bold"]))
