@@ -1,5 +1,6 @@
 .idea/
 build/
+nesy_diag_bench.egg-info/
 UCRArchive_2018/
 __pycache__/
 session_files/
