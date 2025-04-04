@@ -43,8 +43,8 @@ The semantics of all specified parameters are defined in the paper. All paramete
 - $C := 129$
 - $\alpha \in [.01, .05, .1, .2]$
 - $\beta \in [.05, .1, .2]$
-- $\epsilon := 0.5$
-- $\delta := 0.1$
+- $\epsilon := .5$
+- $\delta := .1$
 - $\gamma^{LB} \in [.90, .95, 1.0]$
 - $\gamma^{UB} \in [.95, .99, 1.0]$
 
