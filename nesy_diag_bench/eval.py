@@ -230,7 +230,7 @@ def evaluate_instance_res(
     print("FN (unidentified anomalies):", fn)
     print("--------")
     print("num of fault path deviation:", num_of_fp_deviation)
-    accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)  # ratio of correct prediction to all predictions
+    accuracy = round((float(tp + tn)) / (tp + tn + fp + fn), 2)  # ratio of correct predictions to all predictions
     precision = round(float(tp) / (tp + fp), 2) if tp + fp > 0 else "NaN"  # ratio of true pos to all pos
     print("accuracy:", accuracy)
     print("precision:", precision)
