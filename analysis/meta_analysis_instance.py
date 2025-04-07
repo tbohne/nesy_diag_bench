@@ -39,7 +39,7 @@ def determine_correlation(arr_a: List[float], arr_b: List[float]) -> Tuple[float
     return corr_coeff, p_val, p_val < 0.05
 
 
-df = pd.read_csv("analysis/results/res.csv")
+df = pd.read_csv("results/res.csv")
 
 corr_coeff, p_val, significant = determine_correlation(df["#fault_paths"], df["avg_fp_len"])
 print("fault_paths --- avg_fp_len:")
