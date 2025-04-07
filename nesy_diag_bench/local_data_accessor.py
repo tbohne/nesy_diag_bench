@@ -3,7 +3,7 @@
 # @author Tim Bohne
 
 import json
-from typing import List
+from typing import List, Tuple
 
 import pandas as pd
 from nesy_diag_smach.config import SIGNAL_SESSION_FILES
@@ -17,7 +17,12 @@ class LocalDataAccessor(DataAccessor):
     Implementation of the data accessor interface used for evaluation purposes.
     """
 
-    def __init__(self, instance):
+    def __init__(self, instance: str) -> None:
+        """
+        Inits the local data accessor.
+
+        :param instance: considered problem instance
+        """
         self.instance = instance
 
     def get_fault_context(self) -> FaultContext:
@@ -41,14 +46,13 @@ class LocalDataAccessor(DataAccessor):
         :return: sensor data for each component
         """
         signals = []
-        # for each component we need to check the ground truth of the instance - if it should have an anomaly
+        # for each component, we need to check the ground truth of the instance - whether it should have an anomaly
         with open(self.instance, "r") as f:
             problem_instance = json.load(f)
         for comp in components:
             # we consider class 0 as anomaly
             ground_truth_label = "0" if problem_instance["suspect_components"][comp][0] else "1"
-            # TODO: each comp should have its own associated data, not all C0
-            # path = "res/" + SIGNAL_SESSION_FILES + "/" + comp + ".tsv"
+            # generally, each comp should have its own associated data, not all C0 (irrelevant for the eval)
             path = "res/" + SIGNAL_SESSION_FILES + "/" + "C0" + ".tsv"
             # parse one signal from tsv file
             _, values = self.read_ucr_recording(path, ground_truth_label)
@@ -56,15 +60,20 @@ class LocalDataAccessor(DataAccessor):
         return signals
 
     @staticmethod
-    def read_ucr_recording(path, ground_truth_label):
-        # TODO: should be random from those with ground_truth_label
+    def read_ucr_recording(path: str, ground_truth_label: str) -> Tuple[int, List[float]]:
+        """
+        Reads a UCR recording.
+
+        :param path: path to the recording
+        :param ground_truth_label: expected ground truth label
+        :return: (sample label, signal values)
+        """
+        # generally, should be random from those with ground_truth_label
         sample_idx = 4 if ground_truth_label == "0" else 25
         # dataframe containing all signals from the dataset + label in col 0
         df = pd.read_csv(path, delimiter='\t', header=None, na_values=['-∞', '∞'])
         selected_sample_label = int(df.iloc[sample_idx].to_list()[0])
         selected_sample_values = df.iloc[sample_idx].to_list()[1:]
-        #print("label:", selected_sample_label)
-        #print("signal:", selected_sample_values[:10])
         return selected_sample_label, selected_sample_values
 
     def get_manual_judgement_for_component(self, component: str) -> bool:
