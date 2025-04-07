@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @author Tim Bohne
 
-def log_info(msg) -> None:
+def log_info(msg: str) -> None:
     """
     Custom logging to override defaults.
 
@@ -11,7 +11,7 @@ def log_info(msg) -> None:
     pass
 
 
-def log_warn(msg) -> None:
+def log_warn(msg: str) -> None:
     """
     Custom logging to override defaults.
 
@@ -20,7 +20,7 @@ def log_warn(msg) -> None:
     pass
 
 
-def log_debug(msg) -> None:
+def log_debug(msg: str) -> None:
     """
     Custom logging to override defaults.
 
@@ -29,7 +29,7 @@ def log_debug(msg) -> None:
     pass
 
 
-def log_err(msg) -> None:
+def log_err(msg: str) -> None:
     """
     Custom logging to override defaults.
 
