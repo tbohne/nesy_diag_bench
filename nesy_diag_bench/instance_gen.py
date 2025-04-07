@@ -161,6 +161,8 @@ def write_instance_to_file(
                 + str(int(fault_path_comp_ub * 100)) + "_" + str(int(distractor_ub * 100)) + "_"
                 + str(int(model_acc_lb * 100)) + "_" + str(int(model_acc_ub * 100)) + "_"
                 + str(seed) + "_" + str(idx))
+
+    os.makedirs("instances", exist_ok=True)
     with open("instances/" + filename + ".json", "w") as f:
         json.dump(data, f, indent=4, default=str)
     return filename
