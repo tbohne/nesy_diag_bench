@@ -62,26 +62,26 @@ $ python nesy_diag_bench/analyze_res.py --instance-set-sol exp_solutions/
 
 *Result preprocessing / accumulation (in `analysis/`):*
 ```
-python preprocess_res.py
-python meta_analysis.py
-python meta_analysis_instance.py
+$ python preprocess_res.py
+$ python meta_analysis.py
+$ python meta_analysis_instance.py
 ```
 
 *R scripts for visualizing results (in `analysis/`):*
 
 *It is advisable to start with `plot_gen_cumulative_res.R`, as this script also installs the required R libraries.*
 ```
-Rscript plot_gen_cumulative_res.R
+$ Rscript plot_gen_cumulative_res.R
 ```
 Sample plot:
 ![](img/cumulative.png)
 ```
-Rscript plot_gen_instance_set_res.R
+$ Rscript plot_gen_instance_set_res.R
 ```
 Sample plot:
 ![](img/inst_set_lvl.png)
 ```
-Rscript plot_meta_analysis.R
+$ Rscript plot_meta_analysis.R
 ```
 Sample plot:
 ![](img/meta_analysis.png)
