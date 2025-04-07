@@ -13,7 +13,7 @@ The following figure shows an abstract overview of the evaluation process. The d
 
 It essentially assesses the interplay of several modules that together form the neuro-symbolic diagnosis framework:
 - [nesy_diag_smach](https://github.com/tbohne/nesy_diag_smach) generalizing [vehicle_diag_smac](https://github.com/tbohne/vehicle_diag_smach)
-- [nesy_diag_ontology](https://github.com/tbohne/nesy_diag_ontology) generalizinig [obd_ontology](https://github.com/tbohne/obd_ontology)
+- [nesy_diag_ontology](https://github.com/tbohne/nesy_diag_ontology) generalizing [obd_ontology](https://github.com/tbohne/obd_ontology)
 - [oscillogram_classification](https://github.com/tbohne/oscillogram_classification)
 
 ## Dependencies
