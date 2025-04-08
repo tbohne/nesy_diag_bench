@@ -114,9 +114,9 @@ The semantics of all specified parameters are defined in the paper. All paramete
 
 ## Reduced Parameter Config Used in the Paper
 
-- $C := 129$
+- $C := 129$ (size of the `UCRArchive_2018` dataset)
 - $\alpha \in [.01, .05, .1, .2]$
-- $\beta \in [.05, .1, .2]$
+- $\beta \in [.01, .02, .03, .05, .07, .1, .2]$
 - $\gamma^{LB} \in [.90, .95, 1.0]$
 - $\gamma^{UB} \in [.95, .99, 1.0]$
 - $\delta := .1$
@@ -145,6 +145,8 @@ All the cumulative results of the performed experiments are stored in `analysis/
 ```
 
 ## Component -> UCR Dataset (`UCRArchive_2018`) Mapping
+
+Initially, it was planned to map each of the domain-agnostic components to one UCR dataset, i.e., to train a classifier for each UCR dataset that represents the sensor signal for the respective mapped component. However, since no actual trained classifiers were required for the evaluation, but only the assumption of certain known accuracy ranges, this approach was not pursued further. Perhaps this approach will be explored further in the future.
 
 |component | dataset        | model | test_data | precision | accuracy | recall | architecture | #train | #test | len    | #classes | desc                                          |
 |----------|----------------|-------|-----------|-----------|----------|--------|--------------|--------|-------|--------|----------|-----------------------------------------------|
