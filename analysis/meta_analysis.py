@@ -127,10 +127,10 @@ true_num_anomalies = [
 print("true num anomalies:\n", true_num_anomalies)
 
 print("beta:\n", affected_by_percentages)
-tp_fp_sum = [
-    round(df["avg_tp"][i] + df["avg_fp"][i], 2) for i in range(len(affected_by_percentages))
+fn_fp_sum = [
+    round(df["avg_fn"][i] + df["avg_fp"][i], 2) for i in range(len(affected_by_percentages))
 ]
-print("TP+FP:\n", tp_fp_sum)
+print("FN+FP:\n", fn_fp_sum)
 
 avg_num_found_anomalies = [round(df["avg_fp"][i] + df["avg_tp"][i], 1) for i in range(len(df["avg_tp"]))]
 print("\nfound anomalies:\n", avg_num_found_anomalies)
