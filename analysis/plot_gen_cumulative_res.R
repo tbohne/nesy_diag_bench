@@ -491,8 +491,8 @@ gen_multi_plot_four(
   p1, p2, p3, p4,
   TeX("instance set ($i \\in I$)"),
   TeX("$\\bar{c_r}$"),
-  TeX("$\\bar{p_0}$"),
-  TeX("$p_1$"),
+  TeX("$\\bar{p_0}^i$"),
+  TeX("$\\bar{p_1}^i$"),
   TeX("$\\tilde{f^{max}_i}$"),
   "bestof.png",
   TeX("$p_2$")
