@@ -168,9 +168,9 @@ def write_instance_to_file(
     return filename
 
 
-def find_paths_dfs(anomaly_graph: Dict[str, List[str]], node: str, path: List[str] = []) -> List[List[str]]:
+def find_paths_dfs_recursive(anomaly_graph: Dict[str, List[str]], node: str, path: List[str] = []) -> List[List[str]]:
     """
-    Finds paths in the anomaly graph in a depth-first fashion.
+    Finds paths in the anomaly graph in a depth-first fashion (recursive).
 
     :param anomaly_graph: anomaly graph to find paths in
     :param node: currently considered node (e.g., path source)
@@ -183,21 +183,64 @@ def find_paths_dfs(anomaly_graph: Dict[str, List[str]], node: str, path: List[st
     if node not in anomaly_graph:
         return [path]
     paths = []
-    for node in anomaly_graph[node]:
-        paths.extend(find_paths_dfs(anomaly_graph, node, path))
+    for neighbor in anomaly_graph[node]:
+        paths.extend(find_paths_dfs_recursive(anomaly_graph, neighbor, path))
     return paths
 
 
-def find_all_longest_paths(anomaly_graph: Dict[str, List[str]]) -> List[List[str]]:
+def find_paths_dfs_iterative(anomaly_graph: Dict[str, List[str]], node: str) -> List[List[str]]:
+    """
+    Finds paths in the anomaly graph in a depth-first fashion (iterative).
+
+    :param anomaly_graph: anomaly graph to find paths in
+    :param node: currently considered node (e.g., path source)
+    :return: list of found paths
+    """
+    stack = [(node, [])]  # (current node, path that led to it)
+    all_paths = []
+
+    while stack:
+        current_node, path = stack.pop()
+
+        if current_node in path:  # deal with cyclic relations
+            all_paths.append(path)
+            continue
+        new_path = path + [current_node]
+
+        if current_node not in anomaly_graph or not anomaly_graph[current_node]:  # is a leaf node
+            all_paths.append(new_path)
+        else:
+            # push neighbors to stack in reverse order to maintain DFS left-to-right traversal
+            for neighbor in reversed(anomaly_graph[current_node]):
+                stack.append((neighbor, new_path))
+    return all_paths
+
+
+def find_paths_dfs(anomaly_graph: Dict[str, List[str]], node: str, iterative: bool = True) -> List[List[str]]:
+    """
+    Finds paths in the anomaly graph in a depth-first fashion.
+
+    :param anomaly_graph: anomaly graph to find paths in
+    :param node: currently considered node (e.g., path source)
+    :param iterative: whether to use the iterative or recursive version of DFS
+    :return: list of found paths
+    """
+    if iterative:
+        return find_paths_dfs_iterative(anomaly_graph, node)
+    return find_paths_dfs_recursive(anomaly_graph, node)
+
+
+def find_all_longest_paths(anomaly_graph: Dict[str, List[str]], iterative: bool = True) -> List[List[str]]:
     """
     Finds all longest paths in the anomaly graph.
 
     :param anomaly_graph: anomaly graph to find longest paths in
+    :param iterative: whether to use the iterative or recursive version of DFS
     :return: unique longest paths
     """
     all_paths = []
     for path_src in anomaly_graph:
-        all_paths.extend(find_paths_dfs(anomaly_graph, path_src))
+        all_paths.extend(find_paths_dfs(anomaly_graph, path_src, iterative))
     return find_unique_longest_paths(all_paths)
 
 
@@ -216,11 +259,14 @@ def find_unique_longest_paths(paths: List[List[str]]) -> List[List[str]]:
     return unique_paths
 
 
-def generate_ground_truth_fault_paths(component_net: Dict[str, Tuple[bool, List[str]]]) -> List[List[str]]:
+def generate_ground_truth_fault_paths(
+        component_net: Dict[str, Tuple[bool, List[str]]], iterative: bool = True
+) -> List[List[str]]:
     """
     Generates the ground truth fault paths based on the component network.
 
     :param component_net: component network, i.e., mapping of components to states and affected-by relations
+    :param iterative: whether to use the iterative or recursive version of DFS
     :return: ground truth fault paths
     """
     anomalous_components = [k for k in component_net.keys() if component_net[k][0]]
@@ -240,7 +286,7 @@ def generate_ground_truth_fault_paths(component_net: Dict[str, Tuple[bool, List[
         start, end = edge.split(' -> ')
         anomaly_graph[start].append(end)
 
-    fault_paths = find_all_longest_paths(anomaly_graph)
+    fault_paths = find_all_longest_paths(anomaly_graph, iterative)
 
     # handle one-component-paths
     for anomaly in anomalous_components:
@@ -250,9 +296,11 @@ def generate_ground_truth_fault_paths(component_net: Dict[str, Tuple[bool, List[
     return fault_paths
 
 
-def test_branching_fault_path_instance_one() -> None:
+def test_branching_fault_path_instance_one(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with branching fault paths -- instance one.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -271,7 +319,7 @@ def test_branching_fault_path_instance_one() -> None:
         "C0014": (True, ['C0015']),
         "C0015": (True, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 5
     assert ground_truth_fault_paths[3] == ['C0015', 'C0014']
     assert ground_truth_fault_paths[2] == ['C0007', 'C0012', 'C0011']
@@ -280,9 +328,11 @@ def test_branching_fault_path_instance_one() -> None:
     assert ground_truth_fault_paths[0] == ['C0007', 'C0004', 'C0002', 'C0001']
 
 
-def test_branching_fault_path_instance_two() -> None:
+def test_branching_fault_path_instance_two(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with branching fault paths -- instance two.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -301,7 +351,7 @@ def test_branching_fault_path_instance_two() -> None:
         "C0014": (True, ['C0015']),
         "C0015": (True, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 4
     assert ground_truth_fault_paths[3] == ['C0009', 'C0008']
     assert ground_truth_fault_paths[2] == ['C0015', 'C0014']
@@ -309,9 +359,11 @@ def test_branching_fault_path_instance_two() -> None:
     assert ground_truth_fault_paths[0] == ['C0011', 'C0012', 'C0007', 'C0004', 'C0002', 'C0001']
 
 
-def test_simple_fault_path() -> None:
+def test_simple_fault_path(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with one simple fault path.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -323,14 +375,16 @@ def test_simple_fault_path() -> None:
         "C0006": (True, ['C0008']),
         "C0008": (True, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 1
     assert ground_truth_fault_paths[0] == ['C0008', 'C0006', 'C0004', 'C0002', 'C0001']
 
 
-def test_simple_two_fault_paths() -> None:
+def test_simple_two_fault_paths(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with two simple fault paths.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -344,15 +398,17 @@ def test_simple_two_fault_paths() -> None:
         "C0009": (True, ['C0010']),
         "C00010": (False, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 2
     assert ground_truth_fault_paths[1] == ['C0009', 'C0008']
     assert ground_truth_fault_paths[0] == ['C0006', 'C0004', 'C0002', 'C0001']
 
 
-def test_several_fault_paths() -> None:
+def test_several_fault_paths(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with several fault paths.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -371,7 +427,7 @@ def test_several_fault_paths() -> None:
         "C0014": (True, ['C0015']),
         "C0015": (False, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 4
     assert ground_truth_fault_paths[1] == ['C0012', 'C0011']
     assert ground_truth_fault_paths[2] == ['C0009', 'C0008']
@@ -379,9 +435,11 @@ def test_several_fault_paths() -> None:
     assert ground_truth_fault_paths[3] == ['C0014']
 
 
-def test_complex_case() -> None:
+def test_complex_case(iterative: bool = True) -> None:
     """
     Tests for the expected behavior with a more complex case.
+
+    :param iterative: whether to use the iterative or recursive version of DFS
     """
     component_net = {
         "C0001": (True, ['C0002']),
@@ -404,7 +462,7 @@ def test_complex_case() -> None:
         "C0018": (False, []),
         "C0019": (True, [])
     }
-    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net)
+    ground_truth_fault_paths = generate_ground_truth_fault_paths(component_net, iterative)
     assert len(ground_truth_fault_paths) == 6
     assert ground_truth_fault_paths[5] == ['C0009', 'C0008']
     assert ground_truth_fault_paths[3] == ['C0017', 'C0016', 'C0014']
@@ -461,12 +519,23 @@ def test_basic_functionality() -> None:
     """
     Tests the basic functionality of instance / fault path generation.
     """
+    print("testing basic functionality..")
+    # test iterative implementation of fault path gen
     test_branching_fault_path_instance_one()
     test_branching_fault_path_instance_two()
     test_simple_fault_path()
     test_simple_two_fault_paths()
     test_several_fault_paths()
     test_complex_case()
+
+    # test recursive implementation of fault path gen
+    test_branching_fault_path_instance_one(False)
+    test_branching_fault_path_instance_two(False)
+    test_simple_fault_path(False)
+    test_simple_two_fault_paths(False)
+    test_several_fault_paths(False)
+    test_complex_case(False)
+    print("tests successfully completed..")
 
 
 def generate_instance(args: argparse.Namespace, idx: int) -> None:
