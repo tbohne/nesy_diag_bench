@@ -128,7 +128,7 @@ All the cumulative results of the performed experiments are stored in `analysis/
 
 ```bibtex
 @article{10.1109/ACCESS.2025.3641034,
-    author = {Bohne, Tim and Patricia Windler, Anne-Kathrin and Atzmueller, Martin},
+    author = {Bohne, Tim and Windler, Anne-Kathrin Patricia and Atzmueller, Martin},
     journal = {IEEE Access},
     title = {A Domain-Agnostic Neuro-Symbolic Architecture for Multimodal Human-in-the-Loop Anomaly Detection and Complex Fault Diagnosis},
     year = {2025},
